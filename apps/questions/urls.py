@@ -1,9 +1,12 @@
 from django.urls import path
 
-app_name = 'questions'
+from . import views
+
+app_name = "questions"
 
 urlpatterns = [
-    # path('', views.QuestionListView.as_view(), name='list'),
-    # path('<int:pk>/', views.QuestionDetailView.as_view(), name='detail'),
-    # path('create/', views.QuestionCreateView.as_view(), name='create'),
+    path("", views.QuestionBankView.as_view(), name="list"),
+    path("add/", views.QuestionCreateView.as_view(), name="add"),
+    path("<int:pk>/edit/", views.QuestionUpdateView.as_view(), name="edit"),
+    path("<int:pk>/delete/", views.QuestionDeleteView.as_view(), name="delete"),
 ]

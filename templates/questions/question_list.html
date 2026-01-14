@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Question Bank{% endblock %}
+
+{% block content %}
+  <div class="space-y-6">
+  <!-- Header -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Question Bank</h1>
+        <p class="text-gray-600">{{ total_questions }} question{{ total_questions|pluralize }}</p>
+      </div>
+      <a href="{% url 'questions:add' %}{% if selected_class %}?class={{ selected_class }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
+        Add Question
+      </a>
+    </div>
+
+  <!-- Filters -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+      <form method="get" class="flex flex-wrap items-end gap-4">
+        <div class="flex-1 min-w-[200px]">
+          <label for="class" class="form-label">Filter by Class</label>
+          <select name="class" id="class" class="form-input" onchange="this.form.submit()">
+            <option value="">All Classes</option>
+            {% for cls in classes %}
+              <option value="{{ cls.id }}" {% if selected_class == cls.id|stringformat:"s" %}selected{% endif %}>{{ cls.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="flex-1 min-w-[200px]">
+          <label for="search" class="form-label">Search</label>
+          <input type="text" name="search" id="search" value="{{ search }}" placeholder="Search questions..." class="form-input">
+        </div>
+        <div>
+          <button type="submit" class="inline-flex items-center px-4 py-3 text-sm font-medium text-white bg-gray-600 rounded-lg hover:bg-gray-700">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            Search
+          </button>
+        </div>
+        {% if search or selected_class %}
+          <div>
+            <a href="{% url 'questions:list' %}" class="inline-flex items-center px-4 py-3 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+              Clear Filters
+            </a>
+          </div>
+        {% endif %}
+      </form>
+    </div>
+
+  <!-- Questions List -->
+    {% if page_obj %}
+      <div class="space-y-4">
+        {% for question in page_obj %}
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <div class="flex items-center space-x-2 mb-2">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                    {{ question.assigned_class.name }}
+                  </span>
+                  <span class="text-xs text-gray-500">Added by {{ question.created_by.get_full_name|default:question.created_by.email }}</span>
+                </div>
+                <p class="text-gray-900 font-medium mb-4">{{ question.question_text }}</p>
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                  <div class="flex items-center {% if question.correct_option == 'A' %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
+                    <span class="w-6 h-6 flex items-center justify-center rounded-full {% if question.correct_option == 'A' %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">A</span>
+                    {{ question.option_a }}
+                  </div>
+                  <div class="flex items-center {% if question.correct_option == 'B' %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
+                    <span class="w-6 h-6 flex items-center justify-center rounded-full {% if question.correct_option == 'B' %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">B</span>
+                    {{ question.option_b }}
+                  </div>
+                  <div class="flex items-center {% if question.correct_option == 'C' %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
+                    <span class="w-6 h-6 flex items-center justify-center rounded-full {% if question.correct_option == 'C' %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">C</span>
+                    {{ question.option_c }}
+                  </div>
+                  <div class="flex items-center {% if question.correct_option == 'D' %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
+                    <span class="w-6 h-6 flex items-center justify-center rounded-full {% if question.correct_option == 'D' %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">D</span>
+                    {{ question.option_d }}
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2 ml-4">
+                {% if user.is_admin or question.created_by == user %}
+                  <a href="{% url 'questions:edit' question.pk %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100">
+                    Edit
+                  </a>
+                  <a href="{% url 'questions:delete' question.pk %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100">
+                    Delete
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+  <!-- Pagination -->
+      {% if page_obj.has_other_pages %}
+        <div class="flex items-center justify-center space-x-2">
+          {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_class %}&class={{ selected_class }}{% endif %}{% if search %}&search={{ search }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+              Previous
+            </a>
+          {% endif %}
+          <span class="text-sm text-gray-600">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+          </span>
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_class %}&class={{ selected_class }}{% endif %}{% if search %}&search={{ search }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+              Next
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+    {% else %}
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No questions found</h3>
+        <p class="mt-1 text-sm text-gray-500">Get started by adding your first question.</p>
+        <div class="mt-6">
+          <a href="{% url 'questions:add' %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            Add Question
+          </a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

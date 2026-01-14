@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_edit %}Edit Question{% else %}Add Question{% endif %}{% endblock %}
+
+{% block content %}
+  <div class="max-w-2xl mx-auto">
+  <!-- Header -->
+    <div class="mb-6">
+      <a href="{% url 'questions:list' %}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-2">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to Question Bank
+      </a>
+      <h1 class="text-2xl font-bold text-gray-900">{% if is_edit %}Edit Question{% else %}Add Question{% endif %}</h1>
+    </div>
+
+  <!-- Form -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+
+      <!-- Class Selection -->
+        <div>
+          <label for="{{ form.assigned_class.id_for_label }}" class="form-label">Class *</label>
+          {{ form.assigned_class }}
+          {% if form.assigned_class.errors %}
+            <p class="field-error">{{ form.assigned_class.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+      <!-- Question Text -->
+        <div>
+          <label for="{{ form.question_text.id_for_label }}" class="form-label">Question *</label>
+          {{ form.question_text }}
+          {% if form.question_text.errors %}
+            <p class="field-error">{{ form.question_text.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+      <!-- Options -->
+        <div class="space-y-4">
+          <p class="form-label">Options *</p>
+
+          <div class="flex items-center space-x-3">
+            <span class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600">A</span>
+            <div class="flex-1">
+              {{ form.option_a }}
+              {% if form.option_a.errors %}
+                <p class="field-error">{{ form.option_a.errors.0 }}</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-3">
+            <span class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600">B</span>
+            <div class="flex-1">
+              {{ form.option_b }}
+              {% if form.option_b.errors %}
+                <p class="field-error">{{ form.option_b.errors.0 }}</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-3">
+            <span class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600">C</span>
+            <div class="flex-1">
+              {{ form.option_c }}
+              {% if form.option_c.errors %}
+                <p class="field-error">{{ form.option_c.errors.0 }}</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-3">
+            <span class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600">D</span>
+            <div class="flex-1">
+              {{ form.option_d }}
+              {% if form.option_d.errors %}
+                <p class="field-error">{{ form.option_d.errors.0 }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      <!-- Correct Answer -->
+        <div>
+          <p class="form-label">Correct Answer *</p>
+          <div class="flex items-center space-x-6">
+            {% for radio in form.correct_option %}
+              <label class="inline-flex items-center cursor-pointer">
+                {{ radio.tag }}
+                <span class="ml-2 text-sm font-medium text-gray-700">{{ radio.choice_label }}</span>
+              </label>
+            {% endfor %}
+          </div>
+          {% if form.correct_option.errors %}
+            <p class="field-error">{{ form.correct_option.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+      <!-- Submit -->
+        <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
+          <a href="{% url 'questions:list' %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+            Cancel
+          </a>
+          <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+            {% if is_edit %}Update Question{% else %}Add Question{% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
