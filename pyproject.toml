@@ -1,0 +1,161 @@
+[project]
+name = "examcore"
+version = "0.1.0"
+description = "Open-source examination management system built with Django"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+authors = [
+    {name = "ExamCore Contributors"}
+]
+keywords = ["django", "examination", "education", "quiz", "assessment"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: Django :: 5.0",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Education",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+
+dependencies = [
+    "Django>=5.0,<6.0",
+    "psycopg2-binary>=2.9",
+    "python-decouple>=3.8",
+    "django-tailwind>=3.8",
+    "Pillow>=10.0",
+    "gunicorn>=21.0",
+    "whitenoise>=6.6",
+    "django-extensions>=3.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-django>=4.7",
+    "pytest-cov>=4.1",
+    "pytest-xdist>=3.5",
+    "factory-boy>=3.3",
+    "faker>=22.0",
+    "black>=24.0",
+    "isort>=5.13",
+    "flake8>=7.0",
+    "mypy>=1.8",
+    "django-stubs>=4.2",
+    "pre-commit>=3.6",
+    "django-debug-toolbar>=4.2",
+    "ipython>=8.0",
+]
+
+docs = [
+    "mkdocs>=1.5",
+    "mkdocs-material>=9.5",
+    "mkdocstrings[python]>=0.24",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/examcore"
+Documentation = "https://examcore.readthedocs.io"
+Repository = "https://github.com/yourusername/examcore"
+Issues = "https://github.com/yourusername/examcore/issues"
+Changelog = "https://github.com/yourusername/examcore/blob/main/CHANGELOG.md"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["apps*", "config*", "theme*"]
+
+# Black - Code Formatter
+[tool.black]
+line-length = 88
+target-version = ['py311', 'py312', 'py313']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | migrations
+    | node_modules
+)/
+'''
+
+# isort - Import Sorter
+[tool.isort]
+profile = "black"
+line_length = 88
+known_django = ["django"]
+known_first_party = ["apps", "config"]
+sections = ["FUTURE", "STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+skip = ["venv", ".venv", "migrations", "node_modules"]
+skip_gitignore = true
+
+# Pytest
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+python_files = ["test_*.py", "*_test.py"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "-ra",
+    "--reuse-db",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+# Coverage
+[tool.coverage.run]
+source = ["apps"]
+branch = true
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+show_missing = true
+
+# MyPy - Type Checker
+[tool.mypy]
+python_version = "3.11"
+plugins = ["mypy_django_plugin.main"]
+strict = false
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+exclude = [
+    "migrations",
+    "venv",
+    ".venv",
+]
+
+[tool.django-stubs]
+django_settings_module = "config.settings.development"

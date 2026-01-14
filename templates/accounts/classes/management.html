@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Class Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <!-- Header -->
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900">Class Management</h1>
+    <p class="text-gray-600">Organize students into classes</p>
+  </div>
+
+  <!-- Classes List -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+    <div class="p-6">
+      <!-- Add Class Button -->
+      <div class="flex justify-end mb-4">
+        <button type="button" onclick="document.getElementById('addClassModal').classList.remove('hidden')" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+          </svg>
+          Add Class
+        </button>
+      </div>
+
+      {% if classes %}
+      <div id="classList" class="space-y-2">
+        {% for cls in classes %}
+        <div class="class-item flex items-center justify-between border border-gray-200 rounded-lg p-4 bg-white" data-id="{{ cls.id }}">
+          <div class="flex items-center">
+            <svg class="drag-handle w-5 h-5 text-gray-400 cursor-move mr-3 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+            </svg>
+            <h3 class="font-medium text-gray-900">{{ cls.name }}</h3>
+          </div>
+          <div class="flex items-center space-x-3">
+            {% if cls.student_count %}<span class="text-sm font-medium text-gray-500">{{ cls.student_count }} students</span>{% endif %}
+            <a href="{% url 'accounts:students' class_id=cls.id %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100">
+              View Students
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <form id="reorderForm" method="post" class="hidden">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="reorder">
+        <input type="hidden" name="order" id="orderInput">
+      </form>
+      {% else %}
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No classes yet</h3>
+        <p class="mt-1 text-sm text-gray-500">Get started by creating your first class.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Add Class Modal -->
+<div id="addClassModal" class="fixed inset-0 z-50 overflow-y-auto {% if not show_modal %}hidden{% endif %}">
+  <div class="flex items-center justify-center min-h-screen px-4">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75" onclick="document.getElementById('addClassModal').classList.add('hidden')"></div>
+    <div class="relative bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900">Add Class</h3>
+        <button type="button" onclick="document.getElementById('addClassModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-500">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add">
+
+        {{ form.name }}
+        {% if form.name.errors %}
+        <p class="field-error">{{ form.name.errors.0 }}</p>
+        {% endif %}
+
+        <button type="submit" class="w-full mt-4 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+          Add Class
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const classList = document.getElementById('classList');
+  if (classList) {
+    new Sortable(classList, {
+      handle: '.drag-handle',
+      animation: 150,
+      ghostClass: 'bg-primary-50',
+      onEnd: function() {
+        const items = classList.querySelectorAll('.class-item');
+        const order = Array.from(items).map(item => item.dataset.id);
+        document.getElementById('orderInput').value = JSON.stringify(order);
+        document.getElementById('reorderForm').submit();
+      }
+    });
+  }
+});
+</script>
+{% endblock %}

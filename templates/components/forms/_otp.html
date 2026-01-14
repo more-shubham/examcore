@@ -1,0 +1,31 @@
+{# OTP verification form component - reusable for email verify and forgot password #}
+{# Usage: {% include "components/forms/_otp.html" with form=form email=email resend_url="accounts:resend_otp" %} #}
+
+<div class="text-center mb-8">
+  <h2 class="text-2xl font-bold text-gray-900">Verify Your Email</h2>
+  <p class="text-gray-500 mt-1">We sent a 6-digit code to</p>
+  <p class="font-medium text-gray-700">{{ email }}</p>
+</div>
+
+<form method="post" class="space-y-5">
+  {% csrf_token %}
+
+  <div>
+    <label for="{{ form.otp.id_for_label }}" class="form-label text-center">{{ form.otp.label }}</label>
+    {{ form.otp }}
+    {% if form.otp.errors %}
+      {% for error in form.otp.errors %}
+      <p class="field-error text-center">{{ error }}</p>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <button type="submit" class="btn-primary">
+    Verify
+  </button>
+</form>
+
+<div class="mt-6 text-center">
+  <p class="text-sm text-gray-500">Didn't receive the code? <button type="submit" form="resend-form" class="btn-link">Resend OTP</button></p>
+</div>
+<form id="resend-form" method="post" action="{% url resend_url %}">{% csrf_token %}</form>

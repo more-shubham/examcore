@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-examcore}
+      - POSTGRES_USER=${POSTGRES_USER:-examcore}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-examcore123}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-examcore}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=django-insecure-examcore-dev-key-2024
+      - DB_HOST=db
+      - POSTGRES_DB=examcore
+      - POSTGRES_USER=examcore
+      - POSTGRES_PASSWORD=examcore123
+      - EMAIL_HOST=mailpit
+      - EMAIL_PORT=1025
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"   # Web UI
+      - "1025:1025"   # SMTP
+    environment:
+      - MP_SMTP_AUTH_ACCEPT_ANY=true
+      - MP_SMTP_AUTH_ALLOW_INSECURE=true
+
+volumes:
+  postgres_data:

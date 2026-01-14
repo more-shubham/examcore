@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - {{ school.name }}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <!-- Welcome Header -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Welcome, {{ user.get_full_name|default:user.username }}!</h1>
+        <p class="text-gray-600">{{ school.name }} - Teacher</p>
+      </div>
+      {% if school.logo %}
+      <img src="{{ school.logo.url }}" alt="{{ school.name }}" class="h-16 w-16 object-contain">
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Coming Soon -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+    <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+      <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+    </div>
+    <h2 class="text-2xl font-bold text-gray-900 mb-2">Coming Soon</h2>
+    <p class="text-gray-600 max-w-md mx-auto">
+      Your classes, students, and teaching tools will appear here once they are available. Stay tuned!
+    </p>
+  </div>
+
+  <!-- Profile Info -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Profile</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+      <div>
+        <span class="text-gray-500">Name:</span>
+        <span class="font-medium text-gray-900 ml-2">{{ user.get_full_name }}</span>
+      </div>
+      <div>
+        <span class="text-gray-500">Email:</span>
+        <span class="font-medium text-gray-900 ml-2">{{ user.email }}</span>
+      </div>
+      {% if user.phone %}
+      <div>
+        <span class="text-gray-500">Phone:</span>
+        <span class="font-medium text-gray-900 ml-2">{{ user.phone }}</span>
+      </div>
+      {% endif %}
+      <div>
+        <span class="text-gray-500">Role:</span>
+        <span class="font-medium text-gray-900 ml-2 capitalize">{{ user.role }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
