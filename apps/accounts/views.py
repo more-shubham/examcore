@@ -8,6 +8,7 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import View
 
+from apps.exams.models import Exam
 from apps.questions.models import Question
 
 from .forms import (
@@ -528,6 +529,9 @@ class DashboardView(LoginRequiredMixin, View):
                     "question_count": Question.objects.filter(
                         created_by=user, is_active=True
                     ).count(),
+                    "exam_count": Exam.objects.filter(
+                        created_by=user, is_active=True
+                    ).count(),
                 },
             )
 
@@ -536,6 +540,7 @@ class DashboardView(LoginRequiredMixin, View):
             "school": school,
             "user": user,
             "question_count": Question.objects.filter(is_active=True).count(),
+            "exam_count": Exam.objects.filter(is_active=True).count(),
             "examiner_count": User.objects.filter(
                 role=User.Role.EXAMINER, is_active=True
             ).count(),

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}Exams{% endblock %}
+
+{% block content %}
+  <div class="space-y-6">
+  <!-- Header -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Exams</h1>
+        <p class="text-gray-600">{{ total_exams }} exam{{ total_exams|pluralize }}</p>
+      </div>
+      <a href="{% url 'exams:add' %}{% if selected_class %}?class={{ selected_class }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
+        Create Exam
+      </a>
+    </div>
+
+  <!-- Filters -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+      <form method="get" class="flex flex-wrap items-end gap-4">
+        <div class="flex-1 min-w-[200px]">
+          <label for="class" class="form-label">Filter by Class</label>
+          <select name="class" id="class" class="form-input" onchange="this.form.submit()">
+            <option value="">All Classes</option>
+            {% for cls in classes %}
+              <option value="{{ cls.id }}" {% if selected_class == cls.id|stringformat:"s" %}selected{% endif %}>{{ cls.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="flex-1 min-w-[200px]">
+          <label for="status" class="form-label">Status</label>
+          <select name="status" id="status" class="form-input" onchange="this.form.submit()">
+            <option value="">All Statuses</option>
+            <option value="draft" {% if selected_status == "draft" %}selected{% endif %}>Draft</option>
+            <option value="published" {% if selected_status == "published" %}selected{% endif %}>Published</option>
+          </select>
+        </div>
+        {% if selected_class or selected_status %}
+          <div>
+            <a href="{% url 'exams:list' %}" class="inline-flex items-center px-4 py-3 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+              Clear Filters
+            </a>
+          </div>
+        {% endif %}
+      </form>
+    </div>
+
+  <!-- Exams List -->
+    {% if page_obj %}
+      <div class="space-y-4">
+        {% for exam in page_obj %}
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <div class="flex items-center space-x-2 mb-2">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                    {{ exam.assigned_class.name }}
+                  </span>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                               {% if exam.status_display == 'Draft' %}bg-gray-100 text-gray-800
+                               {% elif exam.status_display == 'Upcoming' %}bg-blue-100 text-blue-800
+                               {% elif exam.status_display == 'Running' %}bg-green-100 text-green-800
+                               {% else %}bg-red-100 text-red-800{% endif %}">
+                    {{ exam.status_display }}
+                  </span>
+                </div>
+                <a href="{% url 'exams:detail' exam.pk %}" class="text-lg font-medium text-gray-900 hover:text-primary-600">
+                  {{ exam.title }}
+                </a>
+                <div class="mt-2 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
+                  <div>
+                    <span class="font-medium">Start:</span>
+                    {{ exam.start_time|date:"M d, Y H:i" }}
+                  </div>
+                  <div>
+                    <span class="font-medium">End:</span>
+                    {{ exam.end_time|date:"M d, Y H:i" }}
+                  </div>
+                  <div>
+                    <span class="font-medium">Duration:</span>
+                    {{ exam.duration_display }}
+                  </div>
+                  <div>
+                    <span class="font-medium">Questions:</span>
+                    {{ exam.get_question_count }}
+                    {% if exam.use_random_questions %}(Random){% endif %}
+                  </div>
+                </div>
+                <p class="mt-1 text-xs text-gray-500">
+                  Created by {{ exam.created_by.get_full_name|default:exam.created_by.email }}
+                </p>
+              </div>
+              <div class="flex items-center space-x-2 ml-4">
+                <a href="{% url 'exams:detail' exam.pk %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-50 rounded-lg hover:bg-gray-100">
+                  View
+                </a>
+                {% if user.is_admin or exam.created_by == user %}
+                  <a href="{% url 'exams:edit' exam.pk %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100">
+                    Edit
+                  </a>
+                  <a href="{% url 'exams:delete' exam.pk %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100">
+                    Delete
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+  <!-- Pagination -->
+      {% if page_obj.has_other_pages %}
+        <div class="flex items-center justify-center space-x-2">
+          {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_class %}&class={{ selected_class }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+              Previous
+            </a>
+          {% endif %}
+          <span class="text-sm text-gray-600">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+          </span>
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_class %}&class={{ selected_class }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+              Next
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+    {% else %}
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No exams found</h3>
+        <p class="mt-1 text-sm text-gray-500">Get started by creating your first exam.</p>
+        <div class="mt-6">
+          <a href="{% url 'exams:add' %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            Create Exam
+          </a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

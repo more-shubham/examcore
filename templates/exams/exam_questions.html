@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Questions - {{ exam.title }}{% endblock %}
+
+{% block content %}
+  <div class="max-w-4xl mx-auto space-y-6">
+  <!-- Header -->
+    <div class="mb-6">
+      <a href="{% url 'exams:detail' exam.pk %}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-2">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to Exam
+      </a>
+      <h1 class="text-2xl font-bold text-gray-900">Manage Questions</h1>
+      <p class="text-gray-600">{{ exam.title }} - {{ exam.assigned_class.name }}</p>
+    </div>
+
+  <!-- Form -->
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900">Select Questions</h2>
+            <p class="text-sm text-gray-500">
+              {{ available_questions|length }} question{{ available_questions|length|pluralize }} available
+              • <span id="selected-count">{{ selected_ids|length }}</span> selected
+            </p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button type="button" onclick="selectAll()" class="text-sm text-primary-600 hover:text-primary-700">Select All</button>
+            <span class="text-gray-300">|</span>
+            <button type="button" onclick="deselectAll()" class="text-sm text-gray-600 hover:text-gray-700">Clear All</button>
+          </div>
+        </div>
+
+        {% if available_questions %}
+          <div class="space-y-3 max-h-[600px] overflow-y-auto">
+            {% for question in available_questions %}
+              <label class="flex items-start p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors question-item">
+                <input type="checkbox"
+                       name="questions"
+                       value="{{ question.pk }}"
+                       class="mt-1 form-checkbox question-checkbox"
+                       {% if question.pk in selected_ids %}checked{% endif %}>
+                <div class="ml-3 flex-1">
+                  <p class="text-gray-900 font-medium">{{ question.question_text }}</p>
+                  <div class="mt-2 grid grid-cols-2 gap-2 text-sm">
+                    <div class="flex items-center {% if question.correct_option == 'A' %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
+                      <span class="w-5 h-5 flex items-center justify-center rounded-full {% if question.correct_option == 'A' %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">A</span>
+                      {{ question.option_a|truncatewords:10 }}
+                    </div>
+                    <div class="flex items-center {% if question.correct_option == 'B' %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
+                      <span class="w-5 h-5 flex items-center justify-center rounded-full {% if question.correct_option == 'B' %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">B</span>
+                      {{ question.option_b|truncatewords:10 }}
+                    </div>
+                    <div class="flex items-center {% if question.correct_option == 'C' %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
+                      <span class="w-5 h-5 flex items-center justify-center rounded-full {% if question.correct_option == 'C' %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">C</span>
+                      {{ question.option_c|truncatewords:10 }}
+                    </div>
+                    <div class="flex items-center {% if question.correct_option == 'D' %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
+                      <span class="w-5 h-5 flex items-center justify-center rounded-full {% if question.correct_option == 'D' %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">D</span>
+                      {{ question.option_d|truncatewords:10 }}
+                    </div>
+                  </div>
+                  <p class="mt-2 text-xs text-gray-500">
+                    Added by {{ question.created_by.get_full_name|default:question.created_by.email }}
+                  </p>
+                </div>
+              </label>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="text-center py-8">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No questions available</h3>
+            <p class="mt-1 text-sm text-gray-500">Add questions to {{ exam.assigned_class.name }} first.</p>
+            <div class="mt-4">
+              <a href="{% url 'questions:add' %}?class={{ exam.assigned_class.pk }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+                Add Questions
+              </a>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+    <!-- Submit -->
+      <div class="flex items-center justify-end space-x-3 mt-6">
+        <a href="{% url 'exams:detail' exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+          Cancel
+        </a>
+        <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+          Save Questions
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function updateCount() {
+      const count = document.querySelectorAll('.question-checkbox:checked').length;
+      document.getElementById('selected-count').textContent = count;
+    }
+
+    function selectAll() {
+      document.querySelectorAll('.question-checkbox').forEach(cb => cb.checked = true);
+      updateCount();
+    }
+
+    function deselectAll() {
+      document.querySelectorAll('.question-checkbox').forEach(cb => cb.checked = false);
+      updateCount();
+    }
+
+    // Update count on change
+    document.querySelectorAll('.question-checkbox').forEach(cb => {
+      cb.addEventListener('change', updateCount);
+    });
+  </script>
+{% endblock %}

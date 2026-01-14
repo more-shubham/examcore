@@ -23,10 +23,10 @@
         <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">My Questions</p>
         <p class="mt-2 text-3xl font-bold text-primary-600">{{ question_count }}</p>
       </a>
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <a href="{% url 'exams:list' %}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:border-indigo-300 transition-colors">
         <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Exams Created</p>
-        <p class="mt-2 text-3xl font-bold text-indigo-600">0</p>
-      </div>
+        <p class="mt-2 text-3xl font-bold text-indigo-600">{{ exam_count }}</p>
+      </a>
     </div>
 
   <!-- Quick Actions -->
@@ -41,7 +41,7 @@
           <div class="text-2xl mb-2">❓</div>
           <div class="text-sm font-medium text-gray-700">Question Bank</div>
         </a>
-        <a href="#" class="p-4 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors">
+        <a href="{% url 'exams:add' %}" class="p-4 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors">
           <div class="text-2xl mb-2">📝</div>
           <div class="text-sm font-medium text-gray-700">Create Exam</div>
         </a>
