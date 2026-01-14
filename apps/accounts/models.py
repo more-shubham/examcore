@@ -1,4 +1,3 @@
-import random
 import secrets
 import string
 
@@ -12,8 +11,9 @@ class School(models.Model):
     Single school/college for this installation.
     Only ONE record should exist in this table.
     """
+
     name = models.CharField(max_length=255)
-    logo = models.ImageField(upload_to='school/', blank=True, null=True)
+    logo = models.ImageField(upload_to="school/", blank=True, null=True)
     address = models.TextField(blank=True)
     phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
@@ -24,9 +24,9 @@ class School(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'school'
-        verbose_name = 'School'
-        verbose_name_plural = 'School'
+        db_table = "school"
+        verbose_name = "School"
+        verbose_name_plural = "School"
 
     def __str__(self):
         return self.name
@@ -50,6 +50,7 @@ class School(models.Model):
 
 class OTPVerification(models.Model):
     """OTP verification for email."""
+
     email = models.EmailField()
     otp = models.CharField(max_length=6)
     is_verified = models.BooleanField(default=False)
@@ -57,9 +58,9 @@ class OTPVerification(models.Model):
     expires_at = models.DateTimeField()
 
     class Meta:
-        db_table = 'otp_verification'
-        verbose_name = 'OTP Verification'
-        verbose_name_plural = 'OTP Verifications'
+        db_table = "otp_verification"
+        verbose_name = "OTP Verification"
+        verbose_name_plural = "OTP Verifications"
 
     def __str__(self):
         return f"{self.email} - {self.otp}"
@@ -70,14 +71,10 @@ class OTPVerification(models.Model):
         # Delete old OTPs for this email
         cls.objects.filter(email=email).delete()
 
-        otp = ''.join(random.choices(string.digits, k=6))
+        otp = "".join(secrets.choice(string.digits) for _ in range(6))
         expires_at = timezone.now() + timezone.timedelta(minutes=10)
 
-        return cls.objects.create(
-            email=email,
-            otp=otp,
-            expires_at=expires_at
-        )
+        return cls.objects.create(email=email, otp=otp, expires_at=expires_at)
 
     def is_valid(self):
         """Check if OTP is still valid."""
@@ -102,6 +99,7 @@ class Class(models.Model):
     Class/Standard model for organizing students.
     Flexible naming: "Class 10", "X", "दहावी", "10th Standard", etc.
     """
+
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     order = models.PositiveIntegerField(default=0, help_text="For sorting classes")
@@ -110,10 +108,10 @@ class Class(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'classes'
-        verbose_name = 'Class'
-        verbose_name_plural = 'Classes'
-        ordering = ['order', 'name']
+        db_table = "classes"
+        verbose_name = "Class"
+        verbose_name_plural = "Classes"
+        ordering = ["order", "name"]
 
     def __str__(self):
         return self.name
@@ -128,10 +126,10 @@ class User(AbstractUser):
     """Custom User model with role-based access."""
 
     class Role(models.TextChoices):
-        ADMIN = 'admin', 'Admin'
-        EXAMINER = 'examiner', 'Examiner'
-        TEACHER = 'teacher', 'Teacher'
-        STUDENT = 'student', 'Student'
+        ADMIN = "admin", "Admin"
+        EXAMINER = "examiner", "Examiner"
+        TEACHER = "teacher", "Teacher"
+        STUDENT = "student", "Student"
 
     role = models.CharField(
         max_length=20,
@@ -139,20 +137,20 @@ class User(AbstractUser):
         default=Role.STUDENT,
     )
     phone = models.CharField(max_length=20, blank=True)
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
     assigned_class = models.ForeignKey(
         Class,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='students',
-        help_text="Only applicable for students"
+        related_name="students",
+        help_text="Only applicable for students",
     )
 
     class Meta:
-        db_table = 'users'
-        verbose_name = 'User'
-        verbose_name_plural = 'Users'
+        db_table = "users"
+        verbose_name = "User"
+        verbose_name_plural = "Users"
 
     def __str__(self):
         return f"{self.get_full_name() or self.username} ({self.role})"
@@ -176,6 +174,7 @@ class User(AbstractUser):
 
 class Invitation(models.Model):
     """Invitation for new users to join the system."""
+
     email = models.EmailField()
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
@@ -186,28 +185,28 @@ class Invitation(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='invitations'
+        related_name="invitations",
     )
     token = models.CharField(max_length=64, unique=True)
     invited_by = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='invitations_sent'
+        User, on_delete=models.CASCADE, related_name="invitations_sent"
     )
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
     accepted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        db_table = 'invitations'
-        verbose_name = 'Invitation'
-        verbose_name_plural = 'Invitations'
+        db_table = "invitations"
+        verbose_name = "Invitation"
+        verbose_name_plural = "Invitations"
 
     def __str__(self):
         return f"Invite: {self.email} ({self.role})"
 
     @classmethod
-    def create_invitation(cls, email, first_name, last_name, phone, role, invited_by, assigned_class=None):
+    def create_invitation(
+        cls, email, first_name, last_name, phone, role, invited_by, assigned_class=None
+    ):
         """Create invitation with secure token."""
         # Delete any existing pending invitations for this email
         cls.objects.filter(email=email.lower(), accepted_at__isnull=True).delete()
@@ -224,7 +223,7 @@ class Invitation(models.Model):
             assigned_class=assigned_class,
             token=token,
             invited_by=invited_by,
-            expires_at=expires_at
+            expires_at=expires_at,
         )
 
     def is_valid(self):
@@ -234,4 +233,5 @@ class Invitation(models.Model):
     def get_invite_url(self):
         """Get the invitation acceptance URL."""
         from django.urls import reverse
-        return reverse('accounts:accept_invite', kwargs={'token': self.token})
+
+        return reverse("accounts:accept_invite", kwargs={"token": self.token})
