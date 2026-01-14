@@ -10,7 +10,7 @@
         <h1 class="text-2xl font-bold text-gray-900">Exams</h1>
         <p class="text-gray-600">{{ total_exams }} exam{{ total_exams|pluralize }}</p>
       </div>
-      <a href="{% url 'exams:add' %}{% if selected_class %}?class={{ selected_class }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+      <a href="{% url 'exams:add' %}{% if selected_subject %}?subject={{ selected_subject }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
         </svg>
@@ -22,11 +22,11 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
       <form method="get" class="flex flex-wrap items-end gap-4">
         <div class="flex-1 min-w-[200px]">
-          <label for="class" class="form-label">Filter by Class</label>
-          <select name="class" id="class" class="form-input" onchange="this.form.submit()">
-            <option value="">All Classes</option>
-            {% for cls in classes %}
-              <option value="{{ cls.id }}" {% if selected_class == cls.id|stringformat:"s" %}selected{% endif %}>{{ cls.name }}</option>
+          <label for="subject" class="form-label">Filter by Subject</label>
+          <select name="subject" id="subject" class="form-input" onchange="this.form.submit()">
+            <option value="">All Subjects</option>
+            {% for subject in subjects %}
+              <option value="{{ subject.id }}" {% if selected_subject == subject.id|stringformat:"s" %}selected{% endif %}>{{ subject.name }} ({{ subject.assigned_class.name }})</option>
             {% endfor %}
           </select>
         </div>
@@ -38,7 +38,7 @@
             <option value="published" {% if selected_status == "published" %}selected{% endif %}>Published</option>
           </select>
         </div>
-        {% if selected_class or selected_status %}
+        {% if selected_subject or selected_status %}
           <div>
             <a href="{% url 'exams:list' %}" class="inline-flex items-center px-4 py-3 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
               Clear Filters
@@ -57,7 +57,7 @@
               <div class="flex-1">
                 <div class="flex items-center space-x-2 mb-2">
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                    {{ exam.assigned_class.name }}
+                    {{ exam.subject.name }}
                   </span>
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                                {% if exam.status_display == 'Draft' %}bg-gray-100 text-gray-800
@@ -115,7 +115,7 @@
       {% if page_obj.has_other_pages %}
         <div class="flex items-center justify-center space-x-2">
           {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}{% if selected_class %}&class={{ selected_class }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
               Previous
             </a>
           {% endif %}
@@ -123,7 +123,7 @@
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
           </span>
           {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if selected_class %}&class={{ selected_class }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
               Next
             </a>
           {% endif %}

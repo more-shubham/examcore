@@ -122,6 +122,31 @@ class Class(models.Model):
         return self.students.filter(is_active=True).count()
 
 
+class Subject(models.Model):
+    """Subject within a class (e.g., Mathematics for Class 10A)."""
+
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    assigned_class = models.ForeignKey(
+        Class,
+        on_delete=models.CASCADE,
+        related_name="subjects",
+    )
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "subjects"
+        verbose_name = "Subject"
+        verbose_name_plural = "Subjects"
+        ordering = ["name"]
+        unique_together = ["assigned_class", "name"]
+
+    def __str__(self):
+        return f"{self.name} ({self.assigned_class.name})"
+
+
 class User(AbstractUser):
     """Custom User model with role-based access."""
 

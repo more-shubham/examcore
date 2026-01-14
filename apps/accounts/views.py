@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import View
 
-from apps.exams.models import Exam
+from apps.exams.models import Exam, ExamAttempt
 from apps.questions.models import Question
 
 from .forms import (
@@ -22,9 +22,10 @@ from .forms import (
     ResetPasswordForm,
     SchoolSetupForm,
     SetPasswordForm,
+    SubjectForm,
     VerifyOTPForm,
 )
-from .models import Class, Invitation, OTPVerification, School
+from .models import Class, Invitation, OTPVerification, School, Subject
 
 User = get_user_model()
 
@@ -496,14 +497,29 @@ class DashboardView(LoginRequiredMixin, View):
         user = request.user
         school = School.get_instance()
 
-        # Student dashboard - simplified view
+        # Student dashboard - with exam data
         if user.is_student:
+            # Get exams for student's class (via subject)
+            student_exams = Exam.objects.filter(
+                subject__assigned_class=user.assigned_class,
+                status=Exam.Status.PUBLISHED,
+                is_active=True,
+            ).select_related("subject")
+            # Count active exams (currently running)
+            active_exams = [e for e in student_exams if e.is_running]
+            # Get student's attempts
+            attempts = ExamAttempt.objects.filter(student=user)
+            completed_attempts = attempts.filter(status=ExamAttempt.Status.SUBMITTED)
+
             return render(
                 request,
                 "accounts/dashboard_student.html",
                 {
                     "school": school,
                     "user": user,
+                    "active_exam_count": len(active_exams),
+                    "completed_exam_count": completed_attempts.count(),
+                    "total_exam_count": student_exams.count(),
                 },
             )
 
@@ -832,3 +848,64 @@ class ClassManagementView(AdminRequiredMixin, View):
             messages.error(request, "Failed to reorder classes.")
 
         return redirect("accounts:classes")
+
+
+class SubjectManagementView(AdminRequiredMixin, View):
+    """Subject management view - filtered by class."""
+
+    template_name = "accounts/subjects/management.html"
+
+    def get_class(self, class_id):
+        """Get the selected class from URL path."""
+        try:
+            return Class.objects.get(id=class_id, is_active=True)
+        except Class.DoesNotExist:
+            return None
+
+    def get(self, request, class_id):
+        selected_class = self.get_class(class_id)
+        if not selected_class:
+            messages.warning(request, "Class not found.")
+            return redirect("accounts:classes")
+
+        context = {
+            "selected_class": selected_class,
+            "subjects": Subject.objects.filter(assigned_class=selected_class),
+            "form": SubjectForm(),
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, class_id):
+        selected_class = self.get_class(class_id)
+        if not selected_class:
+            return redirect("accounts:classes")
+
+        action = request.POST.get("action")
+        if action == "add":
+            form = SubjectForm(request.POST)
+            if form.is_valid():
+                subject = form.save(commit=False)
+                subject.assigned_class = selected_class
+                subject.save()
+                messages.success(
+                    request, f"Subject '{subject.name}' added successfully."
+                )
+                return redirect("accounts:subjects", class_id=class_id)
+            context = {
+                "selected_class": selected_class,
+                "subjects": Subject.objects.filter(assigned_class=selected_class),
+                "form": form,
+                "show_modal": True,
+            }
+            return render(request, self.template_name, context)
+        elif action == "toggle_active":
+            subject_id = request.POST.get("subject_id")
+            try:
+                subject = Subject.objects.get(id=subject_id)
+                subject.is_active = not subject.is_active
+                subject.save()
+                status = "activated" if subject.is_active else "deactivated"
+                messages.success(request, f"Subject '{subject.name}' {status}.")
+            except Subject.DoesNotExist:
+                messages.error(request, "Subject not found.")
+        return redirect("accounts:subjects", class_id=class_id)

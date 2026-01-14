@@ -1,6 +1,6 @@
 from django import forms
 
-from apps.accounts.models import Class
+from apps.accounts.models import Subject
 
 from .models import Question
 
@@ -11,7 +11,7 @@ class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = [
-            "assigned_class",
+            "subject",
             "question_text",
             "option_a",
             "option_b",
@@ -20,7 +20,7 @@ class QuestionForm(forms.ModelForm):
             "correct_option",
         ]
         widgets = {
-            "assigned_class": forms.Select(attrs={"class": "form-input"}),
+            "subject": forms.Select(attrs={"class": "form-input"}),
             "question_text": forms.Textarea(
                 attrs={
                     "class": "form-input",
@@ -43,7 +43,7 @@ class QuestionForm(forms.ModelForm):
             "correct_option": forms.RadioSelect(),
         }
         labels = {
-            "assigned_class": "Class",
+            "subject": "Subject",
             "question_text": "Question",
             "option_a": "Option A",
             "option_b": "Option B",
@@ -54,5 +54,7 @@ class QuestionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["assigned_class"].queryset = Class.objects.filter(is_active=True)
-        self.fields["assigned_class"].empty_label = "Select a class"
+        self.fields["subject"].queryset = Subject.objects.filter(
+            is_active=True
+        ).select_related("assigned_class")
+        self.fields["subject"].empty_label = "Select a subject"

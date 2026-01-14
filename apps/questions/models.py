@@ -21,8 +21,8 @@ class Question(models.Model):
     correct_option = models.CharField(max_length=1, choices=Option.choices)
 
     # Relations
-    assigned_class = models.ForeignKey(
-        "accounts.Class",
+    subject = models.ForeignKey(
+        "accounts.Subject",
         on_delete=models.CASCADE,
         related_name="questions",
     )
@@ -44,7 +44,7 @@ class Question(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"{self.question_text[:50]}... ({self.assigned_class.name})"
+        return f"{self.question_text[:50]}... ({self.subject.name})"
 
     def get_correct_answer_text(self):
         """Return the text of the correct option."""
@@ -95,20 +95,18 @@ class Question(models.Model):
         return result
 
     @staticmethod
-    def get_random_questions(class_obj, count):
+    def get_random_questions(subject, count):
         """
-        Get random questions from a class for exam generation.
+        Get random questions from a subject for exam generation.
 
         Args:
-            class_obj: The Class instance to get questions from
+            subject: The Subject instance to get questions from
             count: Number of questions to select
 
         Returns:
             QuerySet of randomly selected questions
         """
-        all_questions = list(
-            Question.objects.filter(assigned_class=class_obj, is_active=True)
-        )
+        all_questions = list(Question.objects.filter(subject=subject, is_active=True))
 
         if len(all_questions) <= count:
             return all_questions

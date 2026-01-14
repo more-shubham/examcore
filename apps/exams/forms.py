@@ -1,6 +1,6 @@
 from django import forms
 
-from apps.accounts.models import Class
+from apps.accounts.models import Subject
 
 from .models import Exam
 
@@ -13,7 +13,7 @@ class ExamForm(forms.ModelForm):
         fields = [
             "title",
             "description",
-            "assigned_class",
+            "subject",
             "start_time",
             "end_time",
             "use_random_questions",
@@ -34,7 +34,7 @@ class ExamForm(forms.ModelForm):
                     "placeholder": "Optional description",
                 }
             ),
-            "assigned_class": forms.Select(attrs={"class": "form-input"}),
+            "subject": forms.Select(attrs={"class": "form-input"}),
             "start_time": forms.DateTimeInput(
                 attrs={
                     "class": "form-input",
@@ -68,7 +68,7 @@ class ExamForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["assigned_class"].queryset = Class.objects.filter(is_active=True)
+        self.fields["subject"].queryset = Subject.objects.filter(is_active=True)
 
         # Format datetime fields for editing
         if self.instance.pk:

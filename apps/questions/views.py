@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
-from apps.accounts.models import Class
+from apps.accounts.models import Subject
 
 from .forms import QuestionForm
 from .mixins import QuestionManagerRequiredMixin
@@ -11,20 +11,20 @@ from .models import Question
 
 
 class QuestionBankView(QuestionManagerRequiredMixin, View):
-    """View to list all questions with filtering by class."""
+    """View to list all questions with filtering by subject."""
 
     template_name = "questions/question_list.html"
     paginate_by = 20
 
     def get(self, request):
         questions = Question.objects.filter(is_active=True).select_related(
-            "assigned_class", "created_by"
+            "subject", "subject__assigned_class", "created_by"
         )
 
-        # Filter by class if provided
-        class_id = request.GET.get("class")
-        if class_id:
-            questions = questions.filter(assigned_class_id=class_id)
+        # Filter by subject if provided
+        subject_id = request.GET.get("subject")
+        if subject_id:
+            questions = questions.filter(subject_id=subject_id)
 
         # Search by question text
         search = request.GET.get("search")
@@ -36,13 +36,15 @@ class QuestionBankView(QuestionManagerRequiredMixin, View):
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
 
-        # Get all classes for filter dropdown
-        classes = Class.objects.filter(is_active=True)
+        # Get all subjects for filter dropdown
+        subjects = Subject.objects.filter(is_active=True).select_related(
+            "assigned_class"
+        )
 
         context = {
             "page_obj": page_obj,
-            "classes": classes,
-            "selected_class": class_id,
+            "subjects": subjects,
+            "selected_subject": subject_id,
             "search": search or "",
             "total_questions": questions.count(),
         }
@@ -56,10 +58,10 @@ class QuestionCreateView(QuestionManagerRequiredMixin, View):
 
     def get(self, request):
         form = QuestionForm()
-        # Pre-select class if provided in URL
-        class_id = request.GET.get("class")
-        if class_id:
-            form.fields["assigned_class"].initial = class_id
+        # Pre-select subject if provided in URL
+        subject_id = request.GET.get("subject")
+        if subject_id:
+            form.fields["subject"].initial = subject_id
         return render(request, self.template_name, {"form": form, "is_edit": False})
 
     def post(self, request):
