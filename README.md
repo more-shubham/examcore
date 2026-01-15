@@ -23,12 +23,6 @@
   <img src="https://img.shields.io/badge/status-alpha-orange.svg" alt="Status">
 </p>
 
-<br />
-
-<p align="center">
-  <img src=".github/screenshot.png" alt="ExamCore Screenshot" width="800">
-</p>
-
 ---
 
 ## Overview
