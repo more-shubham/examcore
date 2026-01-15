@@ -26,7 +26,7 @@
 <br />
 
 <p align="center">
-  <img src=".github/screenshot.png" alt="ExamCore Screenshot" width="800">
+  <img src=".github/screenshot.jpg" alt="ExamCore Screenshot" width="800">
 </p>
 
 ---
