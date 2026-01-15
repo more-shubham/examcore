@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" fill="none">
+  <!-- ExamCore Full Logo with Text -->
+  <!-- Icon Background -->
+  <rect x="2" y="5" width="40" height="40" rx="10" fill="#2563eb"/>
+  <!-- Graduation Cap -->
+  <path d="M22 14L8 20L22 26L36 20L22 14Z" fill="#ffffff" opacity="0.9"/>
+  <path d="M12 22V30C12 30 16 34 22 34C28 34 32 30 32 30V22" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+  <path d="M34 20V28" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="34" cy="30" r="1.5" fill="#ffffff"/>
+  <!-- Text: ExamCore -->
+  <text x="52" y="33" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#1e3a8a">Exam</text>
+  <text x="108" y="33" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#2563eb">Core</text>
+</svg>

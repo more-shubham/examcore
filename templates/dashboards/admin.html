@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - ExamCore{% endblock %}
+
+{% block content %}
+  <div class="space-y-6">
+  <!-- Welcome Header -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Welcome, {{ user.get_full_name|default:user.username }}!</h1>
+          <p class="text-gray-600">{{ institution.name }}</p>
+        </div>
+        {% if institution.logo %}
+          <img src="{{ institution.logo.url }}" alt="{{ institution.name }}" class="h-16 w-16 object-contain">
+        {% endif %}
+      </div>
+    </div>
+
+  <!-- Quick Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <a href="{% url 'questions:list' %}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:border-primary-300 transition-colors">
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Questions</p>
+        <p class="mt-2 text-3xl font-bold text-primary-600">{{ question_count }}</p>
+      </a>
+      <a href="{% url 'exams:list' %}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:border-indigo-300 transition-colors">
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Exams</p>
+        <p class="mt-2 text-3xl font-bold text-indigo-600">{{ exam_count }}</p>
+      </a>
+      <a href="{% url 'users:examiners' %}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:border-green-300 transition-colors">
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Examiners</p>
+        <p class="mt-2 text-3xl font-bold text-green-600">{{ examiner_count }}</p>
+      </a>
+      <a href="{% url 'users:teachers' %}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:border-blue-300 transition-colors">
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Teachers</p>
+        <p class="mt-2 text-3xl font-bold text-blue-600">{{ teacher_count }}</p>
+      </a>
+      <a href="{% url 'academic:classes' %}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:border-orange-300 transition-colors">
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Classes</p>
+        <p class="mt-2 text-3xl font-bold text-orange-600">{{ class_count }}</p>
+      </a>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Students</p>
+        <p class="mt-2 text-3xl font-bold text-purple-600">{{ student_count }}</p>
+      </div>
+    </div>
+
+  <!-- Quick Actions -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a href="{% url 'exams:add' %}" class="p-4 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors">
+          <div class="text-2xl mb-2">📝</div>
+          <div class="text-sm font-medium text-gray-700">Create Exam</div>
+        </a>
+        <a href="{% url 'questions:list' %}" class="p-4 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors">
+          <div class="text-2xl mb-2">❓</div>
+          <div class="text-sm font-medium text-gray-700">Question Bank</div>
+        </a>
+        <a href="{% url 'academic:classes' %}" class="p-4 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors">
+          <div class="text-2xl mb-2">👥</div>
+          <div class="text-sm font-medium text-gray-700">Manage Classes</div>
+        </a>
+        <a href="#" class="p-4 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors">
+          <div class="text-2xl mb-2">📊</div>
+          <div class="text-sm font-medium text-gray-700">View Results</div>
+        </a>
+      </div>
+    </div>
+
+  <!-- User Info -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Profile</h2>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <span class="text-gray-500">Username:</span>
+          <span class="font-medium text-gray-900 ml-2">{{ user.username }}</span>
+        </div>
+        <div>
+          <span class="text-gray-500">Email:</span>
+          <span class="font-medium text-gray-900 ml-2">{{ user.email }}</span>
+        </div>
+        <div>
+          <span class="text-gray-500">Role:</span>
+          <span class="font-medium text-gray-900 ml-2 capitalize">{{ user.role }}</span>
+        </div>
+        <div>
+          <span class="text-gray-500">Member since:</span>
+          <span class="font-medium text-gray-900 ml-2">{{ user.date_joined|date:"M d, Y" }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

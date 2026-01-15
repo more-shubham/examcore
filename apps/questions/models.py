@@ -1,5 +1,6 @@
 import secrets
 
+from django.conf import settings
 from django.db import models
 
 
@@ -22,12 +23,12 @@ class Question(models.Model):
 
     # Relations
     subject = models.ForeignKey(
-        "accounts.Subject",
+        "academic.Subject",
         on_delete=models.CASCADE,
         related_name="questions",
     )
     created_by = models.ForeignKey(
-        "accounts.User",
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="questions_created",
     )

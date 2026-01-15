@@ -1,6 +1,6 @@
 from django import forms
 
-from apps.accounts.models import Subject
+from apps.academic.models import Subject
 
 from .models import Exam
 

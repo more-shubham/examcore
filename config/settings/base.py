@@ -48,10 +48,18 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "apps.accounts",
-    "apps.exams",
+    # Core infrastructure
+    "apps.core",
+    # Domain apps
+    "apps.institution",
+    "apps.academic",
+    "apps.users",
+    "apps.invitations",
+    "apps.auth",
+    "apps.dashboards",
     "apps.questions",
-    "apps.results",
+    "apps.exams",
+    "apps.attempts",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -94,7 +102,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "apps.accounts.context_processors.school_context",
+                "apps.institution.context_processors.institution_context",
             ],
         },
     },
@@ -127,7 +135,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # AUTHENTICATION
 # =============================================================================
 
-AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "users.User"
 
 AUTH_PASSWORD_VALIDATORS = [
     {

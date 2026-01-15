@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- ExamCore Icon Only -->
+  <!-- Background -->
+  <rect x="2" y="2" width="44" height="44" rx="12" fill="#2563eb"/>
+  <!-- Graduation Cap -->
+  <path d="M24 12L6 20L24 28L42 20L24 12Z" fill="#ffffff" opacity="0.9"/>
+  <path d="M11 22V32C11 32 16 38 24 38C32 38 37 32 37 32V22" stroke="#ffffff" stroke-width="2" fill="none"/>
+  <path d="M40 20V30" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="40" cy="33" r="2" fill="#ffffff"/>
+</svg>

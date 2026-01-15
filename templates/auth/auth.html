@@ -1,0 +1,214 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-50">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if mode == 'login' %}Sign In{% elif mode == 'register' %}Create Account{% elif mode == 'verify' %}Verify Email{% else %}Setup Institution{% endif %} - ExamCore</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
+    <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#eff6ff',
+                100: '#dbeafe',
+                200: '#bfdbfe',
+                300: '#93c5fd',
+                400: '#60a5fa',
+                500: '#3b82f6',
+                600: '#2563eb',
+                700: '#1d4ed8',
+                800: '#1e40af',
+                900: '#1e3a8a',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style type="text/tailwindcss">
+      @layer components {
+        .form-input {
+          @apply block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500;
+        }
+        .form-input-otp {
+          @apply form-input text-center text-2xl tracking-widest;
+        }
+        .form-input-file {
+          @apply block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100;
+        }
+        .form-textarea {
+          @apply form-input resize-none;
+        }
+        .form-label {
+          @apply block text-sm font-medium text-gray-700 mb-2;
+        }
+        .btn-primary {
+          @apply w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors;
+        }
+        .btn-link {
+          @apply text-sm font-medium text-primary-600 hover:text-primary-700;
+        }
+        .alert-error {
+          @apply p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700;
+        }
+        .field-error {
+          @apply text-sm text-red-600 mt-1;
+        }
+      }
+    </style>
+  </head>
+  <body class="h-full">
+
+    {% if mode == 'login' %}
+  {# LOGIN - Centered layout #}
+      <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-md">
+          {% if messages %}
+            <div class="mb-6 space-y-2">
+              {% for message in messages %}
+                <div class="p-4 rounded-lg text-sm {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% elif message.tags == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+            {% include "components/forms/_login.html" with form=form institution=institution %}
+          </div>
+        </div>
+      </div>
+
+    {% else %}
+  {# REGISTRATION FLOW - Split screen layout #}
+      <div class="min-h-full flex">
+
+    {# Left Panel - Blue Branding #}
+        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 p-12 flex-col justify-between">
+          <div>
+        {# Logo/Brand #}
+            <div class="flex items-center space-x-3">
+              <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                <svg class="w-8 h-8 text-white" viewBox="0 0 32 32" fill="none">
+              {# ExamCore Logo: Graduation Cap - Academic Achievement #}
+                  <path d="M16 4L2 10L16 16L30 10L16 4Z" fill="currentColor" opacity="0.3"/>
+                  <path d="M16 4L2 10L16 16L30 10L16 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M6 12V20C6 20 10 24 16 24C22 24 26 20 26 20V12" stroke="currentColor" stroke-width="2"/>
+                  <path d="M28 10V18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="28" cy="20" r="2" fill="currentColor"/>
+                </svg>
+              </div>
+              <span class="text-2xl font-bold text-white">ExamCore</span>
+            </div>
+
+        {# Tagline #}
+            <div class="mt-16">
+              <h1 class="text-4xl font-bold text-white leading-tight">
+                Streamline Your<br>Examination Process
+              </h1>
+              <p class="mt-4 text-lg text-primary-100">
+                The complete examination management system for schools, colleges, and universities.
+              </p>
+            </div>
+
+        {# Features #}
+            <div class="mt-12 space-y-6">
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-white font-semibold">Question Bank Management</h3>
+                  <p class="text-primary-200 text-sm mt-1">Create, organize, and reuse questions across multiple exams</p>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-white font-semibold">Anti-Cheat Protection</h3>
+                  <p class="text-primary-200 text-sm mt-1">Randomized questions and options for each student</p>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-white font-semibold">Role-Based Access</h3>
+                  <p class="text-primary-200 text-sm mt-1">Separate dashboards for admins, examiners, teachers & students</p>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-white font-semibold">Instant Results</h3>
+                  <p class="text-primary-200 text-sm mt-1">Automatic grading with detailed performance analytics</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+      {# Footer #}
+          <div class="text-primary-200 text-sm">
+            Trusted by educational institutions worldwide
+          </div>
+        </div>
+
+    {# Right Panel - Form #}
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-12">
+          <div class="w-full max-w-md">
+
+        {# Messages #}
+            {% if messages %}
+              <div class="mb-6 space-y-2">
+                {% for message in messages %}
+                  <div class="p-4 rounded-lg text-sm {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% elif message.tags == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+        {# Form Card #}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+              {% if mode == 'register' %}
+                {% include "components/forms/_register.html" with form=form %}
+              {% elif mode == 'verify' %}
+                {% include "components/forms/_otp.html" with form=form email=pending_email resend_url="auth:resend_otp" %}
+              {% elif mode == 'institution' %}
+                {% include "components/forms/_institution.html" with form=form %}
+              {% endif %}
+            </div>
+
+        {# Mobile branding hint #}
+            <div class="lg:hidden mt-8 text-center">
+              <p class="text-sm text-gray-500">Setting up <span class="font-semibold text-primary-600">ExamCore</span></p>
+              <p class="text-xs text-gray-400 mt-1">Examination Management System</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+  </body>
+</html>

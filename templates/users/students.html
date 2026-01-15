@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Students - {{ selected_class.name }}{% endblock %}
+
+{% block content %}
+  <div class="space-y-6">
+  <!-- Header -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">{{ selected_class.name }}</h1>
+        <p class="text-gray-600">Students in this class</p>
+      </div>
+      <button type="button" onclick="document.getElementById('addModal').classList.remove('hidden')" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+        Invite Student
+      </button>
+    </div>
+
+  <!-- List -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+      <div class="p-6">
+        {% if users %}
+          <div class="space-y-2">
+            {% for u in users %}
+              <div class="flex items-center justify-between border border-gray-200 rounded-lg p-4">
+                <div>
+                  <div class="font-medium text-gray-900">{{ u.get_full_name }}</div>
+                  <div class="text-sm text-gray-500">{{ u.email }}</div>
+                </div>
+                <div class="flex items-center space-x-3">
+                  {% if u.is_active %}
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Active</span>
+                  {% else %}
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Inactive</span>
+                  {% endif %}
+                  <form method="post" class="inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle_active">
+                    <input type="hidden" name="user_id" value="{{ u.id }}">
+                    <button type="submit" class="text-sm {% if u.is_active %}text-red-600 hover:text-red-700{% else %}text-green-600 hover:text-green-700{% endif %}">
+                      {% if u.is_active %}Deactivate{% else %}Activate{% endif %}
+                    </button>
+                  </form>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="text-center py-12">
+            <h3 class="text-sm font-medium text-gray-900">No students in {{ selected_class.name }}</h3>
+            <p class="mt-1 text-sm text-gray-500">Get started by adding a student.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+<!-- Add Modal -->
+  <div id="addModal" class="fixed inset-0 z-50 overflow-y-auto {% if not show_modal %}hidden{% endif %}">
+    <div class="flex items-center justify-center min-h-screen px-4">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75" onclick="document.getElementById('addModal').classList.add('hidden')"></div>
+      <div class="relative bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Invite Student to {{ selected_class.name }}</h3>
+          <button type="button" onclick="document.getElementById('addModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-500">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+        <p class="text-sm text-gray-500 mb-4">The student will receive an email to set their password.</p>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add">
+          {{ form.assigned_class }}
+          <div class="space-y-4">
+            <div>{{ form.email }}</div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>{{ form.first_name }}</div>
+              <div>{{ form.last_name }}</div>
+            </div>
+            <div>{{ form.phone }}</div>
+          </div>
+          <button type="submit" class="w-full mt-6 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+            Send Invite
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

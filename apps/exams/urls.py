@@ -12,26 +12,4 @@ urlpatterns = [
     path("<int:pk>/edit/", views.ExamUpdateView.as_view(), name="edit"),
     path("<int:pk>/delete/", views.ExamDeleteView.as_view(), name="delete"),
     path("<int:pk>/questions/", views.ExamQuestionsView.as_view(), name="questions"),
-    # Student URLs
-    path("student/", views.StudentExamListView.as_view(), name="student_list"),
-    path(
-        "student/<int:pk>/start/",
-        views.StudentStartExamView.as_view(),
-        name="student_start",
-    ),
-    path(
-        "student/<int:pk>/take/",
-        views.StudentExamView.as_view(),
-        name="student_take",
-    ),
-    path(
-        "student/<int:pk>/submit/",
-        views.StudentSubmitExamView.as_view(),
-        name="student_submit",
-    ),
-    path(
-        "student/<int:pk>/result/",
-        views.StudentResultView.as_view(),
-        name="student_result",
-    ),
 ]

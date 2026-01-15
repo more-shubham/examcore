@@ -1,5 +1,5 @@
 {# OTP verification form component - reusable for email verify and forgot password #}
-{# Usage: {% include "components/forms/_otp.html" with form=form email=email resend_url="accounts:resend_otp" %} #}
+{# Usage: {% include "components/forms/_otp.html" with form=form email=email resend_url="auth:resend_otp" %} #}
 
 <div class="text-center mb-8">
   <h2 class="text-2xl font-bold text-gray-900">Verify Your Email</h2>
@@ -15,7 +15,7 @@
     {{ form.otp }}
     {% if form.otp.errors %}
       {% for error in form.otp.errors %}
-      <p class="field-error text-center">{{ error }}</p>
+        <p class="field-error text-center">{{ error }}</p>
       {% endfor %}
     {% endif %}
   </div>
