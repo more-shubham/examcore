@@ -1,0 +1,40 @@
+{% comment %}
+Status badge component for displaying various statuses.
+
+Usage:
+  {% include 'components/ui/_status_badge.html' with status="active" %}
+  {% include 'components/ui/_status_badge.html' with status="draft" label="Draft" %}
+  {% include 'components/ui/_status_badge.html' with is_active=user.is_active %}
+
+Parameters:
+  - status: Status string - 'active', 'inactive', 'draft', 'published', 'pending', 'running', 'upcoming', 'ended'
+  - label: Custom label text (optional, defaults to capitalized status)
+  - is_active: Boolean for simple active/inactive status (alternative to status parameter)
+{% endcomment %}
+{% if is_active is not None %}
+  {% if is_active %}
+    <span class="status-active">Active</span>
+  {% else %}
+    <span class="status-inactive">Inactive</span>
+  {% endif %}
+{% else %}
+  {% if status == 'active' or status == 'Active' %}
+    <span class="status-active">{{ label|default:"Active" }}</span>
+  {% elif status == 'inactive' or status == 'Inactive' %}
+    <span class="status-inactive">{{ label|default:"Inactive" }}</span>
+  {% elif status == 'draft' or status == 'Draft' %}
+    <span class="badge-gray">{{ label|default:"Draft" }}</span>
+  {% elif status == 'published' or status == 'Published' %}
+    <span class="badge-success">{{ label|default:"Published" }}</span>
+  {% elif status == 'pending' or status == 'Pending' %}
+    <span class="badge-warning">{{ label|default:"Pending" }}</span>
+  {% elif status == 'running' or status == 'Running' %}
+    <span class="badge-success">{{ label|default:"Running" }}</span>
+  {% elif status == 'upcoming' or status == 'Upcoming' %}
+    <span class="badge-info">{{ label|default:"Upcoming" }}</span>
+  {% elif status == 'ended' or status == 'Ended' %}
+    <span class="badge-danger">{{ label|default:"Ended" }}</span>
+  {% else %}
+    <span class="badge-gray">{{ label|default:status }}</span>
+  {% endif %}
+{% endif %}

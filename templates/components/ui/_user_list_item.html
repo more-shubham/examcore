@@ -1,0 +1,36 @@
+{% comment %}
+User list item component for displaying user in a list with actions.
+
+Usage:
+  {% include 'components/ui/_user_list_item.html' with user=u show_toggle=True %}
+
+Parameters:
+  - user: User object (required)
+  - show_toggle: Show activate/deactivate toggle (default: True)
+  - show_email: Show email address (default: True)
+  - extra_info: Additional info to display
+{% endcomment %}
+<div class="flex items-center justify-between border border-gray-200 rounded-lg p-4">
+  <div>
+    <div class="font-medium text-gray-900">{{ user.get_full_name }}</div>
+    {% if show_email != False %}
+      <div class="text-sm text-gray-500">{{ user.email }}</div>
+    {% endif %}
+    {% if extra_info %}
+      <div class="text-xs text-gray-400 mt-1">{{ extra_info }}</div>
+    {% endif %}
+  </div>
+  <div class="flex items-center space-x-3">
+    {% include 'components/ui/_status_badge.html' with is_active=user.is_active %}
+    {% if show_toggle != False %}
+      <form method="post" class="inline">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="toggle_active">
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+        <button type="submit" class="text-sm {% if user.is_active %}text-red-600 hover:text-red-700{% else %}text-green-600 hover:text-green-700{% endif %}">
+          {% if user.is_active %}Deactivate{% else %}Activate{% endif %}
+        </button>
+      </form>
+    {% endif %}
+  </div>
+</div>

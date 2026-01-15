@@ -1,0 +1,25 @@
+{% comment %}
+Filter form component for list views.
+
+Usage:
+  {% include 'components/ui/_filter_form.html' with clear_url=list_url %}
+
+This is a wrapper that provides the card styling and clear button.
+The actual filter fields should be passed via template blocks or slots.
+
+Parameters:
+  - clear_url: URL to clear all filters (required)
+  - show_clear: Boolean to show/hide clear button (optional)
+{% endcomment %}
+<div class="card p-4">
+  <form method="get" class="flex flex-wrap items-end gap-4">
+    {{ filter_fields }}
+    {% if show_clear %}
+      <div>
+        <a href="{{ clear_url }}" class="btn-secondary py-3">
+          Clear Filters
+        </a>
+      </div>
+    {% endif %}
+  </form>
+</div>

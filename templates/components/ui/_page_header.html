@@ -1,0 +1,40 @@
+{% comment %}
+Page header component with title, subtitle, and optional action button.
+
+Usage:
+  {% include 'components/ui/_page_header.html' with title="Exams" subtitle="10 exams" %}
+
+  With action:
+  {% include 'components/ui/_page_header.html' with title="Exams" subtitle="10 exams" action_url=add_url action_text="Create Exam" %}
+
+Parameters:
+  - title: Page title (required)
+  - subtitle: Optional subtitle or count
+  - action_url: URL for the action button (optional)
+  - action_text: Text for the action button (optional)
+  - action_onclick: JavaScript onclick handler instead of URL (optional)
+{% endcomment %}
+<div class="flex items-center justify-between">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900">{{ title }}</h1>
+    {% if subtitle %}
+      <p class="text-gray-600">{{ subtitle }}</p>
+    {% endif %}
+  </div>
+  {% if action_url or action_onclick %}
+    {% if action_url %}
+      <a href="{{ action_url }}" class="btn-primary">
+    {% else %}
+      <button type="button" onclick="{{ action_onclick }}" class="btn-primary">
+    {% endif %}
+    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+    </svg>
+    {{ action_text }}
+    {% if action_url %}
+      </a>
+    {% else %}
+      </button>
+    {% endif %}
+  {% endif %}
+</div>

@@ -1,0 +1,36 @@
+{% comment %}
+Pagination component for list views.
+
+Usage:
+  {% include 'components/ui/_pagination.html' with page_obj=page_obj %}
+  {% include 'components/ui/_pagination.html' with page_obj=page_obj extra_params="&subject=1&status=draft" %}
+
+Parameters:
+  - page_obj: Django paginator page object (required)
+  - extra_params: Additional URL query parameters to preserve (optional)
+{% endcomment %}
+{% if page_obj.has_other_pages %}
+  <nav class="flex items-center justify-center space-x-2" aria-label="Pagination">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}{{ extra_params }}"
+         class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Previous
+      </a>
+    {% endif %}
+    <span class="text-sm text-gray-600">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{{ extra_params }}"
+         class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+        Next
+        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+    {% endif %}
+  </nav>
+{% endif %}

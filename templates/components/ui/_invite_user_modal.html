@@ -1,0 +1,54 @@
+{% comment %}
+Invite user modal component for adding teachers/examiners.
+
+Usage:
+  {% include 'components/ui/_invite_user_modal.html' with modal_id="addModal" role_name="Teacher" form=form show_modal=show_modal %}
+
+Parameters:
+  - modal_id: Unique ID for the modal (required)
+  - role_name: Role being invited - "Teacher", "Examiner", etc. (required)
+  - form: Django form object with email, first_name, last_name, phone fields (required)
+  - show_modal: Boolean to show/hide modal initially (default: hidden)
+{% endcomment %}
+<div id="{{ modal_id }}" class="fixed inset-0 z-50 overflow-y-auto {% if not show_modal %}hidden{% endif %}" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen px-4 py-6">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+         onclick="document.getElementById('{{ modal_id }}').classList.add('hidden')"
+         aria-hidden="true"></div>
+
+    <!-- Modal Panel -->
+    <div class="relative bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900">Invite {{ role_name }}</h3>
+        <button type="button"
+                onclick="document.getElementById('{{ modal_id }}').classList.add('hidden')"
+                class="text-gray-400 hover:text-gray-500 focus:outline-none">
+          <span class="sr-only">Close</span>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <p class="text-sm text-gray-500 mb-4">The {{ role_name|lower }} will receive an email to set their password.</p>
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add">
+        <div class="space-y-4">
+          <div>{{ form.email }}</div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>{{ form.first_name }}</div>
+            <div>{{ form.last_name }}</div>
+          </div>
+          <div>{{ form.phone }}</div>
+        </div>
+        <button type="submit" class="btn-primary btn-full mt-6">
+          Send Invite
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

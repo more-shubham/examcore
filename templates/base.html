@@ -6,48 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% if institution %}{{ institution.name }}{% else %}ExamCore{% endif %}{% endblock %}</title>
     <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: {
-                50: '#eff6ff',
-                100: '#dbeafe',
-                200: '#bfdbfe',
-                300: '#93c5fd',
-                400: '#60a5fa',
-                500: '#3b82f6',
-                600: '#2563eb',
-                700: '#1d4ed8',
-                800: '#1e40af',
-                900: '#1e3a8a',
-              }
-            }
-          }
-        }
-      }
-    </script>
-    <style type="text/tailwindcss">
-      @layer components {
-        .form-input {
-          @apply block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500;
-        }
-        .form-textarea {
-          @apply form-input resize-none;
-        }
-        .form-label {
-          @apply block text-sm font-medium text-gray-700 mb-2;
-        }
-        .form-checkbox {
-          @apply h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500;
-        }
-        .field-error {
-          @apply text-sm text-red-600 mt-1;
-        }
-      }
-    </style>
+    {% include 'components/base/_head_styles.html' %}
     {% block extra_css %}{% endblock %}
   </head>
   <body class="h-full bg-gray-50 flex flex-col">

@@ -4,13 +4,13 @@
 
 {% block content %}
   <div class="space-y-6">
-  <!-- Header -->
+    <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
         <h1 class="text-2xl font-bold text-gray-900">Exams</h1>
         <p class="text-gray-600">{{ total_exams }} exam{{ total_exams|pluralize }}</p>
       </div>
-      <a href="{% url 'exams:add' %}{% if selected_subject %}?subject={{ selected_subject }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+      <a href="{% url 'exams:add' %}{% if selected_subject %}?subject={{ selected_subject }}{% endif %}" class="btn-primary">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
         </svg>
@@ -18,8 +18,8 @@
       </a>
     </div>
 
-  <!-- Filters -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+    <!-- Filters -->
+    <div class="card p-4">
       <form method="get" class="flex flex-wrap items-end gap-4">
         <div class="flex-1 min-w-[200px]">
           <label for="subject" class="form-label">Filter by Subject</label>
@@ -40,32 +40,22 @@
         </div>
         {% if selected_subject or selected_status %}
           <div>
-            <a href="{% url 'exams:list' %}" class="inline-flex items-center px-4 py-3 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
-              Clear Filters
-            </a>
+            <a href="{% url 'exams:list' %}" class="btn-secondary py-3">Clear Filters</a>
           </div>
         {% endif %}
       </form>
     </div>
 
-  <!-- Exams List -->
+    <!-- Exams List -->
     {% if page_obj %}
       <div class="space-y-4">
         {% for exam in page_obj %}
-          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div class="card card-body">
             <div class="flex items-start justify-between">
               <div class="flex-1">
                 <div class="flex items-center space-x-2 mb-2">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                    {{ exam.subject.name }}
-                  </span>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                               {% if exam.status_display == 'Draft' %}bg-gray-100 text-gray-800
-                               {% elif exam.status_display == 'Upcoming' %}bg-blue-100 text-blue-800
-                               {% elif exam.status_display == 'Running' %}bg-green-100 text-green-800
-                               {% else %}bg-red-100 text-red-800{% endif %}">
-                    {{ exam.status_display }}
-                  </span>
+                  <span class="badge-primary">{{ exam.subject.name }}</span>
+                  {% include 'components/ui/_status_badge.html' with status=exam.status_display %}
                 </div>
                 <a href="{% url 'exams:detail' exam.pk %}" class="text-lg font-medium text-gray-900 hover:text-primary-600">
                   {{ exam.title }}
@@ -94,16 +84,10 @@
                 </p>
               </div>
               <div class="flex items-center space-x-2 ml-4">
-                <a href="{% url 'exams:detail' exam.pk %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-50 rounded-lg hover:bg-gray-100">
-                  View
-                </a>
+                <a href="{% url 'exams:detail' exam.pk %}" class="btn-ghost btn-sm">View</a>
                 {% if user.is_admin or exam.created_by == user %}
-                  <a href="{% url 'exams:edit' exam.pk %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100">
-                    Edit
-                  </a>
-                  <a href="{% url 'exams:delete' exam.pk %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100">
-                    Delete
-                  </a>
+                  <a href="{% url 'exams:edit' exam.pk %}" class="btn-sm text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-lg">Edit</a>
+                  <a href="{% url 'exams:delete' exam.pk %}" class="btn-danger btn-sm">Delete</a>
                 {% endif %}
               </div>
             </div>
@@ -111,11 +95,12 @@
         {% endfor %}
       </div>
 
-  <!-- Pagination -->
+      <!-- Pagination -->
       {% if page_obj.has_other_pages %}
-        <div class="flex items-center justify-center space-x-2">
+        <nav class="flex items-center justify-center space-x-2" aria-label="Pagination">
           {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
+               class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
               Previous
             </a>
           {% endif %}
@@ -123,22 +108,23 @@
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
           </span>
           {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
+               class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
               Next
             </a>
           {% endif %}
-        </div>
+        </nav>
       {% endif %}
 
     {% else %}
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+      <div class="card p-12 text-center">
         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
         </svg>
         <h3 class="mt-2 text-sm font-medium text-gray-900">No exams found</h3>
         <p class="mt-1 text-sm text-gray-500">Get started by creating your first exam.</p>
         <div class="mt-6">
-          <a href="{% url 'exams:add' %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+          <a href="{% url 'exams:add' %}" class="btn-primary">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
             </svg>

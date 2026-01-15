@@ -1,0 +1,53 @@
+{% comment %}
+Reusable modal dialog component.
+
+Usage:
+  {% include 'components/ui/_modal.html' with modal_id="addModal" modal_title="Add Item" modal_description="Enter details below." show_modal=show_modal %}
+
+Then define the modal content in your template:
+  {% block modal_content %}
+    <form method="post">...</form>
+  {% endblock %}
+
+Parameters:
+  - modal_id: Unique ID for the modal (required)
+  - modal_title: Modal header title (required)
+  - modal_description: Optional description text below title
+  - show_modal: Boolean to show/hide modal initially (default: hidden)
+  - modal_size: Size class - 'sm', 'md' (default), 'lg', 'xl'
+{% endcomment %}
+<div id="{{ modal_id }}" class="fixed inset-0 z-50 overflow-y-auto {% if not show_modal %}hidden{% endif %}" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen px-4 py-6">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+         onclick="document.getElementById('{{ modal_id }}').classList.add('hidden')"
+         aria-hidden="true"></div>
+
+    <!-- Modal Panel -->
+    <div class="relative bg-white rounded-xl shadow-xl w-full p-6
+                {% if modal_size == 'sm' %}max-w-sm
+                {% elif modal_size == 'lg' %}max-w-lg
+                {% elif modal_size == 'xl' %}max-w-xl
+                {% else %}max-w-md{% endif %}">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900">{{ modal_title }}</h3>
+        <button type="button"
+                onclick="document.getElementById('{{ modal_id }}').classList.add('hidden')"
+                class="text-gray-400 hover:text-gray-500 focus:outline-none">
+          <span class="sr-only">Close</span>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      {% if modal_description %}
+        <p class="text-sm text-gray-500 mb-4">{{ modal_description }}</p>
+      {% endif %}
+
+      <!-- Content slot -->
+      {{ modal_content }}
+    </div>
+  </div>
+</div>
