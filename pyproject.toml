@@ -46,11 +46,6 @@ dev = [
     "pre-commit>=3.6",
     "django-debug-toolbar>=4.2",
     "ipython>=8.0",
-    "pytest>=8.0",
-    "pytest-django>=4.8",
-    "pytest-cov>=4.1",
-    "factory-boy>=3.3",
-    "faker>=24.0",
 ]
 
 [project.urls]
@@ -117,10 +112,3 @@ exclude = [
 
 [tool.django-stubs]
 django_settings_module = "config.settings.production"
-
-# Pytest
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "config.settings.test"
-python_files = ["test_*.py", "*_test.py"]
-addopts = "-v --tb=short"
-testpaths = ["apps"]

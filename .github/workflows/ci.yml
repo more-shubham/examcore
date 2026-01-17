@@ -3,7 +3,7 @@
 # =============================================================================
 # Runs on every push and pull request to main branch:
 # - Lint: Black, isort, flake8, Bandit
-# - Test: pytest with PostgreSQL
+# - Test: Cypress E2E tests with PostgreSQL and Mailpit
 # - Build: Docker image build and cache
 # =============================================================================
 
@@ -53,7 +53,7 @@ jobs:
         run: bandit -r apps/ -c pyproject.toml || bandit -r apps/ -ll
 
   test:
-    name: Test
+    name: E2E Tests
     runs-on: ubuntu-latest
     needs: lint
     services:
@@ -71,6 +71,12 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+      mailpit:
+        image: axllent/mailpit:latest
+        ports:
+          - 8025:8025
+          - 1025:1025
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -81,15 +87,35 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
 
-      - name: Install dependencies
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
 
-      - name: Run tests with coverage
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Run migrations
         env:
-          DJANGO_SETTINGS_MODULE: config.settings.test
-          SECRET_KEY: test-secret-key-for-ci-only-not-for-production-use-12345
+          DJANGO_SETTINGS_MODULE: config.settings.development
+          SECRET_KEY: test-secret-key-for-ci
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          DB_HOST: localhost
+          DB_PORT: 5432
+        run: python manage.py migrate
+
+      - name: Start Django server
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.development
+          SECRET_KEY: test-secret-key-for-ci
           POSTGRES_DB: ${{ env.POSTGRES_DB }}
           POSTGRES_USER: ${{ env.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
@@ -98,14 +124,28 @@ jobs:
           EMAIL_HOST: localhost
           EMAIL_PORT: 1025
         run: |
-          pytest --cov=apps --cov-report=xml --cov-report=term-missing -v
+          python manage.py runserver &
+          sleep 5
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+      - name: Run Cypress tests
+        env:
+          CYPRESS_BASE_URL: http://localhost:8000
+          MAILPIT_URL: http://localhost:8025
+        run: npx cypress run
+
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
         with:
-          file: ./coverage.xml
-          fail_ci_if_error: false
-        continue-on-error: true
+          name: cypress-screenshots
+          path: cypress/screenshots
+
+      - name: Upload Cypress videos
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
 
   build:
     name: Build Docker Image
