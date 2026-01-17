@@ -104,7 +104,7 @@ jobs:
       - name: Run migrations
         env:
           DJANGO_SETTINGS_MODULE: config.settings.ci
-          SECRET_KEY: test-secret-key-for-ci
+          SECRET_KEY: test-secret-key-for-ci-only-not-for-production-use-1234567890
           POSTGRES_DB: ${{ env.POSTGRES_DB }}
           POSTGRES_USER: ${{ env.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
@@ -115,7 +115,7 @@ jobs:
       - name: Start Django server
         env:
           DJANGO_SETTINGS_MODULE: config.settings.ci
-          SECRET_KEY: test-secret-key-for-ci
+          SECRET_KEY: test-secret-key-for-ci-only-not-for-production-use-1234567890
           POSTGRES_DB: ${{ env.POSTGRES_DB }}
           POSTGRES_USER: ${{ env.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
