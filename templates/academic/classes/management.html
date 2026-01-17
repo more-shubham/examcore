@@ -35,9 +35,6 @@
                 </div>
                 <div class="flex items-center space-x-3">
                   {% if cls.student_count %}<span class="text-sm font-medium text-gray-500">{{ cls.student_count }} students</span>{% endif %}
-                  <a href="{% url 'academic:subjects' class_id=cls.id %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-green-600 bg-green-50 rounded-lg hover:bg-green-100">
-                    Subjects
-                  </a>
                   <a href="{% url 'users:students' class_id=cls.id %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100">
                     Students
                   </a>
