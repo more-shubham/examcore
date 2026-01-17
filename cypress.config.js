@@ -26,12 +26,12 @@ module.exports = defineConfig({
         // Reset database - flush all data
         resetDatabase() {
           const projectRoot = path.resolve(__dirname);
-          const venvPython = path.join(projectRoot, '.venv', 'bin', 'python');
+          const pythonPath = process.env.CI ? 'python' : path.join(projectRoot, '.venv', 'bin', 'python');
           const managePy = path.join(projectRoot, 'manage.py');
 
           try {
             console.log('Flushing database...');
-            execSync(`${venvPython} ${managePy} flush --no-input`, {
+            execSync(`${pythonPath} ${managePy} flush --no-input`, {
               cwd: projectRoot,
               stdio: 'inherit',
             });
@@ -46,7 +46,7 @@ module.exports = defineConfig({
         // Setup admin user and institution for tests (programmatic, no UI)
         setupAdminUser({ email, password }) {
           const projectRoot = path.resolve(__dirname);
-          const venvPython = path.join(projectRoot, '.venv', 'bin', 'python');
+          const pythonPath = process.env.CI ? 'python' : path.join(projectRoot, '.venv', 'bin', 'python');
           const managePy = path.join(projectRoot, 'manage.py');
           const fs = require('fs');
 
@@ -117,7 +117,7 @@ else:
 
           try {
             console.log('Setting up admin user...');
-            execSync(`${venvPython} ${managePy} shell -c "${pythonScript}"`, {
+            execSync(`${pythonPath} ${managePy} shell -c "${pythonScript}"`, {
               cwd: projectRoot,
               stdio: 'inherit',
             });
@@ -132,7 +132,7 @@ else:
         // Seed database with test data using seed_cypress command
         seedDatabase() {
           const projectRoot = path.resolve(__dirname);
-          const venvPython = path.join(projectRoot, '.venv', 'bin', 'python');
+          const pythonPath = process.env.CI ? 'python' : path.join(projectRoot, '.venv', 'bin', 'python');
           const managePy = path.join(projectRoot, 'manage.py');
           const fs = require('fs');
 
@@ -153,7 +153,7 @@ else:
 
           try {
             console.log('Seeding database...');
-            execSync(`${venvPython} ${managePy} seed_cypress`, {
+            execSync(`${pythonPath} ${managePy} seed_cypress`, {
               cwd: projectRoot,
               stdio: 'inherit',
             });
