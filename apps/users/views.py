@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views import View
 
 from apps.academic.models import Class
@@ -18,12 +19,18 @@ class ExaminerManagementView(AdminRequiredMixin, View):
 
     def get(self, request):
         examiners = User.objects.filter(role=User.Role.EXAMINER)
+        pending_invitations = Invitation.objects.filter(
+            role=User.Role.EXAMINER,
+            accepted_at__isnull=True,
+            expires_at__gt=timezone.now(),
+        )
         form = AddExaminerForm()
         return render(
             request,
             self.template_name,
             {
                 "examiners": examiners,
+                "pending_invitations": pending_invitations,
                 "form": form,
             },
         )
@@ -42,18 +49,30 @@ class ExaminerManagementView(AdminRequiredMixin, View):
                     role=User.Role.EXAMINER,
                     invited_by=request.user,
                 )
-                EmailService.send_invitation_email(
+                invite_url = request.build_absolute_uri(invitation.get_invite_url())
+                email_sent = EmailService.send_invitation_email(
                     invitation.email,
-                    invitation.get_invite_url(),
+                    invite_url,
                     request.user.get_full_name(),
                 )
-                messages.success(request, f"Invitation sent to {invitation.email}")
+                if email_sent:
+                    messages.success(request, f"Invitation sent to {invitation.email}")
+                else:
+                    messages.warning(
+                        request,
+                        f"Invitation created but email could not be sent to {invitation.email}",
+                    )
                 return redirect("users:examiners")
             return render(
                 request,
                 self.template_name,
                 {
                     "examiners": User.objects.filter(role=User.Role.EXAMINER),
+                    "pending_invitations": Invitation.objects.filter(
+                        role=User.Role.EXAMINER,
+                        accepted_at__isnull=True,
+                        expires_at__gt=timezone.now(),
+                    ),
                     "form": form,
                     "show_modal": True,
                 },
@@ -77,12 +96,18 @@ class TeacherManagementView(AdminRequiredMixin, View):
 
     def get(self, request):
         teachers = User.objects.filter(role=User.Role.TEACHER)
+        pending_invitations = Invitation.objects.filter(
+            role=User.Role.TEACHER,
+            accepted_at__isnull=True,
+            expires_at__gt=timezone.now(),
+        )
         form = AddTeacherForm()
         return render(
             request,
             self.template_name,
             {
                 "teachers": teachers,
+                "pending_invitations": pending_invitations,
                 "form": form,
             },
         )
@@ -101,18 +126,30 @@ class TeacherManagementView(AdminRequiredMixin, View):
                     role=User.Role.TEACHER,
                     invited_by=request.user,
                 )
-                EmailService.send_invitation_email(
+                invite_url = request.build_absolute_uri(invitation.get_invite_url())
+                email_sent = EmailService.send_invitation_email(
                     invitation.email,
-                    invitation.get_invite_url(),
+                    invite_url,
                     request.user.get_full_name(),
                 )
-                messages.success(request, f"Invitation sent to {invitation.email}")
+                if email_sent:
+                    messages.success(request, f"Invitation sent to {invitation.email}")
+                else:
+                    messages.warning(
+                        request,
+                        f"Invitation created but email could not be sent to {invitation.email}",
+                    )
                 return redirect("users:teachers")
             return render(
                 request,
                 self.template_name,
                 {
                     "teachers": User.objects.filter(role=User.Role.TEACHER),
+                    "pending_invitations": Invitation.objects.filter(
+                        role=User.Role.TEACHER,
+                        accepted_at__isnull=True,
+                        expires_at__gt=timezone.now(),
+                    ),
                     "form": form,
                     "show_modal": True,
                 },
@@ -142,6 +179,12 @@ class StudentManagementView(AdminRequiredMixin, View):
         students = User.objects.filter(
             role=User.Role.STUDENT, assigned_class=selected_class
         )
+        pending_invitations = Invitation.objects.filter(
+            role=User.Role.STUDENT,
+            assigned_class=selected_class,
+            accepted_at__isnull=True,
+            expires_at__gt=timezone.now(),
+        )
         form = AddStudentForm(initial={"assigned_class": selected_class})
         return render(
             request,
@@ -149,6 +192,7 @@ class StudentManagementView(AdminRequiredMixin, View):
             {
                 "selected_class": selected_class,
                 "students": students,
+                "pending_invitations": pending_invitations,
                 "form": form,
             },
         )
@@ -169,12 +213,19 @@ class StudentManagementView(AdminRequiredMixin, View):
                     invited_by=request.user,
                     assigned_class=selected_class,
                 )
-                EmailService.send_invitation_email(
+                invite_url = request.build_absolute_uri(invitation.get_invite_url())
+                email_sent = EmailService.send_invitation_email(
                     invitation.email,
-                    invitation.get_invite_url(),
+                    invite_url,
                     request.user.get_full_name(),
                 )
-                messages.success(request, f"Invitation sent to {invitation.email}")
+                if email_sent:
+                    messages.success(request, f"Invitation sent to {invitation.email}")
+                else:
+                    messages.warning(
+                        request,
+                        f"Invitation created but email could not be sent to {invitation.email}",
+                    )
                 return redirect("users:students", class_id=class_id)
             return render(
                 request,
@@ -183,6 +234,12 @@ class StudentManagementView(AdminRequiredMixin, View):
                     "selected_class": selected_class,
                     "students": User.objects.filter(
                         role=User.Role.STUDENT, assigned_class=selected_class
+                    ),
+                    "pending_invitations": Invitation.objects.filter(
+                        role=User.Role.STUDENT,
+                        assigned_class=selected_class,
+                        accepted_at__isnull=True,
+                        expires_at__gt=timezone.now(),
                     ),
                     "form": form,
                     "show_modal": True,

@@ -1,0 +1,25 @@
+id,name,description,class_ref,is_active
+dsu_co3,Data Structures (DSU),Data Structures Using C - Stacks Queues Trees Graphs,co_sem3,true
+dte_co3,Digital Techniques (DTE),Digital Electronics - Logic Gates Combinational Sequential Circuits,co_sem3,true
+ooj_co3,OOP with Java (OOJ),Object Oriented Programming Using Java - Classes Objects Inheritance,co_sem3,true
+cgr_co3,Computer Graphics (CGR),Computer Graphics - 2D 3D Transformations Clipping Curves,co_sem3,true
+dms_co4,DBMS (DMS),Database Management System - SQL Normalization ER Diagrams,co_sem4,true
+sen_co4,Software Engineering (SEN),Software Engineering - SDLC Models Testing Documentation,co_sem4,true
+osy_co4,Operating System (OSY),Operating System - Process Management Memory Scheduling,co_sem4,true
+cns_co4,Computer Networks (CNS),Computer Networks - OSI TCP/IP Routing Protocols,co_sem4,true
+dsu_if3,Data Structures (DSU),Data Structures - Arrays Linked Lists Trees Sorting,if_sem3,true
+ppr_if3,Python Programming (PPR),Python Programming - Basics OOP File Handling Libraries,if_sem3,true
+wbd_if3,Web Development (WBD),Web Development - HTML CSS JavaScript PHP MySQL,if_sem3,true
+dms_if3,DBMS (DMS),Database Management System - SQL PL/SQL Transactions,if_sem3,true
+adb_if4,Advanced DBMS (ADB),Advanced Database - NoSQL MongoDB Distributed Systems,if_sem4,true
+jav_if4,Java Programming (JAV),Core and Advanced Java - Servlets JSP JDBC,if_sem4,true
+ste_if4,Software Testing (STE),Software Testing - Manual Automation Selenium Testing Types,if_sem4,true
+mad_if4,Mobile App Dev (MAD),Mobile Application Development - Android Kotlin Flutter,if_sem4,true
+del_ej3,Digital Electronics (DEL),Digital Electronics - Number Systems Gates Flip-flops Counters,ej_sem3,true
+mic_ej3,Microprocessor (MIC),Microprocessor 8085/8086 - Architecture Programming Interfacing,ej_sem3,true
+eca_ej3,Electronic Circuits (ECA),Electronic Circuits and Applications - Amplifiers Oscillators,ej_sem3,true
+nal_ej3,Network Analysis (NAL),Network Analysis - Theorems Transient Analysis Resonance,ej_sem3,true
+mco_ej4,Microcontroller (MCO),Microcontroller 8051 - Architecture Programming Applications,ej_sem4,true
+dco_ej4,Digital Communication (DCO),Digital Communication - Modulation Multiplexing Error Detection,ej_sem4,true
+lic_ej4,Linear IC (LIC),Linear Integrated Circuits - Op-Amp 555 Timer Regulators,ej_sem4,true
+ems_ej4,Embedded Systems (EMS),Embedded Systems - ARM Architecture RTOS IoT Applications,ej_sem4,true

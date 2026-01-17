@@ -1,0 +1,15 @@
+student_ref,exam_ref,status,score,total_questions
+student_01,exam_ooj_ended,submitted,8,10
+student_02,exam_ooj_ended,submitted,7,10
+student_03,exam_ooj_ended,submitted,9,10
+student_04,exam_ooj_ended,submitted,6,10
+student_05,exam_ooj_ended,submitted,10,10
+student_06,exam_ppr_ended,submitted,5,6
+student_07,exam_ppr_ended,submitted,6,6
+student_08,exam_ppr_ended,submitted,4,6
+student_15,exam_ppr_ended,submitted,5,6
+student_16,exam_ppr_ended,submitted,6,6
+student_23,exam_mco_ended,submitted,5,6
+student_24,exam_mco_ended,submitted,6,6
+student_25,exam_mco_ended,submitted,4,6
+student_26,exam_mco_ended,submitted,5,6

@@ -1,0 +1,7 @@
+id,name,description,order,is_active
+co_sem3,CO - 3rd Semester,Computer Engineering Third Semester,1,true
+co_sem4,CO - 4th Semester,Computer Engineering Fourth Semester,2,true
+if_sem3,IF - 3rd Semester,Information Technology Third Semester,3,true
+if_sem4,IF - 4th Semester,Information Technology Fourth Semester,4,true
+ej_sem3,EJ - 3rd Semester,Electronics & Telecom Third Semester,5,true
+ej_sem4,EJ - 4th Semester,Electronics & Telecom Fourth Semester,6,true

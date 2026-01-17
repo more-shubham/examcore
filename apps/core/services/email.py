@@ -1,7 +1,9 @@
-import smtplib
+import logging
 
 from django.conf import settings
 from django.core.mail import send_mail
+
+logger = logging.getLogger(__name__)
 
 
 class EmailService:
@@ -23,7 +25,8 @@ class EmailService:
                 fail_silently=False,
             )
             return True
-        except smtplib.SMTPException:
+        except Exception as e:
+            logger.error(f"Failed to send OTP email to {email}: {e}")
             return False
 
     @staticmethod
@@ -51,7 +54,8 @@ ExamCore Team
                 fail_silently=False,
             )
             return True
-        except smtplib.SMTPException:
+        except Exception as e:
+            logger.error(f"Failed to send invitation email to {email}: {e}")
             return False
 
     @staticmethod
@@ -68,5 +72,6 @@ ExamCore Team
                 fail_silently=False,
             )
             return True
-        except smtplib.SMTPException:
+        except Exception as e:
+            logger.error(f"Failed to send password reset email to {email}: {e}")
             return False

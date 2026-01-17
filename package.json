@@ -1,0 +1,23 @@
+{
+  "name": "examcore-e2e",
+  "version": "0.1.0",
+  "description": "E2E tests for ExamCore examination management system",
+  "private": true,
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run --headed",
+    "test": "cypress run --headed"
+  },
+  "devDependencies": {
+    "cypress": "^13.6.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "cypress",
+    "e2e",
+    "testing",
+    "examcore"
+  ]
+}

@@ -1,0 +1,193 @@
+id,question_text,subject_ref,created_by_ref,option_a,option_b,option_c,option_d,correct_option,is_active
+q_dsu01,Which data structure uses LIFO principle?,dsu_co3,examiner_01,Queue,Stack,Array,Linked List,b,true
+q_dsu02,Time complexity of binary search is:,dsu_co3,examiner_01,O(n),O(log n),O(n²),O(1),b,true
+q_dsu03,Which traversal visits root first then left then right?,dsu_co3,examiner_01,Inorder,Preorder,Postorder,Level order,b,true
+q_dsu04,In a circular queue the rear pointer after reaching end:,dsu_co3,examiner_01,Stops,Wraps to front,Overwrites,Throws error,b,true
+q_dsu05,Minimum number of queues needed for priority queue implementation:,dsu_co3,examiner_01,1,2,3,4,a,true
+q_dsu06,Which sorting algorithm has best average case O(n log n)?,dsu_co3,examiner_01,Bubble Sort,Insertion Sort,Quick Sort,Selection Sort,c,true
+q_dsu07,Height of a complete binary tree with n nodes is:,dsu_co3,examiner_01,n,log n,n/2,2^n,b,true
+q_dsu08,Linked list is best for:,dsu_co3,examiner_01,Random access,Sequential access,Binary search,Sorting,b,true
+q_dsu09,Stack overflow occurs when:,dsu_co3,examiner_01,Stack is empty,Stack is full,Pop on empty stack,Push on full stack,d,true
+q_dsu10,Infix expression A+B*C in postfix is:,dsu_co3,examiner_01,ABC*+,+A*BC,AB+C*,A+BC*,a,true
+q_dsu11,Graph traversal technique using queue is:,dsu_co3,examiner_01,DFS,BFS,Both,Neither,b,true
+q_dsu12,Number of edges in a complete graph with n vertices:,dsu_co3,examiner_01,n,n-1,n(n-1)/2,n²,c,true
+q_dte01,Binary equivalent of decimal 25 is:,dte_co3,examiner_01,10011,11001,10101,11011,b,true
+q_dte02,Universal gate that can implement any Boolean function:,dte_co3,examiner_01,AND,OR,NAND,XOR,c,true
+q_dte03,Output of XOR gate when both inputs are 1:,dte_co3,examiner_01,0,1,Undefined,High impedance,a,true
+q_dte04,Flip-flop that toggles on every clock pulse:,dte_co3,examiner_01,SR,D,JK with J=K=1,T,d,true
+q_dte05,De Morgan's theorem states A'.B' equals:,dte_co3,examiner_01,(A+B)',(A.B)',(A+B),(A.B),a,true
+q_dte06,Number of select lines for 8:1 multiplexer:,dte_co3,examiner_01,2,3,4,8,b,true
+q_dte07,Counter that counts from 0 to 9 is called:,dte_co3,examiner_01,Binary counter,Decade counter,Ring counter,Johnson counter,b,true
+q_dte08,Edge-triggered flip-flop changes state on:,dte_co3,examiner_01,High level,Low level,Clock edge,Both levels,c,true
+q_dte09,Half adder has how many outputs?,dte_co3,examiner_01,1,2,3,4,b,true
+q_dte10,BCD code for decimal 9 is:,dte_co3,examiner_01,1001,1010,1011,1111,a,true
+q_dte11,Shift register that can shift data in both directions:,dte_co3,examiner_01,SISO,SIPO,PISO,Bidirectional,d,true
+q_dte12,Gray code is used to avoid:,dte_co3,examiner_01,Noise,Glitches during transition,Power consumption,None,b,true
+q_ooj01,Which keyword is used to inherit a class in Java?,ooj_co3,examiner_01,implements,extends,inherits,super,b,true
+q_ooj02,Method that has same name as class and no return type:,ooj_co3,examiner_01,Static method,Constructor,Final method,Abstract method,b,true
+q_ooj03,Which OOP concept allows same method to behave differently?,ooj_co3,examiner_01,Encapsulation,Inheritance,Polymorphism,Abstraction,c,true
+q_ooj04,Interface methods are by default:,ooj_co3,examiner_01,Private,Protected,Public abstract,Static,c,true
+q_ooj05,Which collection class allows duplicate elements?,ooj_co3,examiner_01,Set,List,Map,HashSet,b,true
+q_ooj06,Exception handling uses which keywords?,ooj_co3,examiner_01,try catch throw,if else switch,for while do,break continue return,a,true
+q_ooj07,Final keyword when applied to variable means:,ooj_co3,examiner_01,Variable can be changed,Variable is constant,Variable is static,Variable is null,b,true
+q_ooj08,Multiple inheritance in Java is achieved through:,ooj_co3,examiner_01,Classes,Interfaces,Both,Neither,b,true
+q_ooj09,Which access modifier allows access within package only?,ooj_co3,examiner_01,Private,Public,Protected,Default,d,true
+q_ooj10,Abstract class can have:,ooj_co3,examiner_01,Only abstract methods,Only concrete methods,Both abstract and concrete,Neither,c,true
+q_ooj11,Thread class method that pauses execution:,ooj_co3,examiner_01,stop(),wait(),sleep(),pause(),c,true
+q_ooj12,Which wrapper class corresponds to int?,ooj_co3,examiner_01,Int,INTEGER,Integer,int,c,true
+q_cgr01,Scan conversion is the process of converting:,cgr_co3,examiner_01,Image to vector,Vector to pixels,Analog to digital,3D to 2D,b,true
+q_cgr02,DDA algorithm uses which operation heavily?,cgr_co3,examiner_01,Addition,Multiplication,Division,Floating point,d,true
+q_cgr03,Bresenham's line algorithm uses:,cgr_co3,examiner_01,Floating point,Integer arithmetic,Both,Neither,b,true
+q_cgr04,Which transformation does not change object shape?,cgr_co3,examiner_01,Scaling,Rotation,Shearing,Translation,d,true
+q_cgr05,Homogeneous coordinates use how many values for 2D point?,cgr_co3,examiner_01,2,3,4,1,b,true
+q_cgr06,Cohen-Sutherland algorithm is used for:,cgr_co3,examiner_01,Filling,Line clipping,Circle drawing,Scaling,b,true
+q_cgr07,Anti-aliasing is used to remove:,cgr_co3,examiner_01,Noise,Jagged edges,Distortion,All of above,b,true
+q_cgr08,Z-buffer algorithm is used for:,cgr_co3,examiner_01,Line drawing,Hidden surface removal,Clipping,Transformation,b,true
+q_cgr09,Bezier curve of degree n requires how many control points?,cgr_co3,examiner_01,n,n+1,n-1,2n,b,true
+q_cgr10,Reflection about X-axis changes:,cgr_co3,examiner_01,X coordinate,Y coordinate,Both,Neither,b,true
+q_cgr11,Parallel projection preserves:,cgr_co3,examiner_01,Size,Angles,Parallel lines,All of above,c,true
+q_cgr12,Viewing transformation converts from:,cgr_co3,examiner_01,Object to world,World to view,View to screen,All sequentially,b,true
+q_dms01,SQL command to retrieve data from table:,dms_co4,examiner_01,INSERT,SELECT,UPDATE,DELETE,b,true
+q_dms02,Primary key must be:,dms_co4,examiner_01,Unique only,Not null only,Unique and not null,None of above,c,true
+q_dms03,Which normal form eliminates transitive dependency?,dms_co4,examiner_01,1NF,2NF,3NF,BCNF,c,true
+q_dms04,ACID property where transaction completes fully or not at all:,dms_co4,examiner_01,Atomicity,Consistency,Isolation,Durability,a,true
+q_dms05,Foreign key references:,dms_co4,examiner_01,Same table primary key,Another table primary key,Any column,Unique column,b,true
+q_dms06,JOIN operation that returns all rows from left table:,dms_co4,examiner_01,INNER JOIN,LEFT JOIN,RIGHT JOIN,CROSS JOIN,b,true
+q_dms07,Index improves performance of:,dms_co4,examiner_01,INSERT,SELECT,DELETE,UPDATE,b,true
+q_dms08,View is a:,dms_co4,examiner_01,Physical table,Virtual table,Temporary table,System table,b,true
+q_dms09,Aggregate function that returns total count:,dms_co4,examiner_01,SUM,AVG,COUNT,MAX,c,true
+q_dms10,Relationship where one entity relates to many:,dms_co4,examiner_01,One-to-one,One-to-many,Many-to-many,Ternary,b,true
+q_dms11,DDL stands for:,dms_co4,examiner_01,Data Definition Language,Data Description Language,Database Definition Language,Dynamic Data Language,a,true
+q_dms12,Stored procedure is:,dms_co4,examiner_01,SQL query,Precompiled SQL,View,Index,b,true
+q_sen01,Which SDLC model is also called linear sequential?,sen_co4,examiner_01,Spiral,Agile,Waterfall,Prototype,c,true
+q_sen02,Requirement gathering is part of which phase?,sen_co4,examiner_01,Design,Analysis,Implementation,Testing,b,true
+q_sen03,Black box testing focuses on:,sen_co4,examiner_01,Code structure,Input/output,Both,Neither,b,true
+q_sen04,Which testing is done first?,sen_co4,examiner_01,Integration,System,Unit,Acceptance,c,true
+q_sen05,SRS document contains:,sen_co4,examiner_01,Design details,Requirements specifications,Code,Test cases,b,true
+q_sen06,Cohesion should be:,sen_co4,examiner_01,Low,High,Medium,Zero,b,true
+q_sen07,Coupling between modules should be:,sen_co4,examiner_01,High,Low,Maximum,None,b,true
+q_sen08,COCOMO model is used for:,sen_co4,examiner_01,Testing,Cost estimation,Design,Coding,b,true
+q_sen09,Version control tool example:,sen_co4,examiner_01,Git,Eclipse,JUnit,MySQL,a,true
+q_sen10,Agile methodology emphasizes:,sen_co4,examiner_01,Documentation,Iterative development,Waterfall,None,b,true
+q_sen11,UML diagram for showing object interactions:,sen_co4,examiner_01,Class diagram,Use case,Sequence diagram,ER diagram,c,true
+q_sen12,Regression testing is done:,sen_co4,examiner_01,Before development,After changes,Only once,Never,b,true
+q_osy01,Process state when waiting for I/O:,osy_co4,examiner_01,Running,Ready,Blocked,Terminated,c,true
+q_osy02,CPU scheduling algorithm giving shortest job priority:,osy_co4,examiner_01,FCFS,SJF,Round Robin,Priority,b,true
+q_osy03,Deadlock condition where process holds and waits:,osy_co4,examiner_01,Mutual exclusion,Hold and wait,No preemption,Circular wait,b,true
+q_osy04,Virtual memory uses:,osy_co4,examiner_01,RAM only,Disk as extension of RAM,Cache,ROM,b,true
+q_osy05,Page fault occurs when:,osy_co4,examiner_01,Page is in memory,Page is not in memory,Memory is full,Process terminates,b,true
+q_osy06,Semaphore operations are:,osy_co4,examiner_01,wait and signal,lock and unlock,start and stop,open and close,a,true
+q_osy07,Thrashing occurs when:,osy_co4,examiner_01,CPU is idle,Too much paging,Memory is empty,Process completes,b,true
+q_osy08,LRU stands for:,osy_co4,examiner_01,Last Recently Used,Least Recently Used,Less Readable Unit,Long Range Utility,b,true
+q_osy09,Time quantum is associated with:,osy_co4,examiner_01,FCFS,SJF,Round Robin,Priority,c,true
+q_osy10,Context switch involves:,osy_co4,examiner_01,Saving process state,Loading process state,Both,Neither,c,true
+q_osy11,Banker's algorithm is used for:,osy_co4,examiner_01,Memory management,Deadlock avoidance,CPU scheduling,File management,b,true
+q_osy12,Kernel is the:,osy_co4,examiner_01,User interface,Core of OS,Application,Shell,b,true
+q_cns01,OSI model has how many layers?,cns_co4,examiner_01,5,6,7,8,c,true
+q_cns02,TCP/IP model has how many layers?,cns_co4,examiner_02,4,5,6,7,a,true
+q_cns03,Which layer handles routing?,cns_co4,examiner_02,Data link,Network,Transport,Physical,b,true
+q_cns04,IP address belongs to which layer?,cns_co4,examiner_02,Physical,Data Link,Network,Transport,c,true
+q_cns05,HTTP uses which transport protocol?,cns_co4,examiner_02,UDP,TCP,ICMP,ARP,b,true
+q_cns06,Default subnet mask for Class C is:,cns_co4,examiner_02,255.0.0.0,255.255.0.0,255.255.255.0,255.255.255.255,c,true
+q_cns07,MAC address is how many bits?,cns_co4,examiner_02,32,48,64,128,b,true
+q_cns08,DHCP is used for:,cns_co4,examiner_02,Routing,Dynamic IP assignment,DNS resolution,File transfer,b,true
+q_cns09,Which device operates at network layer?,cns_co4,examiner_02,Hub,Switch,Router,Repeater,c,true
+q_cns10,FTP uses port number:,cns_co4,examiner_02,20 and 21,80,443,23,a,true
+q_cns11,DNS converts:,cns_co4,examiner_02,IP to MAC,Domain name to IP,IP to domain,MAC to IP,b,true
+q_cns12,Loopback IP address is:,cns_co4,examiner_02,192.168.1.1,10.0.0.1,127.0.0.1,255.255.255.255,c,true
+q_dsu_if01,Queue follows which principle?,dsu_if3,examiner_01,LIFO,FIFO,Random,Priority,b,true
+q_dsu_if02,Linked list node contains:,dsu_if3,examiner_01,Data only,Pointer only,Data and pointer,Neither,c,true
+q_dsu_if03,Worst case of quicksort is:,dsu_if3,examiner_01,O(n),O(n log n),O(n²),O(log n),c,true
+q_dsu_if04,BST property for left child:,dsu_if3,examiner_01,Greater than root,Less than root,Equal to root,Random,b,true
+q_dsu_if05,Hashing is used for:,dsu_if3,examiner_01,Sorting,Searching,Both,Neither,b,true
+q_dsu_if06,Merge sort space complexity:,dsu_if3,examiner_01,O(1),O(n),O(log n),O(n²),b,true
+q_ppr01,Python is a:,ppr_if3,examiner_01,Compiled language,Interpreted language,Machine language,Assembly language,b,true
+q_ppr02,List in Python is:,ppr_if3,examiner_01,Immutable,Mutable,Constant,None,b,true
+q_ppr03,Which keyword defines a function in Python?,ppr_if3,examiner_01,function,func,def,define,c,true
+q_ppr04,Tuple is:,ppr_if3,examiner_01,Mutable,Immutable,Both,Neither,b,true
+q_ppr05,Dictionary stores data as:,ppr_if3,examiner_01,Index-value,Key-value,Array,List,b,true
+q_ppr06,To handle exceptions Python uses:,ppr_if3,examiner_01,try-catch,try-except,if-else,for-while,b,true
+q_wbd01,HTML stands for:,wbd_if3,examiner_02,Hyper Text Markup Language,High Text Markup Language,Hyper Transfer Markup Language,None,a,true
+q_wbd02,CSS is used for:,wbd_if3,examiner_02,Content,Styling,Behavior,Database,b,true
+q_wbd03,JavaScript is:,wbd_if3,examiner_02,Server-side only,Client-side only,Both,Neither,c,true
+q_wbd04,PHP is a:,wbd_if3,examiner_02,Client-side language,Server-side language,Markup language,Styling language,b,true
+q_wbd05,AJAX stands for:,wbd_if3,examiner_02,Asynchronous JavaScript and XML,Advanced JavaScript and XML,Automatic JavaScript and XML,None,a,true
+q_wbd06,Bootstrap is a:,wbd_if3,examiner_02,Programming language,CSS framework,Database,Server,b,true
+q_dms_if01,Normalization reduces:,dms_if3,examiner_02,Data,Redundancy,Tables,Queries,b,true
+q_dms_if02,Candidate key that is selected as primary:,dms_if3,examiner_02,Foreign key,Super key,Alternate key,Primary key,d,true
+q_dms_if03,Trigger executes:,dms_if3,examiner_02,Manually,Automatically on event,Never,Randomly,b,true
+q_dms_if04,Transaction log is used for:,dms_if3,examiner_02,Backup,Recovery,Both,Neither,c,true
+q_dms_if05,Deadlock in database means:,dms_if3,examiner_02,Transaction completes,Transactions wait forever,Fast execution,None,b,true
+q_dms_if06,COMMIT makes changes:,dms_if3,examiner_02,Temporary,Permanent,Reversed,None,b,true
+q_adb01,NoSQL database example:,adb_if4,examiner_01,MySQL,PostgreSQL,MongoDB,Oracle,c,true
+q_adb02,MongoDB stores data as:,adb_if4,examiner_01,Tables,Documents,Objects,Files,b,true
+q_adb03,CAP theorem stands for:,adb_if4,examiner_01,Consistency Availability Partition,Cache Access Protocol,None,Complex Access Pattern,a,true
+q_adb04,Sharding is used for:,adb_if4,examiner_01,Backup,Horizontal scaling,Vertical scaling,Security,b,true
+q_adb05,Redis is a:,adb_if4,examiner_01,Relational database,In-memory database,File system,None,b,true
+q_adb06,MapReduce is used for:,adb_if4,examiner_01,Small data,Big data processing,File storage,None,b,true
+q_jav01,Servlet runs on:,jav_if4,examiner_02,Client,Server,Both,Neither,b,true
+q_jav02,JSP stands for:,jav_if4,examiner_02,Java Server Pages,Java Service Provider,Java Script Pages,None,a,true
+q_jav03,JDBC is used to connect:,jav_if4,examiner_02,Java to database,Java to web,Java to XML,None,a,true
+q_jav04,Hibernate is:,jav_if4,examiner_02,Web framework,ORM framework,Testing framework,None,b,true
+q_jav05,Spring is a:,jav_if4,examiner_02,Language,Framework,Database,Server,b,true
+q_jav06,MVC stands for:,jav_if4,examiner_02,Model View Controller,Multiple View Controller,Model Virtual Controller,None,a,true
+q_ste01,Unit testing tests:,ste_if4,examiner_01,Individual units,Whole system,Integration,None,a,true
+q_ste02,Selenium is used for:,ste_if4,examiner_01,Unit testing,Automation testing,Load testing,None,b,true
+q_ste03,Bug severity indicates:,ste_if4,examiner_01,Priority,Impact,Both,Neither,b,true
+q_ste04,Smoke testing is also called:,ste_if4,examiner_01,Regression testing,Sanity testing,Build verification,None,c,true
+q_ste05,Test case contains:,ste_if4,examiner_01,Input only,Expected output only,Both,Neither,c,true
+q_ste06,White box testing examines:,ste_if4,examiner_01,Functionality,Code structure,Both,Neither,b,true
+q_mad01,Android uses which language primarily?,mad_if4,examiner_02,Swift,Kotlin/Java,C#,Python,b,true
+q_mad02,Activity in Android represents:,mad_if4,examiner_02,Background service,Single screen,Database,None,b,true
+q_mad03,Flutter uses which language?,mad_if4,examiner_02,Java,Dart,Swift,JavaScript,b,true
+q_mad04,React Native is based on:,mad_if4,examiner_02,Java,JavaScript,Python,Swift,b,true
+q_mad05,APK stands for:,mad_if4,examiner_02,Android Package Kit,Application Package Kit,Android Process Kit,None,a,true
+q_mad06,Intent in Android is used for:,mad_if4,examiner_02,Data storage,Navigation/communication,Styling,None,b,true
+q_del01,Number system with base 16:,del_ej3,examiner_01,Binary,Octal,Hexadecimal,Decimal,c,true
+q_del02,AND gate output is 1 when:,del_ej3,examiner_01,Any input is 1,All inputs are 1,All inputs are 0,Any input is 0,b,true
+q_del03,SR flip-flop invalid state is:,del_ej3,examiner_01,S=0 R=0,S=0 R=1,S=1 R=0,S=1 R=1,d,true
+q_del04,Encoder converts:,del_ej3,examiner_01,Binary to decimal,Decimal to binary,Analog to digital,Digital to analog,b,true
+q_del05,Multiplexer is also called:,del_ej3,examiner_01,Decoder,Data selector,Counter,Register,b,true
+q_del06,1's complement of 1010 is:,del_ej3,examiner_01,0101,1011,0100,1100,a,true
+q_mic01,8085 microprocessor has how many pins?,mic_ej3,examiner_02,20,40,64,80,b,true
+q_mic02,Accumulator register is:,mic_ej3,examiner_02,8-bit,16-bit,32-bit,64-bit,a,true
+q_mic03,Program counter holds:,mic_ej3,examiner_02,Data,Address of next instruction,Result,Flags,b,true
+q_mic04,MOV instruction is:,mic_ej3,examiner_02,Arithmetic,Data transfer,Control,Logical,b,true
+q_mic05,Stack pointer is a:,mic_ej3,examiner_02,8-bit register,16-bit register,32-bit register,64-bit register,b,true
+q_mic06,Interrupt used for single stepping:,mic_ej3,examiner_02,RST 5.5,RST 6.5,RST 7.5,TRAP,d,true
+q_eca01,Common emitter amplifier provides:,eca_ej3,examiner_01,Voltage gain,Current gain,Both,Neither,c,true
+q_eca02,Negative feedback in amplifier:,eca_ej3,examiner_01,Increases gain,Decreases gain,No effect,Doubles gain,b,true
+q_eca03,Oscillator produces:,eca_ej3,examiner_01,DC signal,AC signal,Noise,None,b,true
+q_eca04,Barkhausen criterion for oscillation is:,eca_ej3,examiner_01,Loop gain < 1,Loop gain = 1,Loop gain > 1,Loop gain = 0,b,true
+q_eca05,Class A amplifier efficiency is about:,eca_ej3,examiner_01,25%,50%,78.5%,100%,a,true
+q_eca06,Push-pull amplifier uses:,eca_ej3,examiner_01,One transistor,Two transistors,Three transistors,Four transistors,b,true
+q_nal01,Kirchhoff's voltage law states:,nal_ej3,examiner_02,Sum of currents = 0,Sum of voltages in loop = 0,Power = VI,None,b,true
+q_nal02,Thevenin's theorem converts circuit to:,nal_ej3,examiner_02,Voltage source with series resistance,Current source with parallel resistance,Both,Neither,a,true
+q_nal03,Resonance occurs when:,nal_ej3,examiner_02,XL > XC,XL < XC,XL = XC,XL = 0,c,true
+q_nal04,Quality factor Q indicates:,nal_ej3,examiner_02,Power,Selectivity,Current,Voltage,b,true
+q_nal05,Time constant of RC circuit is:,nal_ej3,examiner_02,R/C,RC,C/R,1/RC,b,true
+q_nal06,Superposition theorem applies to:,nal_ej3,examiner_02,Nonlinear circuits,Linear circuits,Both,Neither,b,true
+q_mco01,8051 has how many 16-bit timers?,mco_ej4,examiner_01,1,2,3,4,b,true
+q_mco02,Port 0 of 8051 needs:,mco_ej4,examiner_01,Internal pull-up,External pull-up,No pull-up,Push-pull,b,true
+q_mco03,Serial communication in 8051 uses:,mco_ej4,examiner_01,SBUF register,TMOD register,PCON register,SCON register,a,true
+q_mco04,8051 operates at which clock frequency typically?,mco_ej4,examiner_01,1 MHz,8 MHz,12 MHz,100 MHz,c,true
+q_mco05,EA pin when high:,mco_ej4,examiner_01,Uses external memory,Uses internal memory,Disables memory,None,b,true
+q_mco06,Interrupt priority register:,mco_ej4,examiner_01,IE,IP,TCON,PCON,b,true
+q_dco01,Digital modulation technique for binary data:,dco_ej4,examiner_02,AM,FM,ASK/FSK/PSK,None,c,true
+q_dco02,Nyquist rate is:,dco_ej4,examiner_02,Equal to signal frequency,Twice the signal frequency,Half the signal frequency,None,b,true
+q_dco03,PCM stands for:,dco_ej4,examiner_02,Pulse Code Modulation,Phase Code Modulation,Pulse Carrier Modulation,None,a,true
+q_dco04,Hamming code is used for:,dco_ej4,examiner_02,Compression,Error detection and correction,Encryption,Modulation,b,true
+q_dco05,TDM stands for:,dco_ej4,examiner_02,Time Division Multiplexing,Total Data Modulation,Transfer Data Mode,None,a,true
+q_dco06,BPSK uses how many phase shifts?,dco_ej4,examiner_02,1,2,4,8,b,true
+q_lic01,Op-amp ideal input impedance is:,lic_ej4,examiner_01,Zero,Infinity,1K ohm,1M ohm,b,true
+q_lic02,555 timer in astable mode produces:,lic_ej4,examiner_01,Single pulse,Continuous square wave,Sine wave,DC,b,true
+q_lic03,Voltage regulator 7805 gives output of:,lic_ej4,examiner_01,+5V,+12V,-5V,+3.3V,a,true
+q_lic04,Op-amp comparator compares:,lic_ej4,examiner_01,Two currents,Two voltages,Voltage and current,None,b,true
+q_lic05,Slew rate of op-amp is measured in:,lic_ej4,examiner_01,V/s,A/s,W/s,V/µs,d,true
+q_lic06,PLL stands for:,lic_ej4,examiner_01,Pulse Locked Loop,Phase Locked Loop,Power Locked Loop,None,b,true
+q_ems01,RTOS stands for:,ems_ej4,examiner_02,Real Time Operating System,Random Time Operating System,Regular Time OS,None,a,true
+q_ems02,ARM processor is:,ems_ej4,examiner_02,CISC,RISC,Both,Neither,b,true
+q_ems03,IoT stands for:,ems_ej4,examiner_02,Internet of Things,Integration of Technology,International of Telecom,None,a,true
+q_ems04,Embedded system is:,ems_ej4,examiner_02,General purpose computer,Dedicated function system,Server,None,b,true
+q_ems05,Watchdog timer is used for:,ems_ej4,examiner_02,Time display,System reset on hang,Power management,None,b,true
+q_ems06,Raspberry Pi uses which processor?,ems_ej4,examiner_02,8051,ARM,AVR,8085,b,true

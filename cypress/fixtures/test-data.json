@@ -1,0 +1,140 @@
+{
+  "admin": {
+    "email": "admin@examcore.local",
+    "password": "Admin@123",
+    "firstName": "Rajesh",
+    "lastName": "Patil"
+  },
+  "examiner": {
+    "email": "examiner@modelpolytechnic.edu.in",
+    "password": "Examiner@123",
+    "firstName": "Priya",
+    "lastName": "Kulkarni"
+  },
+  "examiner2": {
+    "email": "examiner2@modelpolytechnic.edu.in",
+    "password": "Examiner@123",
+    "firstName": "Vikram",
+    "lastName": "Deshmukh"
+  },
+  "teacher": {
+    "email": "dbms.teacher@modelpolytechnic.edu.in",
+    "password": "Teacher@123",
+    "firstName": "Santosh",
+    "lastName": "Jadhav"
+  },
+  "student": {
+    "email": "rahul.patil@modelpolytechnic.edu.in",
+    "password": "Student@123",
+    "firstName": "Rahul",
+    "lastName": "Patil",
+    "class": "CO - 3rd Semester"
+  },
+  "institution": {
+    "name": "Model Polytechnic College, Mumbai",
+    "email": "principal@modelpolytechnic.edu.in",
+    "phone": "+91-22-26543210",
+    "address": "Plot No. 5, Sector-10, Vashi, Navi Mumbai - 400703, Maharashtra",
+    "website": "https://www.modelpolytechnic.edu.in",
+    "established": 1985
+  },
+  "classes": [
+    {
+      "id": "co_sem3",
+      "name": "CO - 3rd Semester",
+      "description": "Computer Engineering Third Semester"
+    },
+    {
+      "id": "co_sem4",
+      "name": "CO - 4th Semester",
+      "description": "Computer Engineering Fourth Semester"
+    },
+    {
+      "id": "if_sem3",
+      "name": "IF - 3rd Semester",
+      "description": "Information Technology Third Semester"
+    },
+    {
+      "id": "if_sem4",
+      "name": "IF - 4th Semester",
+      "description": "Information Technology Fourth Semester"
+    },
+    {
+      "id": "ej_sem3",
+      "name": "EJ - 3rd Semester",
+      "description": "Electronics & Telecom Third Semester"
+    },
+    {
+      "id": "ej_sem4",
+      "name": "EJ - 4th Semester",
+      "description": "Electronics & Telecom Fourth Semester"
+    }
+  ],
+  "subjects": {
+    "co_sem3": ["Data Structures (DSU)", "Digital Techniques (DTE)", "OOP with Java (OOJ)", "Computer Graphics (CGR)"],
+    "co_sem4": ["DBMS (DMS)", "Software Engineering (SEN)", "Operating System (OSY)", "Computer Networks (CNS)"],
+    "if_sem3": ["Data Structures (DSU)", "Python Programming (PPR)", "Web Development (WBD)", "DBMS (DMS)"],
+    "if_sem4": ["Advanced DBMS (ADB)", "Java Programming (JAV)", "Software Testing (STE)", "Mobile App Dev (MAD)"],
+    "ej_sem3": ["Digital Electronics (DEL)", "Microprocessor (MIC)", "Electronic Circuits (ECA)", "Network Analysis (NAL)"],
+    "ej_sem4": ["Microcontroller (MCO)", "Digital Communication (DCO)", "Linear IC (LIC)", "Embedded Systems (EMS)"]
+  },
+  "questions": [
+    {
+      "text": "Which data structure uses LIFO principle?",
+      "options": ["Queue", "Stack", "Array", "Linked List"],
+      "correct": 1
+    },
+    {
+      "text": "Time complexity of binary search is:",
+      "options": ["O(n)", "O(log n)", "O(n^2)", "O(1)"],
+      "correct": 1
+    },
+    {
+      "text": "SQL command to retrieve data from table:",
+      "options": ["INSERT", "SELECT", "UPDATE", "DELETE"],
+      "correct": 1
+    },
+    {
+      "text": "Which keyword is used to inherit a class in Java?",
+      "options": ["implements", "extends", "inherits", "super"],
+      "correct": 1
+    },
+    {
+      "text": "OSI model has how many layers?",
+      "options": ["5", "6", "7", "8"],
+      "correct": 2
+    },
+    {
+      "text": "Primary key must be:",
+      "options": ["Unique only", "Not null only", "Unique and not null", "None of above"],
+      "correct": 2
+    },
+    {
+      "text": "Process state when waiting for I/O:",
+      "options": ["Running", "Ready", "Blocked", "Terminated"],
+      "correct": 2
+    },
+    {
+      "text": "Universal gate that can implement any Boolean function:",
+      "options": ["AND", "OR", "NAND", "XOR"],
+      "correct": 2
+    },
+    {
+      "text": "Python is a:",
+      "options": ["Compiled language", "Interpreted language", "Machine language", "Assembly language"],
+      "correct": 1
+    },
+    {
+      "text": "8085 microprocessor has how many pins?",
+      "options": ["20", "40", "64", "80"],
+      "correct": 1
+    }
+  ],
+  "exam": {
+    "title": "Data Structures Unit Test",
+    "description": "Stacks Queues and Linked Lists - CO 3rd Sem",
+    "duration": 120,
+    "passingPercentage": 40,
+    "questionsCount": 10
+  }
+}
