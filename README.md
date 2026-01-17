@@ -116,68 +116,33 @@ Automatic grading with detailed performance insights.
 
 ### Prerequisites
 
-- Python 3.11 or higher
-- PostgreSQL 14 or higher
-- Node.js 18+ (for Tailwind CSS)
-- Docker & Docker Compose (optional)
+- Docker & Docker Compose
+- Domain name with SSL certificate
+- SMTP service for email verification
 
-### Quick Start with Docker
+### Quick Start
 
 ```bash
 # Clone the repository
 git clone https://github.com/your-username/examcore.git
 cd examcore
 
-# Copy environment file
+# Copy and configure environment
 cp .env.example .env
+# Edit .env with your configuration (see DEPLOYMENT.md)
 
-# Start with Docker Compose
-docker-compose up -d
+# Set up nginx configuration (see DEPLOYMENT.md)
+mkdir -p nginx/ssl
+# Add your nginx.conf and SSL certificates
+
+# Start services
+docker compose up -d
 
 # Access the application
-open http://localhost:8000
+open https://yourdomain.com
 ```
 
-### Manual Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/your-username/examcore.git
-cd examcore
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -e ".[dev]"
-
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your configuration
-
-# Run database migrations
-python manage.py migrate
-
-# Create superuser (optional)
-python manage.py createsuperuser
-
-# Start development server
-python manage.py runserver
-```
-
-### Tailwind CSS Setup
-
-```bash
-# Install Tailwind dependencies
-python manage.py tailwind install
-
-# Start Tailwind in watch mode (development)
-python manage.py tailwind start
-
-# Build for production
-python manage.py tailwind build
-```
+For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ---
 
@@ -210,19 +175,9 @@ examcore/
 
 ## Configuration
 
-### Environment Variables
+All configuration is done through environment variables. See `.env.example` for the complete list.
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DEBUG` | Debug mode | `False` |
-| `SECRET_KEY` | Django secret key | Required |
-| `POSTGRES_DB` | Database name | `examcore` |
-| `POSTGRES_USER` | Database user | `examcore` |
-| `POSTGRES_PASSWORD` | Database password | Required |
-| `DB_HOST` | Database host | `localhost` |
-| `DB_PORT` | Database port | `5432` |
-| `EMAIL_HOST` | SMTP server | `localhost` |
-| `EMAIL_PORT` | SMTP port | `1025` |
+For detailed configuration instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ---
 
@@ -272,30 +227,7 @@ POST /api/v1/attempts/       # Submit exam attempt
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-### Development Setup
-
-```bash
-# Install development dependencies
-pip install -e ".[dev]"
-
-# Install pre-commit hooks
-pre-commit install
-
-# Run tests
-pytest
-
-# Run linting
-flake8
-black --check .
-isort --check-only .
-```
-
-### Code Style
-
-- Follow PEP 8 guidelines
-- Use Black for formatting (line length: 88)
-- Use isort for import sorting
-- Write tests for new features
+For development setup and code style guidelines, refer to [CLAUDE.md](CLAUDE.md).
 
 ---
 

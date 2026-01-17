@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import LogoutView
+from django.core import signing
 from django.shortcuts import redirect, render
 from django.views import View
 
@@ -17,6 +18,9 @@ from .forms import (
 from .models import OTPVerification
 
 User = get_user_model()
+
+# Session key for storing signed registration credential during OTP verification
+PENDING_CREDENTIAL_SESSION_KEY = "pending_credential_signed"
 
 
 class AuthView(View):
@@ -89,7 +93,10 @@ class AuthView(View):
 
             if EmailService.send_otp_email(email, otp_obj.otp):
                 request.session["pending_email"] = email
-                request.session["pending_password"] = form.cleaned_data["password"]
+                # Sign the password for secure session storage
+                request.session[PENDING_CREDENTIAL_SESSION_KEY] = signing.dumps(
+                    form.cleaned_data["password"]
+                )
                 messages.info(request, "Verification code sent to your email.")
             else:
                 messages.error(
@@ -120,16 +127,38 @@ class AuthView(View):
         if form.is_valid():
             institution = form.save()
 
+            # Retrieve and unsign the password from session
+            try:
+                password = signing.loads(
+                    request.session[PENDING_CREDENTIAL_SESSION_KEY]
+                )
+            except (signing.BadSignature, KeyError):
+                messages.error(
+                    request, "Session expired. Please start registration again."
+                )
+                # Clear session and restart
+                for key in [
+                    "pending_email",
+                    PENDING_CREDENTIAL_SESSION_KEY,
+                    "otp_verified",
+                ]:
+                    request.session.pop(key, None)
+                return redirect("auth:login")
+
             # Create admin user
             user = User.objects.create_user(
                 username=request.session["pending_email"],
                 email=request.session["pending_email"],
-                password=request.session["pending_password"],
+                password=password,
                 role=User.Role.ADMIN,
             )
 
             # Clear session
-            for key in ["pending_email", "pending_password", "otp_verified"]:
+            for key in [
+                "pending_email",
+                PENDING_CREDENTIAL_SESSION_KEY,
+                "otp_verified",
+            ]:
                 request.session.pop(key, None)
 
             login(request, user)

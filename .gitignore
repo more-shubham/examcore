@@ -7,6 +7,9 @@ __pycache__/
 venv/
 env/
 .venv/
+*.egg-info/
+dist/
+build/
 
 # Django
 *.log
@@ -40,3 +43,21 @@ package-lock.json
 
 # Docker
 .docker/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+.tox/
+.nox/
+
+# Nginx SSL (keep directory, ignore contents)
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt
+
+# Backups
+*.sql
+*.backup
+backups/
