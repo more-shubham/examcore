@@ -47,14 +47,10 @@ EMAIL_HOST = config("EMAIL_HOST", default="localhost")
 EMAIL_PORT = config("EMAIL_PORT", default=1025, cast=int)
 
 # =============================================================================
-# CACHING (Local memory for development)
+# CACHING (Use database cache from base settings for consistency)
 # =============================================================================
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-    }
-}
+# Uses database cache from base.py - run: python manage.py createcachetable
 
 # =============================================================================
 # STATIC FILES (No compression in development)

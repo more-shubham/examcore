@@ -153,7 +153,11 @@ class QuestionUpdateView(QuestionManagerRequiredMixin, View):
         return json.dumps(subjects_data)
 
     def get(self, request, pk):
-        question = get_object_or_404(Question, pk=pk, is_active=True)
+        question = get_object_or_404(
+            Question.objects.select_related("subject", "created_by", "correct_option"),
+            pk=pk,
+            is_active=True,
+        )
         # Only creator or admin can edit
         if not (request.user.is_admin or question.created_by == request.user):
             messages.error(request, "You can only edit your own questions.")
@@ -175,7 +179,11 @@ class QuestionUpdateView(QuestionManagerRequiredMixin, View):
         )
 
     def post(self, request, pk):
-        question = get_object_or_404(Question, pk=pk, is_active=True)
+        question = get_object_or_404(
+            Question.objects.select_related("subject", "created_by"),
+            pk=pk,
+            is_active=True,
+        )
         # Only creator or admin can edit
         if not (request.user.is_admin or question.created_by == request.user):
             messages.error(request, "You can only edit your own questions.")
@@ -223,7 +231,11 @@ class QuestionDeleteView(QuestionManagerRequiredMixin, View):
     template_name = "questions/question_confirm_delete.html"
 
     def get(self, request, pk):
-        question = get_object_or_404(Question, pk=pk, is_active=True)
+        question = get_object_or_404(
+            Question.objects.select_related("subject", "created_by"),
+            pk=pk,
+            is_active=True,
+        )
         # Only creator or admin can delete
         if not (request.user.is_admin or question.created_by == request.user):
             messages.error(request, "You can only delete your own questions.")
@@ -231,7 +243,11 @@ class QuestionDeleteView(QuestionManagerRequiredMixin, View):
         return render(request, self.template_name, {"question": question})
 
     def post(self, request, pk):
-        question = get_object_or_404(Question, pk=pk, is_active=True)
+        question = get_object_or_404(
+            Question.objects.select_related("created_by"),
+            pk=pk,
+            is_active=True,
+        )
         # Only creator or admin can delete
         if not (request.user.is_admin or question.created_by == request.user):
             messages.error(request, "You can only delete your own questions.")

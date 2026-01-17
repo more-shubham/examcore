@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+from .managers import ExamManager
+
 
 class Exam(models.Model):
     """Exam definition created by Admin/Examiner."""
@@ -46,11 +48,25 @@ class Exam(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    objects = ExamManager()
+
     class Meta:
         db_table = "exams"
         verbose_name = "Exam"
         verbose_name_plural = "Exams"
         ordering = ["-start_time"]
+        indexes = [
+            models.Index(fields=["is_active"], name="exams_active_idx"),
+            models.Index(
+                fields=["subject", "is_active"], name="exams_subject_active_idx"
+            ),
+            models.Index(
+                fields=["status", "is_active"], name="exams_status_active_idx"
+            ),
+            models.Index(
+                fields=["start_time", "end_time"], name="exams_time_range_idx"
+            ),
+        ]
 
     def __str__(self):
         return f"{self.title} ({self.subject.name})"

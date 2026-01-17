@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from .managers import UserManager
+
 
 class User(AbstractUser):
     """Custom user model with roles."""
@@ -26,10 +28,19 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
+    objects = UserManager()
+
     class Meta:
         db_table = "users"
         verbose_name = "User"
         verbose_name_plural = "Users"
+        indexes = [
+            models.Index(fields=["role"], name="users_role_idx"),
+            models.Index(fields=["role", "is_active"], name="users_role_active_idx"),
+            models.Index(
+                fields=["assigned_class", "is_active"], name="users_class_active_idx"
+            ),
+        ]
 
     def __str__(self):
         return self.get_full_name() or self.email

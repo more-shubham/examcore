@@ -86,7 +86,13 @@ class ExamDetailView(QuestionManagerRequiredMixin, View):
     template_name = "exams/exam_detail.html"
 
     def get(self, request, pk):
-        exam = get_object_or_404(Exam, pk=pk, is_active=True)
+        exam = get_object_or_404(
+            Exam.objects.select_related(
+                "subject", "subject__assigned_class", "created_by"
+            ),
+            pk=pk,
+            is_active=True,
+        )
 
         # Get questions count
         if exam.use_random_questions:
@@ -109,7 +115,13 @@ class ExamUpdateView(QuestionManagerRequiredMixin, View):
     template_name = "exams/exam_form.html"
 
     def get(self, request, pk):
-        exam = get_object_or_404(Exam, pk=pk, is_active=True)
+        exam = get_object_or_404(
+            Exam.objects.select_related(
+                "subject", "subject__assigned_class", "created_by"
+            ),
+            pk=pk,
+            is_active=True,
+        )
         # Only creator or admin can edit
         if not (request.user.is_admin or exam.created_by == request.user):
             messages.error(request, "You can only edit your own exams.")
@@ -122,7 +134,11 @@ class ExamUpdateView(QuestionManagerRequiredMixin, View):
         )
 
     def post(self, request, pk):
-        exam = get_object_or_404(Exam, pk=pk, is_active=True)
+        exam = get_object_or_404(
+            Exam.objects.select_related("created_by"),
+            pk=pk,
+            is_active=True,
+        )
         # Only creator or admin can edit
         if not (request.user.is_admin or exam.created_by == request.user):
             messages.error(request, "You can only edit your own exams.")
@@ -145,7 +161,13 @@ class ExamDeleteView(QuestionManagerRequiredMixin, View):
     template_name = "exams/exam_confirm_delete.html"
 
     def get(self, request, pk):
-        exam = get_object_or_404(Exam, pk=pk, is_active=True)
+        exam = get_object_or_404(
+            Exam.objects.select_related(
+                "subject", "subject__assigned_class", "created_by"
+            ),
+            pk=pk,
+            is_active=True,
+        )
         # Only creator or admin can delete
         if not (request.user.is_admin or exam.created_by == request.user):
             messages.error(request, "You can only delete your own exams.")
@@ -153,7 +175,11 @@ class ExamDeleteView(QuestionManagerRequiredMixin, View):
         return render(request, self.template_name, {"exam": exam})
 
     def post(self, request, pk):
-        exam = get_object_or_404(Exam, pk=pk, is_active=True)
+        exam = get_object_or_404(
+            Exam.objects.select_related("created_by"),
+            pk=pk,
+            is_active=True,
+        )
         # Only creator or admin can delete
         if not (request.user.is_admin or exam.created_by == request.user):
             messages.error(request, "You can only delete your own exams.")
@@ -171,7 +197,13 @@ class ExamQuestionsView(QuestionManagerRequiredMixin, View):
     template_name = "exams/exam_questions.html"
 
     def get(self, request, pk):
-        exam = get_object_or_404(Exam, pk=pk, is_active=True)
+        exam = get_object_or_404(
+            Exam.objects.select_related(
+                "subject", "subject__assigned_class", "created_by"
+            ),
+            pk=pk,
+            is_active=True,
+        )
 
         # Only creator or admin can manage questions
         if not (request.user.is_admin or exam.created_by == request.user):
@@ -179,9 +211,11 @@ class ExamQuestionsView(QuestionManagerRequiredMixin, View):
             return redirect("exams:list")
 
         # Get all available questions for this subject
-        available_questions = Question.objects.filter(
-            subject=exam.subject, is_active=True
-        ).select_related("created_by")
+        available_questions = (
+            Question.objects.filter(subject=exam.subject, is_active=True)
+            .select_related("created_by")
+            .prefetch_related("options")
+        )
 
         # Get currently selected question IDs
         selected_ids = exam.exam_questions.values_list("question_id", flat=True)
@@ -194,7 +228,11 @@ class ExamQuestionsView(QuestionManagerRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, pk):
-        exam = get_object_or_404(Exam, pk=pk, is_active=True)
+        exam = get_object_or_404(
+            Exam.objects.select_related("created_by"),
+            pk=pk,
+            is_active=True,
+        )
 
         # Only creator or admin can manage questions
         if not (request.user.is_admin or exam.created_by == request.user):

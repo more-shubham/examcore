@@ -37,6 +37,14 @@ class Invitation(TimestampedModel):
         db_table = "invitations"
         verbose_name = "Invitation"
         verbose_name_plural = "Invitations"
+        indexes = [
+            models.Index(
+                fields=["email", "accepted_at"], name="invitations_email_accepted_idx"
+            ),
+            models.Index(
+                fields=["expires_at", "accepted_at"], name="invitations_expiry_idx"
+            ),
+        ]
 
     def __str__(self):
         return f"Invitation for {self.email}"

@@ -117,10 +117,16 @@ class StudentExamView(StudentRequiredMixin, View):
     template_name = "attempts/exam_take.html"
 
     def get(self, request, pk):
-        exam = get_object_or_404(Exam, pk=pk, status=Exam.Status.PUBLISHED)
+        exam = get_object_or_404(
+            Exam.objects.select_related("subject", "subject__assigned_class"),
+            pk=pk,
+            status=Exam.Status.PUBLISHED,
+        )
 
         try:
-            attempt = ExamAttempt.objects.get(exam=exam, student=request.user)
+            attempt = ExamAttempt.objects.select_related("exam").get(
+                exam=exam, student=request.user
+            )
         except ExamAttempt.DoesNotExist:
             return redirect("attempts:start", pk=pk)
 
@@ -217,8 +223,17 @@ class StudentResultView(StudentRequiredMixin, View):
     template_name = "attempts/exam_result.html"
 
     def get(self, request, pk):
-        exam = get_object_or_404(Exam, pk=pk)
-        attempt = get_object_or_404(ExamAttempt, exam=exam, student=request.user)
+        exam = get_object_or_404(
+            Exam.objects.select_related("subject", "subject__assigned_class"),
+            pk=pk,
+        )
+        attempt = get_object_or_404(
+            ExamAttempt.objects.prefetch_related(
+                "answers", "answers__question", "answers__selected_option"
+            ),
+            exam=exam,
+            student=request.user,
+        )
 
         return render(
             request,

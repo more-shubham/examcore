@@ -10,20 +10,31 @@ class Class(TimestampedModel):
     description = models.TextField(blank=True)
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
+    cached_student_count = models.PositiveIntegerField(default=0)
 
     class Meta:
         db_table = "classes"
         verbose_name = "Class"
         verbose_name_plural = "Classes"
         ordering = ["order", "name"]
+        indexes = [
+            models.Index(fields=["is_active"], name="classes_active_idx"),
+        ]
 
     def __str__(self):
         return self.name
 
     @property
     def student_count(self):
-        """Return count of active students in this class."""
-        return self.students.filter(is_active=True).count()
+        """Return cached count of active students in this class."""
+        return self.cached_student_count
+
+    def update_student_count(self):
+        """Update the cached student count from the database."""
+        count = self.students.filter(is_active=True).count()
+        if self.cached_student_count != count:
+            self.cached_student_count = count
+            self.save(update_fields=["cached_student_count"])
 
 
 class Subject(TimestampedModel):
@@ -44,6 +55,12 @@ class Subject(TimestampedModel):
         verbose_name_plural = "Subjects"
         ordering = ["name"]
         unique_together = ["assigned_class", "name"]
+        indexes = [
+            models.Index(fields=["is_active"], name="subjects_active_idx"),
+            models.Index(
+                fields=["assigned_class", "is_active"], name="subjects_class_active_idx"
+            ),
+        ]
 
     def __str__(self):
         return f"{self.name} ({self.assigned_class.name})"

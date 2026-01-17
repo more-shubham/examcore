@@ -53,25 +53,11 @@ DATABASES["default"]["CONN_MAX_AGE"] = config(  # noqa: F405
 )
 
 # =============================================================================
-# CACHING
+# CACHING (Database cache - no Redis required)
 # =============================================================================
 
-# Configure Redis cache for production
-REDIS_URL = config("REDIS_URL", default="")
-
-if REDIS_URL:
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.redis.RedisCache",
-            "LOCATION": REDIS_URL,
-        }
-    }
-else:
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        }
-    }
+# Uses database cache from base.py - run: python manage.py createcachetable
+# This provides persistence and works across multiple processes without Redis
 
 # =============================================================================
 # EMAIL

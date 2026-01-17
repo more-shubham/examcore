@@ -16,6 +16,10 @@ class OTPVerification(TimestampedModel):
         db_table = "otp_verification"
         verbose_name = "OTP Verification"
         verbose_name_plural = "OTP Verifications"
+        indexes = [
+            models.Index(fields=["email", "otp"], name="otp_email_otp_idx"),
+            models.Index(fields=["expires_at"], name="otp_expires_idx"),
+        ]
 
     def __str__(self):
         return f"OTP for {self.email}"

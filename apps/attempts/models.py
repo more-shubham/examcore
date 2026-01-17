@@ -6,6 +6,8 @@ from django.utils import timezone
 
 from apps.core.models import TimestampedModel
 
+from .managers import ExamAnswerManager, ExamAttemptManager
+
 
 def secure_shuffle(items):
     """Cryptographically secure shuffle using secrets module."""
@@ -46,11 +48,19 @@ class ExamAttempt(TimestampedModel):
     score = models.PositiveIntegerField(null=True, blank=True)
     total_questions = models.PositiveIntegerField(default=0)
 
+    objects = ExamAttemptManager()
+
     class Meta:
         db_table = "exam_attempts"
         verbose_name = "Exam Attempt"
         verbose_name_plural = "Exam Attempts"
         unique_together = ["exam", "student"]
+        indexes = [
+            models.Index(fields=["status"], name="attempts_status_idx"),
+            models.Index(
+                fields=["student", "status"], name="attempts_student_status_idx"
+            ),
+        ]
 
     def __str__(self):
         return f"{self.student.email} - {self.exam.title}"
@@ -115,8 +125,13 @@ class ExamAttempt(TimestampedModel):
         ).prefetch_related("options")
         questions_dict = {q.id: q for q in questions}
 
-        # Get selected option IDs from answers
-        answers = {a.question_id: a.selected_option_id for a in self.answers.all()}
+        # Get selected option IDs from answers with optimized query
+        answers = {
+            a.question_id: a.selected_option_id
+            for a in self.answers.select_related("selected_option").only(
+                "question_id", "selected_option_id"
+            )
+        }
 
         result = []
         for idx, q_id in enumerate(self.question_order):
@@ -172,11 +187,18 @@ class ExamAnswer(models.Model):
     )
     is_correct = models.BooleanField(default=False)
 
+    objects = ExamAnswerManager()
+
     class Meta:
         db_table = "exam_answers"
         verbose_name = "Exam Answer"
         verbose_name_plural = "Exam Answers"
         unique_together = ["attempt", "question"]
+        indexes = [
+            models.Index(
+                fields=["attempt", "is_correct"], name="answers_attempt_correct_idx"
+            ),
+        ]
 
     def save(self, *args, **kwargs):
         """Auto-check if answer is correct."""

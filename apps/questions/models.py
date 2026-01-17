@@ -5,6 +5,8 @@ from django.db import models
 
 from apps.core.models import TimestampedModel
 
+from .managers import QuestionManager
+
 
 class QuestionOption(TimestampedModel):
     """Individual option for a question."""
@@ -67,11 +69,19 @@ class Question(TimestampedModel):
     # Metadata
     is_active = models.BooleanField(default=True)
 
+    objects = QuestionManager()
+
     class Meta:
         db_table = "questions"
         verbose_name = "Question"
         verbose_name_plural = "Questions"
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["is_active"], name="questions_active_idx"),
+            models.Index(
+                fields=["subject", "is_active"], name="questions_subject_active_idx"
+            ),
+        ]
 
     def __str__(self):
         return f"{self.question_text[:50]}... ({self.subject.name})"

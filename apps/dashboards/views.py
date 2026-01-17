@@ -4,6 +4,8 @@ from django.views import View
 
 from apps.institution.models import Institution
 
+from .cache import get_admin_dashboard_counts
+
 
 class DashboardView(LoginRequiredMixin, View):
     """Role-specific dashboard."""
@@ -46,7 +48,7 @@ class DashboardView(LoginRequiredMixin, View):
             subject__assigned_class=user.assigned_class,
             status=Exam.Status.PUBLISHED,
             is_active=True,
-        )
+        ).select_related("subject")
 
         attempts = ExamAttempt.objects.filter(
             student=user,
@@ -66,30 +68,12 @@ class DashboardView(LoginRequiredMixin, View):
         from apps.questions.models import Question
 
         return {
-            "question_count": Question.objects.filter(created_by=user).count(),
-            "exam_count": Exam.objects.filter(created_by=user).count(),
+            "question_count": Question.objects.filter(
+                created_by=user, is_active=True
+            ).count(),
+            "exam_count": Exam.objects.filter(created_by=user, is_active=True).count(),
         }
 
     def get_admin_context(self):
-        from django.contrib.auth import get_user_model
-
-        from apps.academic.models import Class
-        from apps.exams.models import Exam
-        from apps.questions.models import Question
-
-        User = get_user_model()
-
-        return {
-            "question_count": Question.objects.filter(is_active=True).count(),
-            "exam_count": Exam.objects.filter(is_active=True).count(),
-            "examiner_count": User.objects.filter(
-                role=User.Role.EXAMINER, is_active=True
-            ).count(),
-            "teacher_count": User.objects.filter(
-                role=User.Role.TEACHER, is_active=True
-            ).count(),
-            "class_count": Class.objects.filter(is_active=True).count(),
-            "student_count": User.objects.filter(
-                role=User.Role.STUDENT, is_active=True
-            ).count(),
-        }
+        """Get admin dashboard context with cached counts."""
+        return get_admin_dashboard_counts()

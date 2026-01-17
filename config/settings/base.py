@@ -291,3 +291,19 @@ X_FRAME_OPTIONS = "DENY"
 # Session expires after 1 day (in seconds)
 SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# =============================================================================
+# CACHING (Database cache - no Redis required)
+# =============================================================================
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "django_cache",
+        "TIMEOUT": 300,  # 5 minutes
+        "OPTIONS": {
+            "MAX_ENTRIES": 10000,
+            "CULL_FREQUENCY": 3,
+        },
+    }
+}
