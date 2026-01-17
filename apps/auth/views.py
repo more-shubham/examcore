@@ -84,13 +84,17 @@ class AuthView(View):
     def handle_register(self, request):
         form = RegisterForm(request.POST)
         if form.is_valid():
-            request.session["pending_email"] = form.cleaned_data["email"]
-            request.session["pending_password"] = form.cleaned_data["password"]
+            email = form.cleaned_data["email"]
+            otp_obj = OTPVerification.generate_otp(email)
 
-            otp_obj = OTPVerification.generate_otp(form.cleaned_data["email"])
-            EmailService.send_otp_email(form.cleaned_data["email"], otp_obj.otp)
-
-            messages.info(request, "Verification code sent to your email.")
+            if EmailService.send_otp_email(email, otp_obj.otp):
+                request.session["pending_email"] = email
+                request.session["pending_password"] = form.cleaned_data["password"]
+                messages.info(request, "Verification code sent to your email.")
+            else:
+                messages.error(
+                    request, "Failed to send verification email. Please try again."
+                )
             return redirect("auth:login")
         return render(
             request, self.template_name, self.get_context(request, "register", form)
@@ -149,8 +153,14 @@ class ResendOTPView(View):
         email = request.session.get("pending_email")
         if email:
             otp_obj = OTPVerification.generate_otp(email)
-            EmailService.send_otp_email(email, otp_obj.otp)
-            messages.info(request, "New verification code sent.")
+            if EmailService.send_otp_email(email, otp_obj.otp):
+                messages.info(request, "New verification code sent.")
+            else:
+                messages.error(
+                    request, "Failed to send verification email. Please try again."
+                )
+        else:
+            messages.error(request, "Session expired. Please start registration again.")
         return redirect("auth:login")
 
 
@@ -172,10 +182,12 @@ class ForgotPasswordView(View):
         if form.is_valid():
             email = form.cleaned_data["email"]
             otp_obj = OTPVerification.generate_otp(email)
-            EmailService.send_password_reset_email(email, otp_obj.otp)
-            request.session["reset_email"] = email
-            messages.info(request, "Password reset code sent to your email.")
-            return redirect("auth:reset_password")
+            if EmailService.send_password_reset_email(email, otp_obj.otp):
+                request.session["reset_email"] = email
+                messages.info(request, "Password reset code sent to your email.")
+                return redirect("auth:reset_password")
+            else:
+                messages.error(request, "Failed to send reset email. Please try again.")
         return render(request, self.template_name, {"form": form})
 
 

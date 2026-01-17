@@ -4,6 +4,8 @@ Development settings for ExamCore project.
 Use this settings module for local development.
 """
 
+from decouple import config
+
 from .base import *  # noqa: F401, F403
 
 # =============================================================================
@@ -16,7 +18,7 @@ DEBUG = True
 # ALLOWED HOSTS
 # =============================================================================
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]  # nosec B104
 
 
 # =============================================================================
@@ -39,9 +41,10 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Or use Mailpit (configure in docker-compose)
+# EMAIL_HOST defaults to "localhost" for local dev, or "mailpit" when running in Docker
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "localhost"
-EMAIL_PORT = 1025
+EMAIL_HOST = config("EMAIL_HOST", default="localhost")
+EMAIL_PORT = config("EMAIL_PORT", default=1025, cast=int)
 
 # =============================================================================
 # CACHING (Local memory for development)
