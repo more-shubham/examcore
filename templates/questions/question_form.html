@@ -20,6 +20,15 @@
       <form method="post" class="space-y-6" id="question-form">
         {% csrf_token %}
 
+      <!-- Class Selection -->
+        <div>
+          <label for="{{ form.assigned_class.id_for_label }}" class="form-label">Class *</label>
+          {{ form.assigned_class }}
+          {% if form.assigned_class.errors %}
+            <p class="field-error">{{ form.assigned_class.errors.0 }}</p>
+          {% endif %}
+        </div>
+
       <!-- Subject Selection -->
         <div>
           <label for="{{ form.subject.id_for_label }}" class="form-label">Subject *</label>
@@ -107,6 +116,49 @@
 {% block extra_js %}
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Class-Subject filtering
+      const classSelect = document.getElementById('id_assigned_class');
+      const subjectSelect = document.getElementById('id_subject');
+      const subjectsData = {{ subjects_json|safe }};
+      const currentSubjectId = subjectSelect.value;
+
+      function filterSubjects() {
+        const selectedClassId = classSelect.value;
+        const subjects = subjectsData[selectedClassId] || [];
+
+        // Store current value to restore if still valid
+        const currentValue = subjectSelect.value;
+
+        // Clear and rebuild options
+        subjectSelect.innerHTML = '<option value="">Select a subject</option>';
+        subjects.forEach(function(subject) {
+          const option = document.createElement('option');
+          option.value = subject.id;
+          option.textContent = subject.name;
+          subjectSelect.appendChild(option);
+        });
+
+        // Restore selection if still valid
+        if (currentValue) {
+          const stillExists = subjects.some(s => s.id == currentValue);
+          if (stillExists) {
+            subjectSelect.value = currentValue;
+          }
+        }
+      }
+
+      classSelect.addEventListener('change', filterSubjects);
+
+      // Initialize on page load (filter based on current class selection)
+      if (classSelect.value) {
+        filterSubjects();
+        // Restore current subject if editing
+        if (currentSubjectId) {
+          subjectSelect.value = currentSubjectId;
+        }
+      }
+
+      // Options handling
       const container = document.getElementById('options-container');
       const totalFormsInput = document.getElementById('id_options-TOTAL_FORMS');
       const addBtn = document.getElementById('add-option-btn');

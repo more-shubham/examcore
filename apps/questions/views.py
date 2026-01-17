@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
@@ -58,6 +60,19 @@ class QuestionCreateView(QuestionManagerRequiredMixin, View):
 
     template_name = "questions/question_form.html"
 
+    def get_subjects_json(self):
+        """Return JSON mapping of class IDs to their subjects."""
+        subjects = Subject.objects.filter(is_active=True).select_related(
+            "assigned_class"
+        )
+        subjects_data = {}
+        for subject in subjects:
+            class_id = str(subject.assigned_class_id)
+            if class_id not in subjects_data:
+                subjects_data[class_id] = []
+            subjects_data[class_id].append({"id": subject.id, "name": subject.name})
+        return json.dumps(subjects_data)
+
     def get(self, request):
         form = QuestionForm()
         formset = QuestionOptionFormSet()
@@ -66,11 +81,22 @@ class QuestionCreateView(QuestionManagerRequiredMixin, View):
         subject_id = request.GET.get("subject")
         if subject_id:
             form.fields["subject"].initial = subject_id
+            # Also set the class for the selected subject
+            try:
+                subject = Subject.objects.get(id=subject_id)
+                form.fields["assigned_class"].initial = subject.assigned_class_id
+            except Subject.DoesNotExist:
+                pass
 
         return render(
             request,
             self.template_name,
-            {"form": form, "formset": formset, "is_edit": False},
+            {
+                "form": form,
+                "formset": formset,
+                "is_edit": False,
+                "subjects_json": self.get_subjects_json(),
+            },
         )
 
     def post(self, request):
@@ -99,7 +125,12 @@ class QuestionCreateView(QuestionManagerRequiredMixin, View):
         return render(
             request,
             self.template_name,
-            {"form": form, "formset": formset, "is_edit": False},
+            {
+                "form": form,
+                "formset": formset,
+                "is_edit": False,
+                "subjects_json": self.get_subjects_json(),
+            },
         )
 
 
@@ -107,6 +138,19 @@ class QuestionUpdateView(QuestionManagerRequiredMixin, View):
     """View to edit an existing question."""
 
     template_name = "questions/question_form.html"
+
+    def get_subjects_json(self):
+        """Return JSON mapping of class IDs to their subjects."""
+        subjects = Subject.objects.filter(is_active=True).select_related(
+            "assigned_class"
+        )
+        subjects_data = {}
+        for subject in subjects:
+            class_id = str(subject.assigned_class_id)
+            if class_id not in subjects_data:
+                subjects_data[class_id] = []
+            subjects_data[class_id].append({"id": subject.id, "name": subject.name})
+        return json.dumps(subjects_data)
 
     def get(self, request, pk):
         question = get_object_or_404(Question, pk=pk, is_active=True)
@@ -121,7 +165,13 @@ class QuestionUpdateView(QuestionManagerRequiredMixin, View):
         return render(
             request,
             self.template_name,
-            {"form": form, "formset": formset, "is_edit": True, "question": question},
+            {
+                "form": form,
+                "formset": formset,
+                "is_edit": True,
+                "question": question,
+                "subjects_json": self.get_subjects_json(),
+            },
         )
 
     def post(self, request, pk):
@@ -157,7 +207,13 @@ class QuestionUpdateView(QuestionManagerRequiredMixin, View):
         return render(
             request,
             self.template_name,
-            {"form": form, "formset": formset, "is_edit": True, "question": question},
+            {
+                "form": form,
+                "formset": formset,
+                "is_edit": True,
+                "question": question,
+                "subjects_json": self.get_subjects_json(),
+            },
         )
 
 

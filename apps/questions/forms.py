@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory
 
-from apps.academic.models import Subject
+from apps.academic.models import Class, Subject
 
 from .models import Question, QuestionOption
 
@@ -39,6 +39,14 @@ QuestionOptionFormSet = inlineformset_factory(
 class QuestionForm(forms.ModelForm):
     """Form for creating/editing MCQ questions."""
 
+    assigned_class = forms.ModelChoiceField(
+        queryset=Class.objects.filter(is_active=True),
+        required=True,
+        widget=forms.Select(attrs={"class": "form-input", "id": "id_assigned_class"}),
+        label="Class",
+        empty_label="Select a class",
+    )
+
     correct_option_index = forms.IntegerField(
         required=True,
         min_value=0,
@@ -54,7 +62,7 @@ class QuestionForm(forms.ModelForm):
             "question_text",
         ]
         widgets = {
-            "subject": forms.Select(attrs={"class": "form-input"}),
+            "subject": forms.Select(attrs={"class": "form-input", "id": "id_subject"}),
             "question_text": forms.Textarea(
                 attrs={
                     "class": "form-input",
@@ -74,6 +82,10 @@ class QuestionForm(forms.ModelForm):
             is_active=True
         ).select_related("assigned_class")
         self.fields["subject"].empty_label = "Select a subject"
+
+        # Pre-populate assigned_class for editing
+        if self.instance and self.instance.pk and self.instance.subject:
+            self.fields["assigned_class"].initial = self.instance.subject.assigned_class
 
         # Pre-populate correct_option_index for editing
         if self.instance and self.instance.pk and self.instance.correct_option:
