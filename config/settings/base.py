@@ -5,6 +5,7 @@ This module contains settings common to all environments.
 Environment-specific settings should be placed in their respective modules.
 """
 
+import sys
 from pathlib import Path
 
 from decouple import Csv, config
@@ -16,14 +17,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # CORE SETTINGS
 # =============================================================================
 
-SECRET_KEY = config(
-    "SECRET_KEY",
-    default="django-insecure-change-this-in-production-please",
-)
+SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1", cast=Csv())
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
+
+# CSRF trusted origins (required for production behind proxy)
+CSRF_TRUSTED_ORIGINS = config(
+    "CSRF_TRUSTED_ORIGINS",
+    default="",
+    cast=lambda v: [s.strip() for s in v.split(",") if s.strip()],
+)
 
 # Application namespace
 SITE_ID = 1
@@ -224,16 +229,25 @@ SERVER_EMAIL = config("SERVER_EMAIL", default="server@examcore.local")
 # LOGGING
 # =============================================================================
 
+LOG_LEVEL = config("LOG_LEVEL", default="INFO")
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "format": "[{asctime}] {levelname} {name} {module}:{lineno} - {message}",
             "style": "{",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
         },
         "simple": {
-            "format": "{levelname} {asctime} {module} {message}",
+            "format": "[{asctime}] {levelname} {name} - {message}",
+            "style": "{",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+        "json": {
+            "()": "django.utils.log.ServerFormatter",
+            "format": "[{server_time}] {message}",
             "style": "{",
         },
     },
@@ -247,24 +261,26 @@ LOGGING = {
     },
     "handlers": {
         "console": {
-            "level": "INFO",
+            "level": LOG_LEVEL,
             "class": "logging.StreamHandler",
-            "formatter": "simple",
+            "formatter": "verbose",
+            "stream": sys.stdout,
         },
         "mail_admins": {
             "level": "ERROR",
             "filters": ["require_debug_false"],
             "class": "django.utils.log.AdminEmailHandler",
+            "include_html": False,
         },
     },
     "root": {
         "handlers": ["console"],
-        "level": "INFO",
+        "level": LOG_LEVEL,
     },
     "loggers": {
         "django": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": LOG_LEVEL,
             "propagate": False,
         },
         "django.request": {
@@ -272,9 +288,19 @@ LOGGING = {
             "level": "ERROR",
             "propagate": False,
         },
+        "django.security": {
+            "handlers": ["mail_admins", "console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django.db.backends": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
         "apps": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": LOG_LEVEL,
             "propagate": False,
         },
     },

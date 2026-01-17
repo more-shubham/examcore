@@ -20,12 +20,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]  # nosec B104
 
+# CSRF trusted origins for development
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000"]
 
 # =============================================================================
-# DATABASE (SQLite for quick development)
+# DATABASE
 # =============================================================================
 
-# Uncomment to use SQLite instead of PostgreSQL for quick local development
+# Uses PostgreSQL from base.py by default
+# Uncomment below to use SQLite for quick local development
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.sqlite3",
@@ -34,20 +37,19 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]  # nosec B104
 # }
 
 # =============================================================================
-# EMAIL (Console backend for development)
+# EMAIL
 # =============================================================================
 
-# Use console backend to see emails in terminal
-# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
-# Or use Mailpit (configure in docker-compose)
-# EMAIL_HOST defaults to "localhost" for local dev, or "mailpit" when running in Docker
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# Use Mailpit (configure in docker-compose) or console backend
+EMAIL_BACKEND = config(
+    "EMAIL_BACKEND",
+    default="django.core.mail.backends.smtp.EmailBackend",
+)
 EMAIL_HOST = config("EMAIL_HOST", default="localhost")
 EMAIL_PORT = config("EMAIL_PORT", default=1025, cast=int)
 
 # =============================================================================
-# CACHING (Use database cache from base settings for consistency)
+# CACHING
 # =============================================================================
 
 # Uses database cache from base.py - run: python manage.py createcachetable
@@ -71,3 +73,13 @@ STORAGES = {
 
 LOGGING["handlers"]["console"]["level"] = "DEBUG"  # noqa: F405
 LOGGING["loggers"]["apps"]["level"] = "DEBUG"  # noqa: F405
+LOGGING["loggers"]["django.db.backends"]["level"] = "DEBUG"  # noqa: F405
+
+# =============================================================================
+# SECURITY (Relaxed for development)
+# =============================================================================
+
+# Disable HTTPS requirements in development
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False

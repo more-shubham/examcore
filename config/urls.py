@@ -6,6 +6,8 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
+    # Health checks (no auth required)
+    path("", include("apps.core.urls", namespace="core")),
     # Admin
     path("admin/", admin.site.urls),
     # Dashboard
