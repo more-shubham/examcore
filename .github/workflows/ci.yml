@@ -131,6 +131,15 @@ jobs:
         env:
           CYPRESS_BASE_URL: http://localhost:8000
           MAILPIT_URL: http://localhost:8025
+          DJANGO_SETTINGS_MODULE: config.settings.ci
+          SECRET_KEY: test-secret-key-for-ci-only-not-for-production-use-1234567890
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          DB_HOST: localhost
+          DB_PORT: 5432
+          EMAIL_HOST: localhost
+          EMAIL_PORT: 1025
         run: npx cypress run
 
       - name: Upload Cypress screenshots
