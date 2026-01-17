@@ -63,10 +63,11 @@ class ExamAttempt(TimestampedModel):
         question_ids = [q.id for q in questions]
         shuffled_ids = secure_shuffle(question_ids)
 
+        # Store shuffled option IDs for each question
         option_orders = {}
-        option_keys = ["A", "B", "C", "D"]
         for q in questions:
-            option_orders[str(q.id)] = secure_shuffle(option_keys)
+            option_ids = list(q.options.values_list("id", flat=True))
+            option_orders[str(q.id)] = secure_shuffle(option_ids)
 
         return cls.objects.create(
             exam=exam,
@@ -87,32 +88,35 @@ class ExamAttempt(TimestampedModel):
 
     def get_shuffled_options_for_question(self, question):
         """Get options in student's shuffled order for a question."""
-        order = self.option_orders.get(str(question.id), ["A", "B", "C", "D"])
+        # Build option map from database
+        option_map = {opt.id: opt.text for opt in question.options.all()}
+
+        # Get the shuffled order for this question (list of option IDs)
+        order = self.option_orders.get(str(question.id), list(option_map.keys()))
+
         options = []
-        option_map = {
-            "A": question.option_a,
-            "B": question.option_b,
-            "C": question.option_c,
-            "D": question.option_d,
-        }
-        for idx, key in enumerate(order):
-            options.append(
-                {
-                    "display_number": idx + 1,
-                    "original_key": key,
-                    "text": option_map[key],
-                }
-            )
+        for idx, opt_id in enumerate(order):
+            if opt_id in option_map:
+                options.append(
+                    {
+                        "display_number": idx + 1,
+                        "option_id": opt_id,
+                        "text": option_map[opt_id],
+                    }
+                )
         return options
 
     def get_all_questions_with_options(self):
         """Get all questions with shuffled options and existing answers."""
         from apps.questions.models import Question
 
-        questions = Question.objects.filter(id__in=self.question_order)
+        questions = Question.objects.filter(
+            id__in=self.question_order
+        ).prefetch_related("options")
         questions_dict = {q.id: q for q in questions}
 
-        answers = {a.question_id: a.selected_option for a in self.answers.all()}
+        # Get selected option IDs from answers
+        answers = {a.question_id: a.selected_option_id for a in self.answers.all()}
 
         result = []
         for idx, q_id in enumerate(self.question_order):
@@ -160,7 +164,12 @@ class ExamAnswer(models.Model):
         "questions.Question",
         on_delete=models.CASCADE,
     )
-    selected_option = models.CharField(max_length=1)
+    selected_option = models.ForeignKey(
+        "questions.QuestionOption",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
     is_correct = models.BooleanField(default=False)
 
     class Meta:
@@ -171,5 +180,8 @@ class ExamAnswer(models.Model):
 
     def save(self, *args, **kwargs):
         """Auto-check if answer is correct."""
-        self.is_correct = self.selected_option == self.question.correct_option
+        if self.selected_option and self.question.correct_option:
+            self.is_correct = self.selected_option_id == self.question.correct_option_id
+        else:
+            self.is_correct = False
         super().save(*args, **kwargs)

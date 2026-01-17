@@ -3,23 +3,47 @@ import secrets
 from django.conf import settings
 from django.db import models
 
+from apps.core.models import TimestampedModel
 
-class Question(models.Model):
+
+class QuestionOption(TimestampedModel):
+    """Individual option for a question."""
+
+    question = models.ForeignKey(
+        "Question",
+        on_delete=models.CASCADE,
+        related_name="options",
+    )
+    text = models.CharField(max_length=500)
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="question_options_updated",
+    )
+
+    class Meta:
+        db_table = "question_options"
+        verbose_name = "Question Option"
+        verbose_name_plural = "Question Options"
+
+    def __str__(self):
+        return self.text[:50]
+
+
+class Question(TimestampedModel):
     """MCQ Question for the question bank."""
-
-    class Option(models.TextChoices):
-        A = "A", "Option A"
-        B = "B", "Option B"
-        C = "C", "Option C"
-        D = "D", "Option D"
 
     # Core fields
     question_text = models.TextField()
-    option_a = models.CharField(max_length=500)
-    option_b = models.CharField(max_length=500)
-    option_c = models.CharField(max_length=500)
-    option_d = models.CharField(max_length=500)
-    correct_option = models.CharField(max_length=1, choices=Option.choices)
+    correct_option = models.ForeignKey(
+        "QuestionOption",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="correct_for_questions",
+    )
 
     # Relations
     subject = models.ForeignKey(
@@ -32,11 +56,16 @@ class Question(models.Model):
         on_delete=models.CASCADE,
         related_name="questions_created",
     )
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="questions_updated",
+    )
 
     # Metadata
     is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "questions"
@@ -49,30 +78,27 @@ class Question(models.Model):
 
     def get_correct_answer_text(self):
         """Return the text of the correct option."""
-        return getattr(self, f"option_{self.correct_option.lower()}")
+        if self.correct_option:
+            return self.correct_option.text
+        return ""
 
     def get_options_list(self):
-        """Return all options as a list of tuples (label, text)."""
-        return [
-            ("A", self.option_a),
-            ("B", self.option_b),
-            ("C", self.option_c),
-            ("D", self.option_d),
-        ]
+        """Return all options as a list of QuestionOption objects."""
+        return list(self.options.all())
 
     def get_shuffled_options(self):
         """
         Return shuffled options for exam display.
 
         Returns a list of dicts with:
-        - 'label': Display label (1, 2, 3, 4)
+        - 'label': Display label (1, 2, 3, ...)
         - 'text': Option text
-        - 'original_key': Original option key (A, B, C, D)
+        - 'option_id': The option's database ID
         - 'is_correct': Boolean indicating if this is the correct answer
 
         Using secrets module for cryptographically secure shuffling.
         """
-        options = self.get_options_list()
+        options = list(self.options.all())
 
         # Cryptographically secure shuffle using secrets
         shuffled = []
@@ -81,15 +107,19 @@ class Question(models.Model):
             index = secrets.randbelow(len(temp_options))
             shuffled.append(temp_options.pop(index))
 
-        # Build result with new display labels (1, 2, 3, 4)
+        # Build result with new display labels (1, 2, 3, ...)
         result = []
-        for i, (original_key, text) in enumerate(shuffled, start=1):
+        for i, option in enumerate(shuffled, start=1):
             result.append(
                 {
                     "label": str(i),
-                    "text": text,
-                    "original_key": original_key,
-                    "is_correct": original_key == self.correct_option,
+                    "text": option.text,
+                    "option_id": option.id,
+                    "is_correct": (
+                        self.correct_option_id == option.id
+                        if self.correct_option_id
+                        else False
+                    ),
                 }
             )
 

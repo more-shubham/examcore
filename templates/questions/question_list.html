@@ -63,22 +63,12 @@
                 </div>
                 <p class="text-gray-900 font-medium mb-4">{{ question.question_text }}</p>
                 <div class="grid grid-cols-2 gap-2 text-sm">
-                  <div class="flex items-center {% if question.correct_option == 'A' %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
-                    <span class="w-6 h-6 flex items-center justify-center rounded-full {% if question.correct_option == 'A' %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">A</span>
-                    {{ question.option_a }}
-                  </div>
-                  <div class="flex items-center {% if question.correct_option == 'B' %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
-                    <span class="w-6 h-6 flex items-center justify-center rounded-full {% if question.correct_option == 'B' %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">B</span>
-                    {{ question.option_b }}
-                  </div>
-                  <div class="flex items-center {% if question.correct_option == 'C' %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
-                    <span class="w-6 h-6 flex items-center justify-center rounded-full {% if question.correct_option == 'C' %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">C</span>
-                    {{ question.option_c }}
-                  </div>
-                  <div class="flex items-center {% if question.correct_option == 'D' %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
-                    <span class="w-6 h-6 flex items-center justify-center rounded-full {% if question.correct_option == 'D' %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">D</span>
-                    {{ question.option_d }}
-                  </div>
+                  {% for option in question.options.all %}
+                    <div class="flex items-center {% if question.correct_option_id == option.id %}text-green-600 font-medium{% else %}text-gray-600{% endif %}">
+                      <span class="w-6 h-6 flex items-center justify-center rounded-full {% if question.correct_option_id == option.id %}bg-green-100{% else %}bg-gray-100{% endif %} mr-2 text-xs font-bold">{{ forloop.counter }}</span>
+                      {{ option.text }}
+                    </div>
+                  {% endfor %}
                 </div>
               </div>
               <div class="flex items-center space-x-2 ml-4">

@@ -59,7 +59,7 @@
               <div class="space-y-3">
                 {% for option in item.options %}
                   <label class="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors option-label" data-question="{{ item.question.id }}">
-                    <input type="radio" name="question_{{ item.question.id }}" value="{{ option.original_key }}" class="h-4 w-4 text-primary-600 border-gray-300 focus:ring-primary-500" {% if item.selected_answer == option.original_key %}checked{% endif %}>
+                    <input type="radio" name="question_{{ item.question.id }}" value="{{ option.option_id }}" class="h-4 w-4 text-primary-600 border-gray-300 focus:ring-primary-500" {% if item.selected_answer == option.option_id %}checked{% endif %}>
                     <span class="ml-3 flex items-center">
                       <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-700 text-sm font-medium mr-3">
                         {{ option.display_number }}

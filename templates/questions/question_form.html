@@ -17,7 +17,7 @@
 
   <!-- Form -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <form method="post" class="space-y-6">
+      <form method="post" class="space-y-6" id="question-form">
         {% csrf_token %}
 
       <!-- Subject Selection -->
@@ -40,64 +40,55 @@
 
       <!-- Options -->
         <div class="space-y-4">
-          <p class="form-label">Options *</p>
-
-          <div class="flex items-center space-x-3">
-            <span class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600">A</span>
-            <div class="flex-1">
-              {{ form.option_a }}
-              {% if form.option_a.errors %}
-                <p class="field-error">{{ form.option_a.errors.0 }}</p>
-              {% endif %}
-            </div>
+          <div class="flex items-center justify-between">
+            <p class="form-label">Options * (4-8 options required)</p>
+            <button type="button" id="add-option-btn" class="inline-flex items-center px-3 py-1 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              Add Option
+            </button>
           </div>
 
-          <div class="flex items-center space-x-3">
-            <span class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600">B</span>
-            <div class="flex-1">
-              {{ form.option_b }}
-              {% if form.option_b.errors %}
-                <p class="field-error">{{ form.option_b.errors.0 }}</p>
-              {% endif %}
-            </div>
-          </div>
+          {{ formset.management_form }}
 
-          <div class="flex items-center space-x-3">
-            <span class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600">C</span>
-            <div class="flex-1">
-              {{ form.option_c }}
-              {% if form.option_c.errors %}
-                <p class="field-error">{{ form.option_c.errors.0 }}</p>
-              {% endif %}
-            </div>
-          </div>
-
-          <div class="flex items-center space-x-3">
-            <span class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600">D</span>
-            <div class="flex-1">
-              {{ form.option_d }}
-              {% if form.option_d.errors %}
-                <p class="field-error">{{ form.option_d.errors.0 }}</p>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-
-      <!-- Correct Answer -->
-        <div>
-          <p class="form-label">Correct Answer *</p>
-          <div class="flex items-center space-x-6">
-            {% for radio in form.correct_option %}
-              <label class="inline-flex items-center cursor-pointer">
-                {{ radio.tag }}
-                <span class="ml-2 text-sm font-medium text-gray-700">{{ radio.choice_label }}</span>
-              </label>
+          <div id="options-container" class="space-y-3">
+            {% for option_form in formset %}
+              <div class="option-row flex items-center space-x-3" data-index="{{ forloop.counter0 }}">
+                <label class="inline-flex items-center cursor-pointer">
+                  <input type="radio" name="correct_answer" value="{{ forloop.counter0 }}" class="correct-answer-radio h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
+                         {% if form.correct_option_index.value == forloop.counter0|stringformat:"s" or forloop.counter0 == form.correct_option_index.value %}checked{% endif %}>
+                  <span class="ml-2 w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600 option-label">{{ forloop.counter }}</span>
+                </label>
+                <div class="flex-1">
+                  {% for hidden in option_form.hidden_fields %}
+                    {{ hidden }}
+                  {% endfor %}
+                  {{ option_form.text }}
+                  {% if option_form.text.errors %}
+                    <p class="field-error">{{ option_form.text.errors.0 }}</p>
+                  {% endif %}
+                </div>
+                {% if option_form.DELETE %}
+                  <button type="button" class="delete-option-btn p-2 text-red-600 hover:bg-red-50 rounded-lg" title="Remove option">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                  </button>
+                  <div style="display: none;">{{ option_form.DELETE }}</div>
+                {% endif %}
+              </div>
             {% endfor %}
           </div>
-          {% if form.correct_option.errors %}
-            <p class="field-error">{{ form.correct_option.errors.0 }}</p>
+
+          <p class="text-sm text-gray-500">Select the radio button next to the correct answer.</p>
+          {% if form.correct_option_index.errors %}
+            <p class="field-error">{{ form.correct_option_index.errors.0 }}</p>
           {% endif %}
         </div>
+
+        <!-- Hidden field for correct option index -->
+        <input type="hidden" name="correct_option_index" id="correct_option_index" value="{{ form.correct_option_index.value|default:'0' }}">
 
       <!-- Submit -->
         <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
@@ -111,4 +102,125 @@
       </form>
     </div>
   </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const container = document.getElementById('options-container');
+      const totalFormsInput = document.getElementById('id_options-TOTAL_FORMS');
+      const addBtn = document.getElementById('add-option-btn');
+      const correctOptionInput = document.getElementById('correct_option_index');
+      const maxForms = 8;
+      const minForms = 4;
+
+    // Update correct_option_index when radio changes
+      function updateCorrectOption() {
+        const checkedRadio = document.querySelector('.correct-answer-radio:checked');
+        if (checkedRadio) {
+          correctOptionInput.value = checkedRadio.value;
+        }
+      }
+
+    // Update labels and radio values after add/remove
+      function updateLabels() {
+        const rows = container.querySelectorAll('.option-row:not(.deleted)');
+        rows.forEach((row, idx) => {
+          row.dataset.index = idx;
+          const label = row.querySelector('.option-label');
+          const radio = row.querySelector('.correct-answer-radio');
+          if (label) label.textContent = idx + 1;
+          if (radio) radio.value = idx;
+        });
+
+      // Update add button visibility
+        addBtn.style.display = rows.length >= maxForms ? 'none' : '';
+
+      // Update delete button visibility (hide if at minimum)
+        rows.forEach(row => {
+          const deleteBtn = row.querySelector('.delete-option-btn');
+          if (deleteBtn) {
+            deleteBtn.style.display = rows.length <= minForms ? 'none' : '';
+          }
+        });
+      }
+
+    // Add option
+      addBtn.addEventListener('click', function() {
+        const totalForms = parseInt(totalFormsInput.value);
+        if (totalForms >= maxForms) return;
+
+        const newIndex = totalForms;
+        const newRow = document.createElement('div');
+        newRow.className = 'option-row flex items-center space-x-3';
+        newRow.dataset.index = newIndex;
+        newRow.innerHTML = `
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="radio" name="correct_answer" value="${newIndex}" class="correct-answer-radio h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500">
+          <span class="ml-2 w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600 option-label">${newIndex + 1}</span>
+        </label>
+        <div class="flex-1">
+          <input type="hidden" name="options-${newIndex}-id" id="id_options-${newIndex}-id">
+          <input type="text" name="options-${newIndex}-text" class="form-input" placeholder="Enter option text" id="id_options-${newIndex}-text">
+        </div>
+        <button type="button" class="delete-option-btn p-2 text-red-600 hover:bg-red-50 rounded-lg" title="Remove option">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+        </button>
+        <div style="display: none;">
+          <input type="checkbox" name="options-${newIndex}-DELETE" id="id_options-${newIndex}-DELETE">
+        </div>
+      `;
+
+        container.appendChild(newRow);
+        totalFormsInput.value = newIndex + 1;
+
+      // Attach delete handler
+        newRow.querySelector('.delete-option-btn').addEventListener('click', deleteOption);
+        newRow.querySelector('.correct-answer-radio').addEventListener('change', updateCorrectOption);
+
+        updateLabels();
+      });
+
+    // Delete option
+      function deleteOption(e) {
+        const row = e.target.closest('.option-row');
+        const deleteCheckbox = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
+
+        if (deleteCheckbox) {
+        // Existing option - mark for deletion
+          deleteCheckbox.checked = true;
+          row.classList.add('deleted');
+          row.style.display = 'none';
+        } else {
+        // New option - remove from DOM and decrement total
+          row.remove();
+          totalFormsInput.value = parseInt(totalFormsInput.value) - 1;
+        }
+
+        updateLabels();
+
+      // If deleted option was the correct one, select the first available
+        const remainingRadios = container.querySelectorAll('.option-row:not(.deleted) .correct-answer-radio');
+        if (remainingRadios.length > 0 && !document.querySelector('.correct-answer-radio:checked:not(.deleted *)')) {
+          remainingRadios[0].checked = true;
+          updateCorrectOption();
+        }
+      }
+
+    // Attach delete handlers to existing buttons
+      document.querySelectorAll('.delete-option-btn').forEach(btn => {
+        btn.addEventListener('click', deleteOption);
+      });
+
+    // Attach change handlers to existing radios
+      document.querySelectorAll('.correct-answer-radio').forEach(radio => {
+        radio.addEventListener('change', updateCorrectOption);
+      });
+
+    // Initialize labels
+      updateLabels();
+    });
+  </script>
 {% endblock %}

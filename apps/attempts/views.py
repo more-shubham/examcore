@@ -158,14 +158,19 @@ class StudentExamView(StudentRequiredMixin, View):
         if attempt.status != ExamAttempt.Status.IN_PROGRESS:
             return redirect("attempts:result", pk=pk)
 
+        # Save answers - value is now the option ID (integer)
         for key, value in request.POST.items():
             if key.startswith("question_") and value:
                 question_id = key.replace("question_", "")
-                ExamAnswer.objects.update_or_create(
-                    attempt=attempt,
-                    question_id=question_id,
-                    defaults={"selected_option": value},
-                )
+                try:
+                    option_id = int(value)
+                    ExamAnswer.objects.update_or_create(
+                        attempt=attempt,
+                        question_id=question_id,
+                        defaults={"selected_option_id": option_id},
+                    )
+                except (ValueError, TypeError):
+                    continue
 
         if request.headers.get("X-Requested-With") == "XMLHttpRequest":
             return render(request, self.template_name, {"saved": True})
@@ -183,14 +188,19 @@ class StudentSubmitExamView(StudentRequiredMixin, View):
         if attempt.status == ExamAttempt.Status.SUBMITTED:
             return redirect("attempts:result", pk=pk)
 
+        # Save answers - value is now the option ID (integer)
         for key, value in request.POST.items():
             if key.startswith("question_") and value:
                 question_id = key.replace("question_", "")
-                ExamAnswer.objects.update_or_create(
-                    attempt=attempt,
-                    question_id=question_id,
-                    defaults={"selected_option": value},
-                )
+                try:
+                    option_id = int(value)
+                    ExamAnswer.objects.update_or_create(
+                        attempt=attempt,
+                        question_id=question_id,
+                        defaults={"selected_option_id": option_id},
+                    )
+                except (ValueError, TypeError):
+                    continue
 
         attempt.status = ExamAttempt.Status.SUBMITTED
         attempt.submitted_at = timezone.now()
