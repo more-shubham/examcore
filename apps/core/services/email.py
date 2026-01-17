@@ -1,3 +1,5 @@
+import smtplib
+
 from django.conf import settings
 from django.core.mail import send_mail
 
@@ -21,7 +23,7 @@ class EmailService:
                 fail_silently=False,
             )
             return True
-        except Exception:
+        except smtplib.SMTPException:
             return False
 
     @staticmethod
@@ -49,7 +51,7 @@ ExamCore Team
                 fail_silently=False,
             )
             return True
-        except Exception:
+        except smtplib.SMTPException:
             return False
 
     @staticmethod
@@ -66,5 +68,5 @@ ExamCore Team
                 fail_silently=False,
             )
             return True
-        except Exception:
+        except smtplib.SMTPException:
             return False

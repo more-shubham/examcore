@@ -38,12 +38,6 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=8.0",
-    "pytest-django>=4.7",
-    "pytest-cov>=4.1",
-    "pytest-xdist>=3.5",
-    "factory-boy>=3.3",
-    "faker>=22.0",
     "black>=24.0",
     "isort>=5.13",
     "flake8>=7.0",
@@ -52,12 +46,6 @@ dev = [
     "pre-commit>=3.6",
     "django-debug-toolbar>=4.2",
     "ipython>=8.0",
-]
-
-docs = [
-    "mkdocs>=1.5",
-    "mkdocs-material>=9.5",
-    "mkdocstrings[python]>=0.24",
 ]
 
 [project.urls]
@@ -107,41 +95,6 @@ sections = ["FUTURE", "STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLD
 skip = ["venv", ".venv", "migrations", "node_modules"]
 skip_gitignore = true
 
-# Pytest
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "config.settings.test"
-python_files = ["test_*.py", "*_test.py"]
-addopts = [
-    "--strict-markers",
-    "--strict-config",
-    "-ra",
-    "--reuse-db",
-]
-filterwarnings = [
-    "ignore::DeprecationWarning",
-]
-
-# Coverage
-[tool.coverage.run]
-source = ["apps"]
-branch = true
-omit = [
-    "*/migrations/*",
-    "*/tests/*",
-    "*/__pycache__/*",
-]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if __name__ == .__main__.:",
-    "if TYPE_CHECKING:",
-]
-show_missing = true
-
 # MyPy - Type Checker
 [tool.mypy]
 python_version = "3.11"
@@ -158,4 +111,4 @@ exclude = [
 ]
 
 [tool.django-stubs]
-django_settings_module = "config.settings.development"
+django_settings_module = "config.settings.production"

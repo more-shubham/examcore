@@ -54,7 +54,11 @@ class ExamAttempt(TimestampedModel):
         db_table = "exam_attempts"
         verbose_name = "Exam Attempt"
         verbose_name_plural = "Exam Attempts"
-        unique_together = ["exam", "student"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["exam", "student"], name="unique_attempt_per_student"
+            ),
+        ]
         indexes = [
             models.Index(fields=["status"], name="attempts_status_idx"),
             models.Index(
@@ -193,7 +197,11 @@ class ExamAnswer(models.Model):
         db_table = "exam_answers"
         verbose_name = "Exam Answer"
         verbose_name_plural = "Exam Answers"
-        unique_together = ["attempt", "question"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["attempt", "question"], name="unique_answer_per_question"
+            ),
+        ]
         indexes = [
             models.Index(
                 fields=["attempt", "is_correct"], name="answers_attempt_correct_idx"

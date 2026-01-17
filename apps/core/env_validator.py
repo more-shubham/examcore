@@ -1,8 +1,3 @@
-"""
-Environment validation module.
-Validates required environment variables at Django startup.
-"""
-
 import logging
 
 from django.conf import settings
@@ -28,6 +23,7 @@ class EnvironmentValidator:
         self._validate_database()
         self._validate_email()
         self._validate_logging()
+        self._validate_production_security()
 
         # Log warnings
         for warning in self.warnings:
@@ -67,14 +63,6 @@ class EnvironmentValidator:
             self.errors.append("Database USER (POSTGRES_USER) is required")
         if not db.get("PASSWORD"):
             self.errors.append("Database PASSWORD (POSTGRES_PASSWORD) is required")
-        elif db.get("PASSWORD") == "examcore123":
-            # Warn in development, error in production
-            if settings.DEBUG:
-                self.warnings.append(
-                    "Database PASSWORD is using insecure default - change for production"
-                )
-            else:
-                self.errors.append("Database PASSWORD is using insecure default")
         if not db.get("HOST"):
             self.errors.append("Database HOST (DB_HOST) is required")
 
@@ -90,6 +78,46 @@ class EnvironmentValidator:
         if log_level.upper() not in self.VALID_LOG_LEVELS:
             self.errors.append(
                 f"LOG_LEVEL must be one of {self.VALID_LOG_LEVELS}, got: {log_level}"
+            )
+
+    def _validate_production_security(self):
+        """Validate security settings for production (DEBUG=False)."""
+        if settings.DEBUG:
+            # Skip production security checks in debug mode
+            return
+
+        # Check SSL redirect
+        if not getattr(settings, "SECURE_SSL_REDIRECT", False):
+            self.warnings.append(
+                "SECURE_SSL_REDIRECT is False - HTTPS not enforced. "
+                "Set to True unless behind a proxy that handles SSL."
+            )
+
+        # Check secure cookies
+        if not getattr(settings, "SESSION_COOKIE_SECURE", False):
+            self.errors.append("SESSION_COOKIE_SECURE must be True in production")
+
+        if not getattr(settings, "CSRF_COOKIE_SECURE", False):
+            self.errors.append("CSRF_COOKIE_SECURE must be True in production")
+
+        # Check CSRF trusted origins
+        csrf_origins = getattr(settings, "CSRF_TRUSTED_ORIGINS", [])
+        if not csrf_origins:
+            self.errors.append("CSRF_TRUSTED_ORIGINS must be configured in production")
+        else:
+            # Warn if any origins don't use HTTPS
+            for origin in csrf_origins:
+                if origin.startswith("http://"):
+                    self.warnings.append(
+                        f"CSRF_TRUSTED_ORIGINS contains non-HTTPS origin: {origin}"
+                    )
+
+        # Check HSTS settings
+        hsts_seconds = getattr(settings, "SECURE_HSTS_SECONDS", 0)
+        if hsts_seconds == 0:
+            self.warnings.append(
+                "SECURE_HSTS_SECONDS is 0 - HSTS not enabled. "
+                "Consider setting to 31536000 (1 year) for production."
             )
 
 

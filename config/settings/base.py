@@ -1,21 +1,9 @@
-"""
-Base Django settings for ExamCore project.
-
-This module contains settings common to all environments.
-Environment-specific settings should be placed in their respective modules.
-"""
-
 import sys
 from pathlib import Path
 
 from decouple import Csv, config
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
-# =============================================================================
-# CORE SETTINGS
-# =============================================================================
 
 SECRET_KEY = config("SECRET_KEY")
 
@@ -23,19 +11,13 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 
-# CSRF trusted origins (required for production behind proxy)
 CSRF_TRUSTED_ORIGINS = config(
     "CSRF_TRUSTED_ORIGINS",
     default="",
     cast=lambda v: [s.strip() for s in v.split(",") if s.strip()],
 )
 
-# Application namespace
 SITE_ID = 1
-
-# =============================================================================
-# APPLICATION DEFINITION
-# =============================================================================
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -53,9 +35,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    # Core infrastructure
     "apps.core",
-    # Domain apps
     "apps.institution",
     "apps.academic",
     "apps.users",
@@ -69,10 +49,6 @@ LOCAL_APPS = [
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-# =============================================================================
-# MIDDLEWARE
-# =============================================================================
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -84,17 +60,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# =============================================================================
-# URLS
-# =============================================================================
-
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
-
-# =============================================================================
-# TEMPLATES
-# =============================================================================
 
 TEMPLATES = [
     {
@@ -113,16 +81,12 @@ TEMPLATES = [
     },
 ]
 
-# =============================================================================
-# DATABASE
-# =============================================================================
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": config("POSTGRES_DB", default="examcore"),
         "USER": config("POSTGRES_USER", default="examcore"),
-        "PASSWORD": config("POSTGRES_PASSWORD", default="examcore123"),
+        "PASSWORD": config("POSTGRES_PASSWORD"),
         "HOST": config("DB_HOST", default="localhost"),
         "PORT": config("DB_PORT", default="5432"),
         "ATOMIC_REQUESTS": True,
@@ -133,12 +97,7 @@ DATABASES = {
     }
 }
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# =============================================================================
-# AUTHENTICATION
-# =============================================================================
 
 AUTH_USER_MODEL = "users.User"
 
@@ -162,18 +121,10 @@ LOGIN_URL = "/"
 LOGIN_REDIRECT_URL = "/dashboard/"
 LOGOUT_REDIRECT_URL = "/"
 
-# =============================================================================
-# INTERNATIONALIZATION
-# =============================================================================
-
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
-
-# =============================================================================
-# STATIC FILES
-# =============================================================================
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
@@ -184,7 +135,6 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
-# WhiteNoise configuration
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -194,23 +144,11 @@ STORAGES = {
     },
 }
 
-# =============================================================================
-# MEDIA FILES
-# =============================================================================
-
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# =============================================================================
-# TAILWIND CSS
-# =============================================================================
-
 TAILWIND_APP_NAME = "theme"
 INTERNAL_IPS = ["127.0.0.1"]
-
-# =============================================================================
-# EMAIL CONFIGURATION
-# =============================================================================
 
 EMAIL_BACKEND = config(
     "EMAIL_BACKEND",
@@ -224,10 +162,6 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="noreply@examcore.local")
 SERVER_EMAIL = config("SERVER_EMAIL", default="server@examcore.local")
-
-# =============================================================================
-# LOGGING
-# =============================================================================
 
 LOG_LEVEL = config("LOG_LEVEL", default="INFO")
 
@@ -306,27 +240,18 @@ LOGGING = {
     },
 }
 
-# =============================================================================
-# SECURITY (Base settings - override in production.py)
-# =============================================================================
-
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = True
 X_FRAME_OPTIONS = "DENY"
 
-# Session expires after 1 day (in seconds)
-SESSION_COOKIE_AGE = 86400  # 24 hours
+SESSION_COOKIE_AGE = 86400
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-
-# =============================================================================
-# CACHING (Database cache - no Redis required)
-# =============================================================================
 
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
         "LOCATION": "django_cache",
-        "TIMEOUT": 300,  # 5 minutes
+        "TIMEOUT": 300,
         "OPTIONS": {
             "MAX_ENTRIES": 10000,
             "CULL_FREQUENCY": 3,

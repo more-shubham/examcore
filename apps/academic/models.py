@@ -54,7 +54,11 @@ class Subject(TimestampedModel):
         verbose_name = "Subject"
         verbose_name_plural = "Subjects"
         ordering = ["name"]
-        unique_together = ["assigned_class", "name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["assigned_class", "name"], name="unique_subject_per_class"
+            ),
+        ]
         indexes = [
             models.Index(fields=["is_active"], name="subjects_active_idx"),
             models.Index(

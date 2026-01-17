@@ -160,7 +160,11 @@ class ExamQuestion(models.Model):
         db_table = "exam_questions"
         verbose_name = "Exam Question"
         verbose_name_plural = "Exam Questions"
-        unique_together = ["exam", "question"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["exam", "question"], name="unique_question_per_exam"
+            ),
+        ]
         ordering = ["order"]
 
     def __str__(self):

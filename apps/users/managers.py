@@ -1,5 +1,3 @@
-"""Custom managers for the User model."""
-
 from django.contrib.auth.models import UserManager as BaseUserManager
 from django.db import models
 
@@ -13,19 +11,19 @@ class UserQuerySet(models.QuerySet):
 
     def admins(self):
         """Filter to admin users."""
-        return self.filter(role="admin")
+        return self.filter(role=self.model.Role.ADMIN)
 
     def examiners(self):
         """Filter to examiner users."""
-        return self.filter(role="examiner")
+        return self.filter(role=self.model.Role.EXAMINER)
 
     def teachers(self):
         """Filter to teacher users."""
-        return self.filter(role="teacher")
+        return self.filter(role=self.model.Role.TEACHER)
 
     def students(self):
         """Filter to student users."""
-        return self.filter(role="student")
+        return self.filter(role=self.model.Role.STUDENT)
 
     def in_class(self, assigned_class):
         """Filter to users in a specific class."""

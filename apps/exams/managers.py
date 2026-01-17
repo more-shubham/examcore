@@ -1,5 +1,3 @@
-"""Custom managers for the Exam model."""
-
 from django.db import models
 from django.utils import timezone
 
@@ -13,11 +11,11 @@ class ExamQuerySet(models.QuerySet):
 
     def published(self):
         """Filter to published exams."""
-        return self.filter(status="published")
+        return self.filter(status=self.model.Status.PUBLISHED)
 
     def draft(self):
         """Filter to draft exams."""
-        return self.filter(status="draft")
+        return self.filter(status=self.model.Status.DRAFT)
 
     def for_subject(self, subject):
         """Filter to exams for a specific subject."""

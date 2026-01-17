@@ -1,5 +1,3 @@
-"""Custom managers for ExamAttempt and ExamAnswer models."""
-
 from django.db import models
 
 
@@ -8,19 +6,21 @@ class ExamAttemptQuerySet(models.QuerySet):
 
     def in_progress(self):
         """Filter to in-progress attempts."""
-        return self.filter(status="in_progress")
+        return self.filter(status=self.model.Status.IN_PROGRESS)
 
     def submitted(self):
         """Filter to submitted attempts."""
-        return self.filter(status="submitted")
+        return self.filter(status=self.model.Status.SUBMITTED)
 
     def timed_out(self):
         """Filter to timed-out attempts."""
-        return self.filter(status="timed_out")
+        return self.filter(status=self.model.Status.TIMED_OUT)
 
     def completed(self):
         """Filter to completed attempts (submitted or timed out)."""
-        return self.filter(status__in=["submitted", "timed_out"])
+        return self.filter(
+            status__in=[self.model.Status.SUBMITTED, self.model.Status.TIMED_OUT]
+        )
 
     def for_student(self, student):
         """Filter to attempts by a specific student."""
