@@ -339,6 +339,7 @@ class Command(BaseCommand):
                 continue
 
             random_count = row.get("random_question_count", "")
+            exam_type = row.get("exam_type", "official")
             exam = Exam.objects.create(
                 title=row["title"],
                 description=row.get("description", ""),
@@ -350,6 +351,7 @@ class Command(BaseCommand):
                 ),
                 random_question_count=int(random_count) if random_count else None,
                 status=row.get("status", "draft"),
+                exam_type=exam_type,
                 created_by=self.user_map[creator_ref],
                 is_active=parse_bool(row.get("is_active", "true")),
             )

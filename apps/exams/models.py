@@ -12,9 +12,19 @@ class Exam(models.Model):
         DRAFT = "draft", "Draft"
         PUBLISHED = "published", "Published"
 
+    class ExamType(models.TextChoices):
+        OFFICIAL = "official", "Official"
+        PRACTICE = "practice", "Practice"
+
     # Core fields
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
+    exam_type = models.CharField(
+        max_length=20,
+        choices=ExamType.choices,
+        default=ExamType.OFFICIAL,
+        help_text="Practice exams can be retaken multiple times",
+    )
 
     # Subject assignment
     subject = models.ForeignKey(
@@ -66,6 +76,9 @@ class Exam(models.Model):
             models.Index(
                 fields=["start_time", "end_time"], name="exams_time_range_idx"
             ),
+            models.Index(
+                fields=["exam_type", "is_active"], name="exams_type_active_idx"
+            ),
         ]
 
     def __str__(self):
@@ -107,6 +120,11 @@ class Exam(models.Model):
     def is_ended(self):
         """Check if exam has ended."""
         return timezone.now() > self.end_time
+
+    @property
+    def is_practice(self):
+        """Check if this is a practice exam."""
+        return self.exam_type == self.ExamType.PRACTICE
 
     @property
     def status_display(self):

@@ -14,6 +14,7 @@ module.exports = defineConfig({
     defaultCommandTimeout: 10000,
     requestTimeout: 10000,
     responseTimeout: 10000,
+    taskTimeout: 120000,
     // Stop on first error - no retries
     retries: 0,
     // Environment variables

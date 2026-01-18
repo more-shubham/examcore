@@ -47,6 +47,7 @@ class ExamAttempt(TimestampedModel):
     )
     score = models.PositiveIntegerField(null=True, blank=True)
     total_questions = models.PositiveIntegerField(default=0)
+    attempt_number = models.PositiveIntegerField(default=1)
 
     objects = ExamAttemptManager()
 
@@ -54,16 +55,14 @@ class ExamAttempt(TimestampedModel):
         db_table = "exam_attempts"
         verbose_name = "Exam Attempt"
         verbose_name_plural = "Exam Attempts"
-        constraints = [
-            models.UniqueConstraint(
-                fields=["exam", "student"], name="unique_attempt_per_student"
-            ),
-        ]
+        # Note: Unique constraint for official exams is enforced in application logic
+        # to allow multiple attempts for practice exams
         indexes = [
             models.Index(fields=["status"], name="attempts_status_idx"),
             models.Index(
                 fields=["student", "status"], name="attempts_student_status_idx"
             ),
+            models.Index(fields=["exam", "student"], name="attempts_exam_student_idx"),
         ]
 
     def __str__(self):
@@ -83,12 +82,16 @@ class ExamAttempt(TimestampedModel):
             option_ids = list(q.options.values_list("id", flat=True))
             option_orders[str(q.id)] = secure_shuffle(option_ids)
 
+        # Calculate attempt number (for practice exams, this can be > 1)
+        attempt_number = cls.objects.filter(exam=exam, student=student).count() + 1
+
         return cls.objects.create(
             exam=exam,
             student=student,
             question_order=shuffled_ids,
             option_orders=option_orders,
             total_questions=len(questions),
+            attempt_number=attempt_number,
         )
 
     def get_question_at_index(self, index):

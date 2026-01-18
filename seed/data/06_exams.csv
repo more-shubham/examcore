@@ -1,13 +1,15 @@
-id,title,description,subject_ref,start_time,end_time,use_random_questions,random_question_count,status,created_by_ref,is_active
-exam_dsu_upcoming,Data Structures Unit Test,Stacks Queues and Linked Lists - CO 3rd Sem,dsu_co3,+2d,+2d2h,true,10,published,examiner_01,true
-exam_dms_running,DBMS Mid-Term,SQL Normalization and ER Diagrams - CO 4th Sem,dms_co4,-1h,+2h,true,10,published,examiner_01,true
-exam_ooj_ended,Java OOP Quiz,Classes Inheritance and Polymorphism - CO 3rd Sem,ooj_co3,-7d,-7d3h,true,10,published,examiner_01,true
-exam_sen_draft,Software Engineering Test (Draft),SDLC Models and Testing - CO 4th Sem,sen_co4,+5d,+5d1h,true,10,draft,examiner_01,true
-exam_dte_upcoming,Digital Techniques Test,Logic Gates and Flip-flops - CO 3rd Sem,dte_co3,+3d,+3d1h30m,true,10,published,examiner_01,true
-exam_cns_running,Computer Networks Exam,OSI Model and TCP/IP - CO 4th Sem,cns_co4,-30m,+2h30m,true,10,published,examiner_02,true
-exam_ppr_ended,Python Programming Quiz,Basics and Data Types - IF 3rd Sem,ppr_if3,-14d,-14d2h,true,6,published,examiner_02,true
-exam_adb_upcoming,Advanced DBMS Test,NoSQL and MongoDB - IF 4th Sem,adb_if4,+1d,+1d2h,true,6,published,examiner_02,true
-exam_mic_draft,Microprocessor Test (Draft),8085 Architecture - EJ 3rd Sem,mic_ej3,+10d,+10d3h,true,6,draft,examiner_02,true
-exam_mco_ended,Microcontroller Quiz,8051 Programming - EJ 4th Sem,mco_ej4,-3d,-3d2h,true,6,published,examiner_02,true
-exam_dsu_manual,DSU Special Test,Selected Questions on Trees and Graphs - CO 3rd Sem,dsu_co3,+4d,+4d1h30m,false,,published,examiner_01,true
-exam_osy_manual,Operating System Revision,Process Scheduling and Memory - CO 4th Sem,osy_co4,+6d,+6d2h,false,,published,examiner_02,true
+id,title,description,subject_ref,start_time,end_time,use_random_questions,random_question_count,status,created_by_ref,is_active,exam_type
+exam_dsu_upcoming,Data Structures Unit Test,Stacks Queues and Linked Lists - CO 3rd Sem,dsu_co3,+2d,+2d2h,true,10,published,examiner_01,true,official
+exam_dms_running,DBMS Mid-Term,SQL Normalization and ER Diagrams - CO 4th Sem,dms_co4,-1h,+2h,true,10,published,examiner_01,true,official
+exam_ooj_ended,Java OOP Quiz,Classes Inheritance and Polymorphism - CO 3rd Sem,ooj_co3,-7d,-7d3h,true,10,published,examiner_01,true,official
+exam_sen_draft,Software Engineering Test (Draft),SDLC Models and Testing - CO 4th Sem,sen_co4,+5d,+5d1h,true,10,draft,examiner_01,true,official
+exam_dte_upcoming,Digital Techniques Test,Logic Gates and Flip-flops - CO 3rd Sem,dte_co3,+3d,+3d1h30m,true,10,published,examiner_01,true,official
+exam_cns_running,Computer Networks Exam,OSI Model and TCP/IP - CO 4th Sem,cns_co4,-30m,+2h30m,true,10,published,examiner_02,true,official
+exam_ppr_ended,Python Programming Quiz,Basics and Data Types - IF 3rd Sem,ppr_if3,-14d,-14d2h,true,6,published,examiner_02,true,official
+exam_adb_upcoming,Advanced DBMS Test,NoSQL and MongoDB - IF 4th Sem,adb_if4,+1d,+1d2h,true,6,published,examiner_02,true,official
+exam_mic_draft,Microprocessor Test (Draft),8085 Architecture - EJ 3rd Sem,mic_ej3,+10d,+10d3h,true,6,draft,examiner_02,true,official
+exam_mco_ended,Microcontroller Quiz,8051 Programming - EJ 4th Sem,mco_ej4,-3d,-3d2h,true,6,published,examiner_02,true,official
+exam_dsu_manual,DSU Special Test,Selected Questions on Trees and Graphs - CO 3rd Sem,dsu_co3,+4d,+4d1h30m,false,,published,examiner_01,true,official
+exam_osy_manual,Operating System Revision,Process Scheduling and Memory - CO 4th Sem,osy_co4,+6d,+6d2h,false,,published,examiner_02,true,official
+exam_dsu_practice,DSU Practice Quiz,Practice questions on Arrays and Sorting - CO 3rd Sem,dsu_co3,-1h,+3h,true,5,published,examiner_01,true,practice
+exam_ooj_practice,Java Basics Practice,Practice OOP concepts - Multiple attempts allowed - CO 3rd Sem,ooj_co3,-30m,+4h,true,5,published,examiner_01,true,practice
