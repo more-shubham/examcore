@@ -63,10 +63,9 @@ describe('Teacher - Assigned Subjects', () => {
     cy.get('a[href*="questions"]').should('exist');
   });
 
-  // Skip until Issue #2 is implemented
-  it.skip('should have link to view subject exams', () => {
+  it('should have link to view subject exams', () => {
     // Should be able to navigate to exams for their subject
-    cy.get('a[href*="exams"], a:contains("Exams")').should('exist');
+    cy.get('a[href*="exams"]').should('exist');
   });
 
   it('should show classes associated with assigned subjects', () => {
@@ -100,15 +99,11 @@ describe('Teacher - Assigned Subjects', () => {
     cy.contains(/DBMS|DMS/i).should('exist');
   });
 
-  // Skip until Issue #2 is implemented
-  it.skip('should only show exams from assigned subjects in exam list', () => {
+  it('should only show exams from assigned subjects in exam list', () => {
     cy.visit('/exams/');
     // Teacher should only see exams from their assigned subjects
-    cy.get('body').then(($body) => {
-      const text = $body.text();
-      // Should show exams related to their subjects
-      expect(text.length).to.be.greaterThan(0);
-    });
+    // DBMS teacher should see DBMS related exams
+    cy.contains(/DBMS|DMS/i).should('exist');
   });
 
   // Skip until Issue #3 is implemented

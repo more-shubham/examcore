@@ -10,12 +10,14 @@
         <h1 class="text-2xl font-bold text-gray-900">Exams</h1>
         <p class="text-gray-600">{{ total_exams }} exam{{ total_exams|pluralize }}</p>
       </div>
-      <a href="{% url 'exams:add' %}{% if selected_subject %}?subject={{ selected_subject }}{% endif %}" class="btn-primary">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-        </svg>
-        Create Exam
-      </a>
+      {% if can_manage %}
+        <a href="{% url 'exams:add' %}{% if selected_subject %}?subject={{ selected_subject }}{% endif %}" class="btn-primary">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+          </svg>
+          Create Exam
+        </a>
+      {% endif %}
     </div>
 
     <!-- Filters -->
@@ -85,7 +87,7 @@
               </div>
               <div class="flex items-center space-x-2 ml-4">
                 <a href="{% url 'exams:detail' exam.pk %}" class="btn-ghost btn-sm">View</a>
-                {% if user.is_admin or exam.created_by == user %}
+                {% if can_manage and user.is_admin or can_manage and exam.created_by == user %}
                   <a href="{% url 'exams:edit' exam.pk %}" class="btn-sm text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-lg">Edit</a>
                   <a href="{% url 'exams:delete' exam.pk %}" class="btn-danger btn-sm">Delete</a>
                 {% endif %}
@@ -122,15 +124,19 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
         </svg>
         <h3 class="mt-2 text-sm font-medium text-gray-900">No exams found</h3>
-        <p class="mt-1 text-sm text-gray-500">Get started by creating your first exam.</p>
-        <div class="mt-6">
-          <a href="{% url 'exams:add' %}" class="btn-primary">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-            </svg>
-            Create Exam
-          </a>
-        </div>
+        {% if can_manage %}
+          <p class="mt-1 text-sm text-gray-500">Get started by creating your first exam.</p>
+          <div class="mt-6">
+            <a href="{% url 'exams:add' %}" class="btn-primary">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              Create Exam
+            </a>
+          </div>
+        {% else %}
+          <p class="mt-1 text-sm text-gray-500">No exams available for your assigned subjects.</p>
+        {% endif %}
       </div>
     {% endif %}
   </div>

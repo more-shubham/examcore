@@ -28,7 +28,7 @@
             </span>
           </div>
         </div>
-        {% if user.is_admin or exam.created_by == user %}
+        {% if can_manage and user.is_admin or can_manage and exam.created_by == user %}
           <div class="flex items-center space-x-2">
             <a href="{% url 'exams:edit' exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100">
               Edit
@@ -113,7 +113,7 @@
             </p>
           {% endif %}
         </div>
-        {% if not exam.use_random_questions and user.is_admin or exam.created_by == user %}
+        {% if not exam.use_random_questions and can_manage and user.is_admin or not exam.use_random_questions and can_manage and exam.created_by == user %}
           <a href="{% url 'exams:questions' exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
             Manage Questions
           </a>

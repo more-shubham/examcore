@@ -4,23 +4,34 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
 from apps.academic.models import Subject
-from apps.core.mixins import QuestionManagerRequiredMixin
+from apps.core.mixins import ExamViewerRequiredMixin, QuestionManagerRequiredMixin
 from apps.questions.models import Question
 
 from .forms import ExamForm
 from .models import Exam, ExamQuestion
 
 
-class ExamListView(QuestionManagerRequiredMixin, View):
+class ExamListView(ExamViewerRequiredMixin, View):
     """View to list all exams with filtering by subject."""
 
     template_name = "exams/exam_list.html"
     paginate_by = 20
 
     def get(self, request):
+        user = request.user
         exams = Exam.objects.filter(is_active=True).select_related(
             "subject", "subject__assigned_class", "created_by"
         )
+
+        # Teachers only see exams from their assigned subjects
+        if user.is_teacher and not user.is_admin and not user.is_examiner:
+            assigned_subjects = user.assigned_subjects.filter(is_active=True)
+            exams = exams.filter(subject__in=assigned_subjects)
+            subjects = assigned_subjects.select_related("assigned_class")
+        else:
+            subjects = Subject.objects.filter(is_active=True).select_related(
+                "assigned_class"
+            )
 
         # Filter by subject if provided
         subject_id = request.GET.get("subject")
@@ -37,17 +48,13 @@ class ExamListView(QuestionManagerRequiredMixin, View):
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
 
-        # Get all subjects for filter dropdown
-        subjects = Subject.objects.filter(is_active=True).select_related(
-            "assigned_class"
-        )
-
         context = {
             "page_obj": page_obj,
             "subjects": subjects,
             "selected_subject": subject_id,
             "selected_status": status,
             "total_exams": exams.count(),
+            "can_manage": user.is_admin or user.is_examiner,
         }
         return render(request, self.template_name, context)
 
@@ -80,12 +87,13 @@ class ExamCreateView(QuestionManagerRequiredMixin, View):
         return render(request, self.template_name, {"form": form, "is_edit": False})
 
 
-class ExamDetailView(QuestionManagerRequiredMixin, View):
+class ExamDetailView(ExamViewerRequiredMixin, View):
     """View to see exam details and questions."""
 
     template_name = "exams/exam_detail.html"
 
     def get(self, request, pk):
+        user = request.user
         exam = get_object_or_404(
             Exam.objects.select_related(
                 "subject", "subject__assigned_class", "created_by"
@@ -93,6 +101,13 @@ class ExamDetailView(QuestionManagerRequiredMixin, View):
             pk=pk,
             is_active=True,
         )
+
+        # Teachers can only view exams from their assigned subjects
+        if user.is_teacher and not user.is_admin and not user.is_examiner:
+            assigned_subject_ids = user.assigned_subjects.values_list("id", flat=True)
+            if exam.subject_id not in assigned_subject_ids:
+                messages.error(request, "You don't have access to this exam.")
+                return redirect("exams:list")
 
         # Get questions count
         if exam.use_random_questions:
@@ -105,6 +120,7 @@ class ExamDetailView(QuestionManagerRequiredMixin, View):
         context = {
             "exam": exam,
             "available_questions": available_questions,
+            "can_manage": user.is_admin or user.is_examiner,
         }
         return render(request, self.template_name, context)
 
