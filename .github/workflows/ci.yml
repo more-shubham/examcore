@@ -126,8 +126,16 @@ jobs:
           EMAIL_HOST: localhost
           EMAIL_PORT: 1025
         run: |
-          python manage.py runserver &
-          sleep 5
+          python manage.py runserver 2>&1 &
+          echo "Waiting for server to start..."
+          for i in {1..30}; do
+            if curl -s http://localhost:8000/ > /dev/null 2>&1; then
+              echo "Server is ready!"
+              break
+            fi
+            echo "Attempt $i: Server not ready yet..."
+            sleep 1
+          done
 
       - name: Run Cypress tests
         env:
