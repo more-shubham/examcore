@@ -6,24 +6,38 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
 from apps.academic.models import Subject
-from apps.core.mixins import QuestionManagerRequiredMixin
+from apps.core.mixins import QuestionManagerRequiredMixin, QuestionViewerRequiredMixin
 
 from .forms import QuestionForm, QuestionOptionFormSet
 from .models import Question
 
 
-class QuestionBankView(QuestionManagerRequiredMixin, View):
+class QuestionBankView(QuestionViewerRequiredMixin, View):
     """View to list all questions with filtering by subject."""
 
     template_name = "questions/question_list.html"
     paginate_by = 20
 
     def get(self, request):
+        user = request.user
+
+        # Base queryset
         questions = (
             Question.objects.filter(is_active=True)
             .select_related("subject", "subject__assigned_class", "created_by")
             .prefetch_related("options")
         )
+
+        # Teachers only see questions from their assigned subjects
+        if user.is_teacher and not user.is_admin:
+            assigned_subjects = user.assigned_subjects.filter(is_active=True)
+            questions = questions.filter(subject__in=assigned_subjects)
+            subjects = assigned_subjects.select_related("assigned_class")
+        else:
+            # Admin and examiner see all subjects
+            subjects = Subject.objects.filter(is_active=True).select_related(
+                "assigned_class"
+            )
 
         # Filter by subject if provided
         subject_id = request.GET.get("subject")
@@ -40,17 +54,13 @@ class QuestionBankView(QuestionManagerRequiredMixin, View):
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
 
-        # Get all subjects for filter dropdown
-        subjects = Subject.objects.filter(is_active=True).select_related(
-            "assigned_class"
-        )
-
         context = {
             "page_obj": page_obj,
             "subjects": subjects,
             "selected_subject": subject_id,
             "search": search or "",
             "total_questions": questions.count(),
+            "can_manage": user.is_admin or user.is_examiner,
         }
         return render(request, self.template_name, context)
 

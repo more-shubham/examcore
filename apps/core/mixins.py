@@ -61,3 +61,17 @@ class QuestionManagerRequiredMixin(LoginRequiredMixin):
             messages.error(request, "You don't have permission to manage questions.")
             return redirect("dashboards:home")
         return super().dispatch(request, *args, **kwargs)
+
+
+class QuestionViewerRequiredMixin(LoginRequiredMixin):
+    """Mixin for views that allow admin, examiner, or teacher to view questions."""
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if not (
+            request.user.is_admin or request.user.is_examiner or request.user.is_teacher
+        ):
+            messages.error(request, "You don't have permission to view questions.")
+            return redirect("dashboards:home")
+        return super().dispatch(request, *args, **kwargs)

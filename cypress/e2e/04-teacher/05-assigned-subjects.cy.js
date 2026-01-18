@@ -58,10 +58,9 @@ describe('Teacher - Assigned Subjects', () => {
     });
   });
 
-  // Skip until Issue #1 is implemented
-  it.skip('should have link to view subject questions', () => {
+  it('should have link to view subject questions', () => {
     // Should be able to navigate to questions for their subject
-    cy.get('a[href*="questions"], a:contains("Questions")').should('exist');
+    cy.get('a[href*="questions"]').should('exist');
   });
 
   // Skip until Issue #2 is implemented
@@ -94,19 +93,11 @@ describe('Teacher - Assigned Subjects', () => {
     });
   });
 
-  // Skip until Issue #1 is implemented
-  it.skip('should only show questions from assigned subjects in question list', () => {
+  it('should only show questions from assigned subjects in question list', () => {
     cy.visit('/questions/');
     // Teacher should only see questions from their assigned subjects
-    // DBMS teacher should see DBMS questions, not DSU or OOJ
-    cy.get('body').then(($body) => {
-      const text = $body.text();
-      // If filtered by subject, should only show relevant questions
-      if (text.includes('DBMS') || text.includes('Database')) {
-        // Good - showing assigned subject content
-        expect(true).to.be.true;
-      }
-    });
+    // DBMS teacher should see DBMS questions
+    cy.contains(/DBMS|DMS/i).should('exist');
   });
 
   // Skip until Issue #2 is implemented
