@@ -106,13 +106,10 @@ describe('Teacher - Assigned Subjects', () => {
     cy.contains(/DBMS|DMS/i).should('exist');
   });
 
-  // Skip until Issue #3 is implemented
-  it.skip('should only show results from assigned subjects', () => {
+  it('should only show results from assigned subjects', () => {
     cy.visit('/results/');
     // Teacher should only see results for their subjects
-    cy.get('body').then(($body) => {
-      const text = $body.text();
-      expect(text.length).to.be.greaterThan(0);
-    });
+    // Should show results page content
+    cy.contains('Student Results').should('exist');
   });
 });

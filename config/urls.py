@@ -5,6 +5,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from apps.attempts.views import TeacherResultDetailView, TeacherResultsListView
+
 urlpatterns = [
     # Health checks (no auth required)
     path("", include("apps.core.urls", namespace="core")),
@@ -18,6 +20,9 @@ urlpatterns = [
     path("exams/", include("apps.exams.urls", namespace="exams")),
     # Student exam attempts
     path("my-exams/", include("apps.attempts.urls", namespace="attempts")),
+    # Teacher/Admin results view
+    path("results/", TeacherResultsListView.as_view(), name="results_list"),
+    path("results/<int:pk>/", TeacherResultDetailView.as_view(), name="result_detail"),
     # Invitations (accept invite) - /invite/<token>/
     path("", include("apps.invitations.urls", namespace="invitations")),
     # Academic management (classes, subjects)
