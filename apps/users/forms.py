@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 
 from apps.academic.models import Class, Subject
 
+from .models import NotificationPreference
+
 User = get_user_model()
 
 
@@ -113,3 +115,88 @@ class AddStudentForm(AddUserForm):
     def __init__(self, *args, **kwargs):
         kwargs["role"] = User.Role.STUDENT
         super().__init__(*args, **kwargs)
+
+
+class ProfileForm(forms.ModelForm):
+    """Form for editing user profile."""
+
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "phone", "avatar"]
+        widgets = {
+            "first_name": forms.TextInput(
+                attrs={
+                    "class": "form-input",
+                    "placeholder": "First name",
+                }
+            ),
+            "last_name": forms.TextInput(
+                attrs={
+                    "class": "form-input",
+                    "placeholder": "Last name",
+                }
+            ),
+            "phone": forms.TextInput(
+                attrs={
+                    "class": "form-input",
+                    "placeholder": "Phone number",
+                }
+            ),
+            "avatar": forms.ClearableFileInput(
+                attrs={
+                    "class": "form-input",
+                    "accept": "image/*",
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["first_name"].required = True
+        self.fields["last_name"].required = True
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get("phone", "").strip()
+        if phone:
+            # Remove common formatting characters for validation
+            digits_only = "".join(c for c in phone if c.isdigit())
+            if len(digits_only) < 10:
+                raise forms.ValidationError(
+                    "Please enter a valid phone number with at least 10 digits."
+                )
+        return phone
+
+
+class NotificationPreferencesForm(forms.ModelForm):
+    """Form for managing notification preferences."""
+
+    class Meta:
+        model = NotificationPreference
+        fields = ["exam_published", "exam_reminder", "result_available"]
+        widgets = {
+            "exam_published": forms.CheckboxInput(
+                attrs={
+                    "class": "form-checkbox h-5 w-5 text-primary-600",
+                }
+            ),
+            "exam_reminder": forms.CheckboxInput(
+                attrs={
+                    "class": "form-checkbox h-5 w-5 text-primary-600",
+                }
+            ),
+            "result_available": forms.CheckboxInput(
+                attrs={
+                    "class": "form-checkbox h-5 w-5 text-primary-600",
+                }
+            ),
+        }
+        labels = {
+            "exam_published": "New Exam Notifications",
+            "exam_reminder": "Exam Reminders",
+            "result_available": "Result Notifications",
+        }
+        help_texts = {
+            "exam_published": "Receive an email when a new exam is published for your class",
+            "exam_reminder": "Receive a reminder email 24 hours before an exam starts",
+            "result_available": "Receive an email when your exam result is available",
+        }

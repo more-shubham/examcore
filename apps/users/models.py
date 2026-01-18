@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from .managers import UserManager
 
@@ -66,3 +68,40 @@ class User(AbstractUser):
     @property
     def is_student(self):
         return self.role == self.Role.STUDENT
+
+
+class NotificationPreference(models.Model):
+    """User notification preferences."""
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="notification_preferences",
+    )
+    exam_published = models.BooleanField(
+        default=True,
+        help_text="Receive email when a new exam is published for your class",
+    )
+    exam_reminder = models.BooleanField(
+        default=True,
+        help_text="Receive reminder email 24 hours before exam starts",
+    )
+    result_available = models.BooleanField(
+        default=True,
+        help_text="Receive email when your exam result is available",
+    )
+
+    class Meta:
+        db_table = "notification_preferences"
+        verbose_name = "Notification Preference"
+        verbose_name_plural = "Notification Preferences"
+
+    def __str__(self):
+        return f"Notification Preferences for {self.user.email}"
+
+
+@receiver(post_save, sender=User)
+def create_notification_preferences(sender, instance, created, **kwargs):
+    """Create notification preferences when a new user is created."""
+    if created:
+        NotificationPreference.objects.get_or_create(user=instance)

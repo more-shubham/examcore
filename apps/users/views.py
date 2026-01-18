@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views import View
@@ -8,8 +9,14 @@ from apps.core.mixins import AdminRequiredMixin
 from apps.core.services.email import EmailService
 from apps.invitations.models import Invitation
 
-from .forms import AddExaminerForm, AddStudentForm, AddTeacherForm
-from .models import User
+from .forms import (
+    AddExaminerForm,
+    AddStudentForm,
+    AddTeacherForm,
+    NotificationPreferencesForm,
+    ProfileForm,
+)
+from .models import NotificationPreference, User
 
 
 class ExaminerManagementView(AdminRequiredMixin, View):
@@ -264,3 +271,44 @@ class StudentManagementView(AdminRequiredMixin, View):
             messages.success(request, f"Student {user.get_full_name()} {status}.")
 
         return redirect("users:students", class_id=class_id)
+
+
+class ProfileView(LoginRequiredMixin, View):
+    """View and edit user profile."""
+
+    template_name = "users/profile.html"
+
+    def get(self, request):
+        form = ProfileForm(instance=request.user)
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request):
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your profile has been updated successfully.")
+            return redirect("users:profile")
+        return render(request, self.template_name, {"form": form})
+
+
+class NotificationPreferencesView(LoginRequiredMixin, View):
+    """Manage notification preferences."""
+
+    template_name = "users/notification_preferences.html"
+
+    def get(self, request):
+        # Get or create notification preferences for the user
+        preferences, _ = NotificationPreference.objects.get_or_create(user=request.user)
+        form = NotificationPreferencesForm(instance=preferences)
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request):
+        preferences, _ = NotificationPreference.objects.get_or_create(user=request.user)
+        form = NotificationPreferencesForm(request.POST, instance=preferences)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request, "Your notification preferences have been updated successfully."
+            )
+            return redirect("users:notification_preferences")
+        return render(request, self.template_name, {"form": form})

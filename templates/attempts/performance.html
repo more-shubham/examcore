@@ -1,0 +1,357 @@
+{% extends 'base.html' %}
+
+{% block title %}My Performance{% endblock %}
+
+{% block content %}
+  <div class="space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">My Performance</h1>
+        <p class="text-gray-600">Track your exam history and analytics</p>
+      </div>
+      <a href="{% url 'attempts:list' %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to Exams
+      </a>
+    </div>
+
+    {% if total_exams > 0 %}
+      <!-- Overall Statistics -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-gray-600">Exams Taken</p>
+              <p class="text-2xl font-bold text-gray-900">{{ total_exams }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-gray-600">Average Score</p>
+              <p class="text-2xl font-bold text-gray-900">{{ avg_percentage }}%</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-gray-600">Pass Rate</p>
+              <p class="text-2xl font-bold text-gray-900">{{ pass_rate }}%</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-gray-600">Passed</p>
+              <p class="text-2xl font-bold text-gray-900">{{ passed_count }}/{{ total_exams }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Highest & Lowest Scores -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {% if highest_exam %}
+          <div class="bg-white rounded-xl shadow-sm border border-green-200 p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="flex items-center space-x-2 mb-1">
+                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                  </svg>
+                  <span class="text-sm font-medium text-green-600">Highest Score</span>
+                </div>
+                <h3 class="font-semibold text-gray-900">{{ highest_exam.exam.title }}</h3>
+                <p class="text-sm text-gray-500">{{ highest_exam.exam.subject.name }}</p>
+              </div>
+              <div class="text-3xl font-bold text-green-600">{{ highest_exam.percentage_score }}%</div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if lowest_exam %}
+          <div class="bg-white rounded-xl shadow-sm border border-red-200 p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="flex items-center space-x-2 mb-1">
+                  <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                  </svg>
+                  <span class="text-sm font-medium text-red-600">Lowest Score</span>
+                </div>
+                <h3 class="font-semibold text-gray-900">{{ lowest_exam.exam.title }}</h3>
+                <p class="text-sm text-gray-500">{{ lowest_exam.exam.subject.name }}</p>
+              </div>
+              <div class="text-3xl font-bold text-red-600">{{ lowest_exam.percentage_score }}%</div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Charts Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Score Trend Chart -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-4">Score Trend</h2>
+          <div class="h-64">
+            <canvas id="trendChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Subject Comparison Chart -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-4">Performance by Subject</h2>
+          <div class="h-64">
+            <canvas id="subjectChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subject-wise Breakdown -->
+      {% if subject_data %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-4">Subject-wise Breakdown</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for subject in subject_data %}
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="font-medium text-gray-900">{{ subject.name }}</h3>
+                  <span class="text-lg font-bold {% if subject.avg_percentage >= 70 %}text-green-600{% elif subject.avg_percentage >= 50 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                    {{ subject.avg_percentage }}%
+                  </span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500">
+                  <span>{{ subject.total_exams }} exam{{ subject.total_exams|pluralize }}</span>
+                  <div class="w-24 bg-gray-200 rounded-full h-2">
+                    <div class="h-2 rounded-full {% if subject.avg_percentage >= 70 %}bg-green-500{% elif subject.avg_percentage >= 50 %}bg-yellow-500{% else %}bg-red-500{% endif %}"
+                         style="width: {{ subject.avg_percentage }}%"></div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Recent Exam History -->
+      {% if recent_attempts %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-4">Recent Exams</h2>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exam</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                {% for attempt in recent_attempts %}
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">{{ attempt.exam.title }}</div>
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-500">{{ attempt.exam.subject.name }}</div>
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-500">{{ attempt.submitted_at|date:"M d, Y" }}</div>
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                   {% if attempt.percentage_score >= 70 %}bg-green-100 text-green-800
+                                   {% elif attempt.percentage_score >= 50 %}bg-yellow-100 text-yellow-800
+                                   {% else %}bg-red-100 text-red-800{% endif %}">
+                        {{ attempt.percentage_score }}%
+                      </span>
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                   {% if attempt.percentage_score >= 50 %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                        {% if attempt.percentage_score >= 50 %}Pass{% else %}Fail{% endif %}
+                      </span>
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap text-right text-sm">
+                      <a href="{% url 'attempts:result' pk=attempt.exam.pk %}" class="text-primary-600 hover:text-primary-900">View Result</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% endif %}
+
+    {% else %}
+      <!-- Empty State -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+        <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">No Exam History Yet</h3>
+        <p class="text-gray-500 mb-6">Complete your first exam to see your performance analytics.</p>
+        <a href="{% url 'attempts:list' %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          </svg>
+          View Available Exams
+        </a>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  {% if total_exams > 0 %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Trend Chart Data
+        const trendData = {{ trend_data_json|safe }};
+        const subjectLabels = {{ chart_subjects_json|safe }};
+        const subjectScores = {{ chart_scores_json|safe }};
+
+        // Score Trend Line Chart
+        if (trendData.length > 0) {
+          const trendCtx = document.getElementById('trendChart').getContext('2d');
+          new Chart(trendCtx, {
+            type: 'line',
+            data: {
+              labels: trendData.map(d => d.date),
+              datasets: [{
+                label: 'Score %',
+                data: trendData.map(d => d.score),
+                borderColor: 'rgb(99, 102, 241)',
+                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                tension: 0.3,
+                fill: true,
+                pointBackgroundColor: trendData.map(d => d.score >= 50 ? 'rgb(34, 197, 94)' : 'rgb(239, 68, 68)'),
+                pointRadius: 6,
+                pointHoverRadius: 8,
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  callbacks: {
+                    title: function(context) {
+                      return trendData[context[0].dataIndex].exam;
+                    },
+                    label: function(context) {
+                      return 'Score: ' + context.parsed.y + '%';
+                    }
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  max: 100,
+                  ticks: {
+                    callback: function(value) {
+                      return value + '%';
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        // Subject Comparison Bar Chart
+        if (subjectLabels.length > 0) {
+          const subjectCtx = document.getElementById('subjectChart').getContext('2d');
+          new Chart(subjectCtx, {
+            type: 'bar',
+            data: {
+              labels: subjectLabels,
+              datasets: [{
+                label: 'Average Score',
+                data: subjectScores,
+                backgroundColor: subjectScores.map(score =>
+                  score >= 70 ? 'rgba(34, 197, 94, 0.8)' :
+                    score >= 50 ? 'rgba(234, 179, 8, 0.8)' :
+                    'rgba(239, 68, 68, 0.8)'
+                ),
+                borderColor: subjectScores.map(score =>
+                  score >= 70 ? 'rgb(34, 197, 94)' :
+                    score >= 50 ? 'rgb(234, 179, 8)' :
+                    'rgb(239, 68, 68)'
+                ),
+                borderWidth: 1,
+                borderRadius: 4,
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      return 'Avg: ' + context.parsed.y + '%';
+                    }
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  max: 100,
+                  ticks: {
+                    callback: function(value) {
+                      return value + '%';
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      });
+    </script>
+  {% endif %}
+{% endblock %}
