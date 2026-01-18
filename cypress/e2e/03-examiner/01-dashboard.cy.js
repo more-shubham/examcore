@@ -26,76 +26,79 @@ describe('Examiner Dashboard', () => {
 
   it('should display examiner dashboard', () => {
     cy.url().should('include', '/dashboard');
-    cy.contains(/dashboard|welcome/i).should('be.visible');
+    cy.contains('Welcome').should('be.visible');
   });
 
   it('should show welcome message with examiner name', () => {
-    // Verify examiner name appears (Priya Kulkarni)
-    cy.get('body').then(($body) => {
-      const text = $body.text().toLowerCase();
-      const hasExaminerInfo = text.includes('priya') || text.includes('examiner') || text.includes('welcome');
-      expect(hasExaminerInfo).to.be.true;
-    });
+    // Verify examiner name appears (Priya Kulkarni from seed data)
+    cy.contains('Welcome').should('be.visible');
+    cy.contains('Priya').should('be.visible');
   });
 
   it('should display institution name and logo', () => {
     // Verify institution name
-    cy.contains(/polytechnic|college|model/i).should('be.visible');
+    cy.contains('Model Polytechnic College').should('be.visible');
 
     // Verify institution logo is displayed
-    cy.get('img[alt*="Model Polytechnic"], img[alt*="Polytechnic"], img[src*="institution/"]')
+    cy.get('img[src*="institution/"]')
       .should('be.visible')
       .and('have.attr', 'src')
       .and('include', 'institution/');
   });
 
-  it('should display My Questions count', () => {
-    // Look for questions stat
-    cy.get('body').then(($body) => {
-      const text = $body.text().toLowerCase();
-      const hasQuestionsInfo = text.includes('question') || text.includes('created');
-      expect(hasQuestionsInfo).to.be.true;
-    });
+  it('should display My Questions stat card', () => {
+    // Look for My Questions stat card
+    cy.contains('My Questions').should('be.visible');
+    // Should have a number displayed
+    cy.contains('My Questions').parent().find('.text-3xl').should('exist');
   });
 
-  it('should display Exams Created count', () => {
-    // Look for exams stat
-    cy.get('body').then(($body) => {
-      const text = $body.text().toLowerCase();
-      const hasExamsInfo = text.includes('exam') || text.includes('test');
-      expect(hasExamsInfo).to.be.true;
-    });
+  it('should display Exams Created stat card', () => {
+    // Look for Exams Created stat card
+    cy.contains('Exams Created').should('be.visible');
+    // Should have a number displayed
+    cy.contains('Exams Created').parent().find('.text-3xl').should('exist');
   });
 
-  it('should have navigation to Questions', () => {
-    cy.contains(/question/i).should('be.visible');
-    cy.contains(/question/i).click();
+  it('should have navigation to Questions via stat card', () => {
+    cy.contains('My Questions').click();
     cy.url().should('include', '/questions');
   });
 
-  it('should have navigation to Exams', () => {
-    cy.contains(/exam/i).should('be.visible');
-    cy.contains(/exam/i).click();
+  it('should have navigation to Exams via stat card', () => {
+    cy.contains('Exams Created').click();
     cy.url().should('include', '/exams');
   });
 
-  it('should have quick action links', () => {
-    // Look for quick action buttons
-    cy.get('body').then(($body) => {
-      const text = $body.text().toLowerCase();
-      const hasQuickActions = ['add', 'create', 'new', 'manage'].some(action => text.includes(action));
-      expect(hasQuickActions).to.be.true;
-    });
+  it('should have Quick Actions section with links', () => {
+    // Verify Quick Actions section exists
+    cy.contains('Quick Actions').should('be.visible');
+
+    // Verify action links exist
+    cy.contains('Add Question').should('be.visible');
+    cy.contains('Question Bank').should('be.visible');
+    cy.contains('Create Exam').should('be.visible');
+  });
+
+  it('should navigate to add question from Quick Actions', () => {
+    cy.contains('Add Question').click();
+    cy.url().should('include', '/questions/add');
+  });
+
+  it('should navigate to create exam from Quick Actions', () => {
+    cy.contains('Create Exam').click();
+    cy.url().should('include', '/exams/add');
+  });
+
+  it('should display user profile information', () => {
+    cy.contains('Your Profile').should('be.visible');
+    cy.contains('Email:').should('be.visible');
+    cy.contains('Role:').should('be.visible');
+    cy.contains('examiner').should('be.visible');
   });
 
   it('should have logout functionality', () => {
-    cy.get('form[action="/logout/"], button:contains("Logout"), a:contains("Logout")').first().then(($logout) => {
-      if ($logout.is('form')) {
-        cy.wrap($logout).submit();
-      } else {
-        cy.wrap($logout).click();
-      }
-    });
-    cy.url().should('not.include', '/dashboard');
+    cy.contains('Logout').click();
+    cy.url().should('eq', Cypress.config().baseUrl + '/');
   });
 });
