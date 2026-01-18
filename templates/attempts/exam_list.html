@@ -5,9 +5,25 @@
 {% block content %}
   <div class="space-y-6">
   <!-- Header -->
-    <div>
-      <h1 class="text-2xl font-bold text-gray-900">My Exams</h1>
-      <p class="text-gray-600">Exams available for your class</p>
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">My Exams</h1>
+        <p class="text-gray-600">Exams available for your class</p>
+      </div>
+      <div class="flex items-center space-x-3">
+        <a href="{% url 'attempts:performance' %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+          Performance
+        </a>
+        <a href="{% url 'attempts:history' %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          History
+        </a>
+      </div>
     </div>
 
   <!-- Active Exams -->
@@ -49,16 +65,16 @@
               <div class="ml-4">
                 {% if item.attempt %}
                   {% if item.attempt.status == 'submitted' or item.attempt.status == 'timed_out' %}
-                    <a href="{% url 'exams:student_result' item.exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+                    <a href="{% url 'attempts:result' item.exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
                       View Result
                     </a>
                   {% else %}
-                    <a href="{% url 'exams:student_take' item.exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
+                    <a href="{% url 'attempts:take' item.exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
                       Continue Exam
                     </a>
                   {% endif %}
                 {% else %}
-                  <a href="{% url 'exams:student_start' item.exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
+                  <a href="{% url 'attempts:start' item.exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
                     Start Exam
                   </a>
                 {% endif %}
@@ -160,7 +176,7 @@
               </div>
               <div class="ml-4">
                 {% if item.attempt %}
-                  <a href="{% url 'exams:student_result' item.exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100">
+                  <a href="{% url 'attempts:result' item.exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100">
                     View Result
                   </a>
                 {% else %}
@@ -175,8 +191,127 @@
       </div>
     {% endif %}
 
+  <!-- Practice Exams - Active -->
+    {% if practice_active %}
+      <div class="space-y-4">
+        <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+          <span class="w-3 h-3 bg-purple-500 rounded-full mr-2 animate-pulse"></span>
+          Practice Exams
+          <span class="ml-2 text-xs font-normal text-gray-500">(Can be retaken)</span>
+        </h2>
+        {% for item in practice_active %}
+          <div class="bg-white rounded-xl shadow-sm border-2 border-purple-200 p-6">
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <div class="flex items-center space-x-2 mb-2">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                    Practice
+                  </span>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    Available Now
+                  </span>
+                  {% if item.attempt_count > 0 %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      {{ item.attempt_count }} attempt{{ item.attempt_count|pluralize }}
+                    </span>
+                  {% endif %}
+                </div>
+                <h3 class="text-lg font-medium text-gray-900">{{ item.exam.title }}</h3>
+                <p class="text-sm text-primary-600 font-medium">{{ item.exam.subject.name }}</p>
+                {% if item.exam.description %}
+                  <p class="mt-1 text-sm text-gray-600">{{ item.exam.description }}</p>
+                {% endif %}
+                <div class="mt-3 grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                  <div>
+                    <span class="font-medium">Duration:</span>
+                    {{ item.exam.duration_display }}
+                  </div>
+                  <div>
+                    <span class="font-medium">Questions:</span>
+                    {{ item.exam.get_question_count }}
+                  </div>
+                  <div>
+                    <span class="font-medium">Ends:</span>
+                    {{ item.exam.end_time|date:"M d, H:i" }}
+                  </div>
+                </div>
+              </div>
+              <div class="ml-4 flex flex-col space-y-2">
+                {% if item.has_in_progress %}
+                  <a href="{% url 'attempts:take' item.exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700">
+                    Continue Exam
+                  </a>
+                {% else %}
+                  <a href="{% url 'attempts:start' item.exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700">
+                    {% if item.attempt_count > 0 %}Retake{% else %}Start{% endif %} Practice
+                  </a>
+                {% endif %}
+                {% if item.attempt_count > 0 %}
+                  <a href="{% url 'attempts:result' item.exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100">
+                    View Results
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  <!-- Practice Exam History -->
+    {% if practice_available %}
+      <div class="space-y-4">
+        <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+          <span class="w-3 h-3 bg-purple-400 rounded-full mr-2"></span>
+          Practice History
+        </h2>
+        {% for item in practice_available %}
+          <div class="bg-white rounded-xl shadow-sm border border-purple-100 p-6 opacity-90">
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <div class="flex items-center space-x-2 mb-2">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                    Practice
+                  </span>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    {{ item.attempt_count }} attempt{{ item.attempt_count|pluralize }}
+                  </span>
+                  {% if item.attempt %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Best: {{ item.attempt.percentage_score }}%
+                    </span>
+                  {% endif %}
+                </div>
+                <h3 class="text-lg font-medium text-gray-900">{{ item.exam.title }}</h3>
+                <p class="text-sm text-primary-600 font-medium">{{ item.exam.subject.name }}</p>
+                <div class="mt-3 grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                  <div>
+                    <span class="font-medium">Date:</span>
+                    {{ item.exam.start_time|date:"M d, Y" }}
+                  </div>
+                  <div>
+                    <span class="font-medium">Duration:</span>
+                    {{ item.exam.duration_display }}
+                  </div>
+                  <div>
+                    <span class="font-medium">Questions:</span>
+                    {{ item.exam.get_question_count }}
+                  </div>
+                </div>
+              </div>
+              <div class="ml-4">
+                <a href="{% url 'attempts:result' item.exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100">
+                  View Results
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
   <!-- Empty State -->
-    {% if not active_exams and not upcoming_exams and not past_exams %}
+    {% if not active_exams and not upcoming_exams and not past_exams and not practice_active and not practice_available %}
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>

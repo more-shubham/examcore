@@ -5,7 +5,7 @@
 {% block content %}
   <div class="max-w-2xl mx-auto space-y-6">
   <!-- Back Link -->
-    <a href="{% url 'exams:student_list' %}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900">
+    <a href="{% url 'attempts:list' %}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900">
       <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
       </svg>
@@ -16,6 +16,14 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
     <!-- Header -->
       <div class="{% if attempt.percentage_score >= 70 %}bg-green-600{% elif attempt.percentage_score >= 50 %}bg-yellow-500{% else %}bg-red-500{% endif %} px-6 py-8 text-center">
+        {% if exam.is_practice %}
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white/20 text-white mb-3">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            Practice Exam - Attempt #{{ attempt.attempt_number }}
+          </span>
+        {% endif %}
         <h1 class="text-2xl font-bold text-white">{{ exam.title }}</h1>
         <p class="mt-2 text-white opacity-90">Exam Completed</p>
       </div>
@@ -90,11 +98,74 @@
               <svg class="w-5 h-5 text-red-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
-              <p class="text-sm text-red-700">Keep studying! Review the material and try again next time.</p>
+              {% if exam.is_practice %}
+                <p class="text-sm text-red-700">Don't worry! This is a practice exam - you can try again to improve your score.</p>
+              {% else %}
+                <p class="text-sm text-red-700">Keep studying! Review the material and try again next time.</p>
+              {% endif %}
             {% endif %}
           </div>
         </div>
+
+      <!-- Action Buttons -->
+        <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <a href="{% url 'attempts:review' pk=exam.pk %}" class="inline-flex items-center px-6 py-3 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+            </svg>
+            Review Answers
+          </a>
+          <a href="{% url 'attempts:result_pdf' pk=exam.pk %}" class="inline-flex items-center px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Download PDF
+          </a>
+          {% if exam.is_practice %}
+            <a href="{% url 'attempts:start' pk=exam.pk %}" class="inline-flex items-center px-6 py-3 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              Try Again
+            </a>
+          {% endif %}
+        </div>
       </div>
     </div>
+
+    {% if exam.is_practice and all_attempts|length > 1 %}
+    <!-- Previous Attempts History -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100">
+          <h2 class="text-lg font-semibold text-gray-900">All Attempts</h2>
+        </div>
+        <div class="divide-y divide-gray-100">
+          {% for past_attempt in all_attempts %}
+            <div class="px-6 py-4 flex items-center justify-between {% if past_attempt.id == attempt.id %}bg-purple-50{% endif %}">
+              <div class="flex items-center space-x-4">
+                <div class="flex-shrink-0 w-10 h-10 rounded-full {% if past_attempt.percentage_score >= 70 %}bg-green-100{% elif past_attempt.percentage_score >= 50 %}bg-yellow-100{% else %}bg-red-100{% endif %} flex items-center justify-center">
+                  <span class="text-sm font-bold {% if past_attempt.percentage_score >= 70 %}text-green-600{% elif past_attempt.percentage_score >= 50 %}text-yellow-600{% else %}text-red-600{% endif %}">#{{ past_attempt.attempt_number }}</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-900">
+                    Attempt #{{ past_attempt.attempt_number }}
+                    {% if past_attempt.id == attempt.id %}
+                      <span class="ml-2 text-xs text-purple-600">(Current)</span>
+                    {% endif %}
+                  </p>
+                  <p class="text-xs text-gray-500">{{ past_attempt.submitted_at|date:"M d, Y H:i" }}</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="text-lg font-bold {% if past_attempt.percentage_score >= 70 %}text-green-600{% elif past_attempt.percentage_score >= 50 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                  {{ past_attempt.percentage_score }}%
+                </p>
+                <p class="text-xs text-gray-500">{{ past_attempt.score }}/{{ past_attempt.total_questions }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
   </div>
 {% endblock %}

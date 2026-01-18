@@ -46,7 +46,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
     <!-- Questions -->
       <div class="lg:col-span-3 space-y-4">
-        <form id="exam-form" method="post" action="{% url 'exams:student_submit' exam.pk %}">
+        <form id="exam-form" method="post" action="{% url 'attempts:submit' exam.pk %}">
           {% csrf_token %}
           {% for item in questions_data %}
             <div id="question-{{ item.index }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -229,7 +229,7 @@
         clearTimeout(saveTimeout);
         saveTimeout = setTimeout(() => {
           const formData = new FormData(document.getElementById('exam-form'));
-          fetch('{% url "exams:student_take" exam.pk %}', {
+          fetch('{% url "attempts:take" exam.pk %}', {
             method: 'POST',
             body: formData,
             headers: {
