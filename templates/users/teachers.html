@@ -20,6 +20,11 @@
                 <div>
                   <div class="font-medium text-gray-900">{{ invitation.first_name }} {{ invitation.last_name }}</div>
                   <div class="text-sm text-gray-500">{{ invitation.email }}</div>
+                  {% if invitation.assigned_subjects.exists %}
+                    <div class="text-xs text-gray-400 mt-1">
+                      Subjects: {{ invitation.assigned_subjects.all|join:", " }}
+                    </div>
+                  {% endif %}
                 </div>
                 <div class="flex items-center">
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
@@ -39,7 +44,13 @@
         {% if teachers %}
           <div class="space-y-2">
             {% for u in teachers %}
-              {% include 'components/ui/_user_list_item.html' with user=u %}
+              {% with subjects=u.assigned_subjects.all %}
+                {% if subjects %}
+                  {% include 'components/ui/_user_list_item.html' with user=u extra_info=subjects|join:", " %}
+                {% else %}
+                  {% include 'components/ui/_user_list_item.html' with user=u extra_info="No subjects assigned" %}
+                {% endif %}
+              {% endwith %}
             {% endfor %}
           </div>
         {% elif not pending_invitations %}
@@ -56,6 +67,63 @@
     </div>
   </div>
 
-  <!-- Add Modal -->
-  {% include 'components/ui/_invite_user_modal.html' with modal_id="addModal" role_name="Teacher" form=form show_modal=show_modal %}
+  <!-- Add Teacher Modal -->
+  <div id="addModal" class="fixed inset-0 z-50 overflow-y-auto {% if not show_modal %}hidden{% endif %}" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen px-4 py-6">
+      <!-- Backdrop -->
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+           onclick="document.getElementById('addModal').classList.add('hidden')"
+           aria-hidden="true"></div>
+
+      <!-- Modal Panel -->
+      <div class="relative bg-white rounded-xl shadow-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Invite Teacher</h3>
+          <button type="button"
+                  onclick="document.getElementById('addModal').classList.add('hidden')"
+                  class="text-gray-400 hover:text-gray-500 focus:outline-none">
+            <span class="sr-only">Close</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <p class="text-sm text-gray-500 mb-4">The teacher will receive an email to set their password.</p>
+
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add">
+          <div class="space-y-4">
+            <div>{{ form.email }}</div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>{{ form.first_name }}</div>
+              <div>{{ form.last_name }}</div>
+            </div>
+            <div>{{ form.phone }}</div>
+
+            <!-- Subjects Selection -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Assigned Subjects</label>
+              <p class="text-xs text-gray-500 mb-3">Select subjects this teacher will teach</p>
+              <div class="max-h-48 overflow-y-auto border border-gray-200 rounded-lg p-3 space-y-2">
+                {% for subject in form.assigned_subjects %}
+                  <label class="flex items-center space-x-2 text-sm">
+                    {{ subject.tag }}
+                    <span class="text-gray-700">{{ subject.choice_label }}</span>
+                  </label>
+                {% empty %}
+                  <p class="text-sm text-gray-500">No subjects available. Create subjects first.</p>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary btn-full mt-6">
+            Send Invite
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 {% endblock %}

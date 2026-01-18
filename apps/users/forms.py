@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from apps.academic.models import Class
+from apps.academic.models import Class, Subject
 
 User = get_user_model()
 
@@ -69,11 +69,32 @@ class AddExaminerForm(AddUserForm):
 
 
 class AddTeacherForm(AddUserForm):
-    """Form for adding teachers."""
+    """Form for adding teachers with subject assignment."""
+
+    assigned_subjects = forms.ModelMultipleChoiceField(
+        queryset=Subject.objects.filter(is_active=True),
+        label="Assigned Subjects",
+        required=False,
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+                "class": "form-checkbox",
+            }
+        ),
+        help_text="Select subjects this teacher will teach",
+    )
+
+    class Meta(AddUserForm.Meta):
+        fields = ["email", "first_name", "last_name", "phone", "assigned_subjects"]
 
     def __init__(self, *args, **kwargs):
         kwargs["role"] = User.Role.TEACHER
         super().__init__(*args, **kwargs)
+        # Group subjects by class for better display
+        self.fields["assigned_subjects"].queryset = (
+            Subject.objects.filter(is_active=True)
+            .select_related("assigned_class")
+            .order_by("assigned_class__order", "name")
+        )
 
 
 class AddStudentForm(AddUserForm):

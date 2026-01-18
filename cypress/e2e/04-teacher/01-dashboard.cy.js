@@ -2,7 +2,7 @@
  * Teacher Dashboard Tests
  *
  * Tests teacher dashboard access and functionality.
- * Teacher dashboard may show "Coming Soon" placeholder.
+ * Teacher dashboard shows assigned subjects and statistics.
  *
  * Run: npx cypress run --spec "cypress/e2e/04-teacher/**"
  */
@@ -14,7 +14,7 @@ describe('Teacher Dashboard', () => {
   });
 
   beforeEach(() => {
-    // Login as teacher
+    // Login as teacher (DBMS teacher - Santosh Jadhav)
     cy.fixture('credentials').then((creds) => {
       cy.visit('/');
       cy.get('input[name="username"]').type(creds.teacher.email);
@@ -29,50 +29,49 @@ describe('Teacher Dashboard', () => {
     cy.contains(/dashboard|welcome/i).should('be.visible');
   });
 
-  it('should show teacher name or role', () => {
-    cy.get('body').then(($body) => {
-      const text = $body.text().toLowerCase();
-      // Check for teacher name (Santosh Jadhav) or role
-      const hasTeacherInfo = text.includes('santosh') || text.includes('teacher') || text.includes('welcome');
-      expect(hasTeacherInfo).to.be.true;
-    });
+  it('should show teacher name', () => {
+    // DBMS teacher is Santosh Jadhav
+    cy.contains('Santosh').should('be.visible');
   });
 
   it('should display institution name and logo', () => {
     // Verify institution name
     cy.contains(/polytechnic|college|model/i).should('be.visible');
 
-    // Check for logo
-    cy.get('img[alt*="logo"], img[alt*="Logo"], .logo').then(($logo) => {
-      if ($logo.length > 0) {
-        cy.wrap($logo).first().should('be.visible');
+    // Check for logo (may or may not be visible depending on if logo file exists)
+    cy.get('img').then(($imgs) => {
+      if ($imgs.length > 0) {
+        cy.wrap($imgs).first().should('be.visible');
       }
     });
   });
 
-  it('should show Coming Soon or placeholder content', () => {
-    // Teacher dashboard might show placeholder
+  it('should display My Subjects section', () => {
+    // Teacher dashboard should show assigned subjects
+    cy.contains('My Subjects').should('be.visible');
+  });
+
+  it('should show assigned subjects', () => {
+    // DBMS teacher has DBMS subjects assigned
     cy.get('body').then(($body) => {
-      const text = $body.text().toLowerCase();
-      const hasContent = text.includes('coming soon') ||
-      text.includes('dashboard') ||
-      text.includes('class') ||
-      text.includes('student') ||
-      text.includes('welcome');
-      expect(hasContent).to.be.true;
+      const text = $body.text();
+      const hasSubjects = text.includes('DBMS') || text.includes('Database');
+      expect(hasSubjects).to.be.true;
     });
   });
 
+  it('should display statistics cards', () => {
+    // Dashboard should show statistics
+    cy.contains('Subjects').should('be.visible');
+    cy.contains('Questions').should('be.visible');
+    cy.contains('Exams').should('be.visible');
+  });
+
   it('should display profile information', () => {
-    // Look for profile section or user info
-    cy.get('body').then(($body) => {
-      const text = $body.text().toLowerCase();
-      const hasProfileInfo = text.includes('santosh') ||
-      text.includes('jadhav') ||
-      text.includes('dbms') ||
-      text.includes('teacher');
-      expect(hasProfileInfo).to.be.true;
-    });
+    // Look for profile section
+    cy.contains('Your Profile').should('be.visible');
+    cy.contains(/Santosh/i).should('be.visible');
+    cy.contains(/teacher/i).should('be.visible');
   });
 
   it('should have navigation menu', () => {

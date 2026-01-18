@@ -62,6 +62,10 @@ class AcceptInviteView(View):
                 assigned_class=invitation.assigned_class,
             )
 
+            # Assign subjects if this is a teacher
+            if invitation.assigned_subjects.exists():
+                user.assigned_subjects.set(invitation.assigned_subjects.all())
+
             # Mark invitation as accepted
             invitation.accepted_at = timezone.now()
             invitation.save()

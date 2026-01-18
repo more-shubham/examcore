@@ -95,12 +95,14 @@ class TeacherManagementView(AdminRequiredMixin, View):
     template_name = "users/teachers.html"
 
     def get(self, request):
-        teachers = User.objects.filter(role=User.Role.TEACHER)
+        teachers = User.objects.filter(role=User.Role.TEACHER).prefetch_related(
+            "assigned_subjects", "assigned_subjects__assigned_class"
+        )
         pending_invitations = Invitation.objects.filter(
             role=User.Role.TEACHER,
             accepted_at__isnull=True,
             expires_at__gt=timezone.now(),
-        )
+        ).prefetch_related("assigned_subjects")
         form = AddTeacherForm()
         return render(
             request,
@@ -125,6 +127,7 @@ class TeacherManagementView(AdminRequiredMixin, View):
                     phone=form.cleaned_data["phone"],
                     role=User.Role.TEACHER,
                     invited_by=request.user,
+                    assigned_subjects=form.cleaned_data.get("assigned_subjects"),
                 )
                 invite_url = request.build_absolute_uri(invitation.get_invite_url())
                 email_sent = EmailService.send_invitation_email(
@@ -144,12 +147,16 @@ class TeacherManagementView(AdminRequiredMixin, View):
                 request,
                 self.template_name,
                 {
-                    "teachers": User.objects.filter(role=User.Role.TEACHER),
+                    "teachers": User.objects.filter(
+                        role=User.Role.TEACHER
+                    ).prefetch_related(
+                        "assigned_subjects", "assigned_subjects__assigned_class"
+                    ),
                     "pending_invitations": Invitation.objects.filter(
                         role=User.Role.TEACHER,
                         accepted_at__isnull=True,
                         expires_at__gt=timezone.now(),
-                    ),
+                    ).prefetch_related("assigned_subjects"),
                     "form": form,
                     "show_modal": True,
                 },

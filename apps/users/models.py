@@ -24,6 +24,12 @@ class User(AbstractUser):
         blank=True,
         related_name="students",
     )
+    assigned_subjects = models.ManyToManyField(
+        "academic.Subject",
+        blank=True,
+        related_name="teachers",
+        help_text="Subjects assigned to this teacher",
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]

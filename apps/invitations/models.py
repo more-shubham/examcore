@@ -24,6 +24,12 @@ class Invitation(TimestampedModel):
         blank=True,
         related_name="invitations",
     )
+    assigned_subjects = models.ManyToManyField(
+        "academic.Subject",
+        blank=True,
+        related_name="invitations",
+        help_text="Subjects to assign to teacher upon acceptance",
+    )
     token = models.CharField(max_length=64, unique=True)
     invited_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -51,13 +57,21 @@ class Invitation(TimestampedModel):
 
     @classmethod
     def create_invitation(
-        cls, email, first_name, last_name, phone, role, invited_by, assigned_class=None
+        cls,
+        email,
+        first_name,
+        last_name,
+        phone,
+        role,
+        invited_by,
+        assigned_class=None,
+        assigned_subjects=None,
     ):
         """Create a new invitation with secure token."""
         # Delete any existing pending invitations for this email
         cls.objects.filter(email=email.lower(), accepted_at__isnull=True).delete()
 
-        return cls.objects.create(
+        invitation = cls.objects.create(
             email=email.lower(),
             first_name=first_name,
             last_name=last_name,
@@ -68,6 +82,12 @@ class Invitation(TimestampedModel):
             invited_by=invited_by,
             expires_at=timezone.now() + timedelta(days=7),
         )
+
+        # Set assigned subjects if provided (for teachers)
+        if assigned_subjects:
+            invitation.assigned_subjects.set(assigned_subjects)
+
+        return invitation
 
     def is_valid(self):
         """Check if invitation is still valid."""

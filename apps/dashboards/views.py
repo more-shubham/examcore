@@ -26,6 +26,8 @@ class DashboardView(LoginRequiredMixin, View):
 
         if user.is_student:
             context.update(self.get_student_context(user))
+        elif user.is_teacher:
+            context.update(self.get_teacher_context(user))
         elif user.is_examiner:
             context.update(self.get_examiner_context(user))
         elif user.is_admin:
@@ -61,6 +63,34 @@ class DashboardView(LoginRequiredMixin, View):
             "active_exam_count": active_count,
             "total_exam_count": exams.count(),
             "completed_exam_count": attempts.count(),
+        }
+
+    def get_teacher_context(self, user):
+        from apps.exams.models import Exam
+        from apps.questions.models import Question
+
+        assigned_subjects = user.assigned_subjects.filter(
+            is_active=True
+        ).select_related("assigned_class")
+
+        # Get counts for assigned subjects
+        question_count = Question.objects.filter(
+            subject__in=assigned_subjects, is_active=True
+        ).count()
+
+        exam_count = Exam.objects.filter(
+            subject__in=assigned_subjects, is_active=True
+        ).count()
+
+        # Get student count across all classes with assigned subjects
+        classes = {s.assigned_class for s in assigned_subjects}
+        student_count = sum(c.student_count for c in classes)
+
+        return {
+            "assigned_subjects": assigned_subjects,
+            "question_count": question_count,
+            "exam_count": exam_count,
+            "student_count": student_count,
         }
 
     def get_examiner_context(self, user):

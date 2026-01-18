@@ -233,6 +233,22 @@ class Command(BaseCommand):
                 is_staff=parse_bool(row.get("is_staff", "false")),
                 is_active=parse_bool(row.get("is_active", "true")),
             )
+
+            # Assign subjects to teachers
+            subject_refs = row.get("subject_refs", "")
+            if subject_refs and role == "teacher":
+                subject_ids = [s.strip() for s in subject_refs.split("|") if s.strip()]
+                subjects = [
+                    self.subject_map[ref]
+                    for ref in subject_ids
+                    if ref in self.subject_map
+                ]
+                if subjects:
+                    user.assigned_subjects.set(subjects)
+                    self.stdout.write(
+                        f"    Assigned {len(subjects)} subjects to {user.email}"
+                    )
+
             self.user_map[row["id"]] = user
 
             # Store credentials for fixtures (plain password for testing)

@@ -4,7 +4,7 @@
 
 {% block content %}
   <div class="space-y-6">
-  <!-- Welcome Header -->
+    <!-- Welcome Header -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <div class="flex items-center justify-between">
         <div>
@@ -17,20 +17,80 @@
       </div>
     </div>
 
-  <!-- Coming Soon -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-      <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center">
+          <div class="p-3 bg-blue-100 rounded-lg">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Subjects</p>
+            <p class="text-2xl font-bold text-gray-900">{{ assigned_subjects|length }}</p>
+          </div>
+        </div>
       </div>
-      <h2 class="text-2xl font-bold text-gray-900 mb-2">Coming Soon</h2>
-      <p class="text-gray-600 max-w-md mx-auto">
-        Your classes, students, and teaching tools will appear here once they are available. Stay tuned!
-      </p>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center">
+          <div class="p-3 bg-green-100 rounded-lg">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Questions</p>
+            <p class="text-2xl font-bold text-gray-900">{{ question_count }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center">
+          <div class="p-3 bg-purple-100 rounded-lg">
+            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Exams</p>
+            <p class="text-2xl font-bold text-gray-900">{{ exam_count }}</p>
+          </div>
+        </div>
+      </div>
     </div>
 
-  <!-- Profile Info -->
+    <!-- Assigned Subjects -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">My Subjects</h2>
+      {% if assigned_subjects %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {% for subject in assigned_subjects %}
+            <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors">
+              <h3 class="font-medium text-gray-900">{{ subject.name }}</h3>
+              <p class="text-sm text-gray-500 mt-1">{{ subject.assigned_class.name }}</p>
+              {% if subject.description %}
+                <p class="text-xs text-gray-400 mt-2 line-clamp-2">{{ subject.description }}</p>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-center py-8">
+          <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+          </div>
+          <h3 class="text-sm font-medium text-gray-900">No subjects assigned</h3>
+          <p class="mt-1 text-sm text-gray-500">Contact your administrator to get subjects assigned.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Profile Info -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Profile</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
