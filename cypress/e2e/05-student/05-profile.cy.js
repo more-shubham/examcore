@@ -30,7 +30,7 @@ describe('Student Profile Edit', () => {
   });
 
   it('should navigate to profile page from dashboard', () => {
-    cy.contains('Edit Profile').click();
+    cy.contains('a', 'Edit Profile').first().click();
     cy.url().should('include', '/profile');
     cy.contains('Edit Profile').should('be.visible');
   });
@@ -127,7 +127,7 @@ describe('Student Profile Edit', () => {
     cy.visit('/profile/');
 
     // Click cancel
-    cy.contains('Cancel').click();
+    cy.contains('a', 'Cancel').first().click();
 
     // Should go back to dashboard
     cy.url().should('include', '/dashboard');
@@ -137,7 +137,7 @@ describe('Student Profile Edit', () => {
     cy.visit('/profile/');
 
     cy.contains('Back to Dashboard').should('be.visible');
-    cy.contains('Back to Dashboard').click();
+    cy.contains('a', 'Back to Dashboard').first().click();
     cy.url().should('include', '/dashboard');
   });
 

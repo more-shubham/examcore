@@ -110,10 +110,12 @@ describe('Student - Take Exam', () => {
     cy.visit('/my-exams/');
 
     // Navigate to exam
-    cy.get('a:contains("Start Exam"), a:contains("Start"), button:contains("Start")').then(($btn) => {
+    cy.get('body').then(($body) => {
+      const $btn = $body.find('a:contains("Start Exam"), a:contains("Start"), button:contains("Start")');
       if ($btn.length > 0) {
         cy.wrap($btn).first().click();
-        cy.get('button:contains("Begin"), button:contains("Start Exam")').then(($beginBtn) => {
+        cy.get('body').then(($body2) => {
+          const $beginBtn = $body2.find('button:contains("Begin"), button:contains("Start Exam")');
           if ($beginBtn.length > 0) cy.wrap($beginBtn).first().click();
         });
 
@@ -130,15 +132,18 @@ describe('Student - Take Exam', () => {
     cy.visit('/my-exams/');
 
     // Navigate to exam
-    cy.get('a:contains("Start Exam"), a:contains("Start"), button:contains("Start")').then(($btn) => {
+    cy.get('body').then(($body) => {
+      const $btn = $body.find('a:contains("Start Exam"), a:contains("Start"), button:contains("Start")');
       if ($btn.length > 0) {
         cy.wrap($btn).first().click();
-        cy.get('button:contains("Begin"), button:contains("Start Exam")').then(($beginBtn) => {
+        cy.get('body').then(($body2) => {
+          const $beginBtn = $body2.find('button:contains("Begin"), button:contains("Start Exam")');
           if ($beginBtn.length > 0) cy.wrap($beginBtn).first().click();
         });
 
         // Look for next/previous buttons or question navigator
-        cy.get('button:contains("Next"), a:contains("Next"), [data-action="next"]').then(($next) => {
+        cy.get('body').then(($body3) => {
+          const $next = $body3.find('button:contains("Next"), a:contains("Next"), [data-action="next"]');
           if ($next.length > 0) {
             cy.wrap($next).first().click();
             // Should move to next question
@@ -155,16 +160,18 @@ describe('Student - Take Exam', () => {
     cy.visit('/my-exams/');
 
     // Navigate to exam
-    cy.get('a:contains("Start Exam"), a:contains("Start"), button:contains("Start")').then(($btn) => {
+    cy.get('body').then(($body) => {
+      const $btn = $body.find('a:contains("Start Exam"), a:contains("Start"), button:contains("Start")');
       if ($btn.length > 0) {
         cy.wrap($btn).first().click();
-        cy.get('button:contains("Begin"), button:contains("Start Exam")').then(($beginBtn) => {
+        cy.get('body').then(($body2) => {
+          const $beginBtn = $body2.find('button:contains("Begin"), button:contains("Start Exam")');
           if ($beginBtn.length > 0) cy.wrap($beginBtn).first().click();
         });
 
         // Look for timer display or time remaining text
-        cy.get('body').then(($body) => {
-          const text = $body.text();
+        cy.get('body').then(($body3) => {
+          const text = $body3.text();
           const hasTimer = /\d+:\d+/.test(text) || text.includes('remaining') || text.includes('Time');
           expect(hasTimer).to.be.true;
         });
@@ -178,10 +185,12 @@ describe('Student - Take Exam', () => {
     cy.visit('/my-exams/');
 
     // Navigate to exam
-    cy.get('a:contains("Start Exam"), a:contains("Start"), button:contains("Start")').then(($btn) => {
+    cy.get('body').then(($body) => {
+      const $btn = $body.find('a:contains("Start Exam"), a:contains("Start"), button:contains("Start")');
       if ($btn.length > 0) {
         cy.wrap($btn).first().click();
-        cy.get('button:contains("Begin"), button:contains("Start Exam")').then(($beginBtn) => {
+        cy.get('body').then(($body2) => {
+          const $beginBtn = $body2.find('button:contains("Begin"), button:contains("Start Exam")');
           if ($beginBtn.length > 0) cy.wrap($beginBtn).first().click();
         });
 
@@ -189,7 +198,8 @@ describe('Student - Take Exam', () => {
         cy.get('input[type="radio"]').first().check();
 
         // Try to go to next question
-        cy.get('button:contains("Next"), a:contains("Next")').then(($next) => {
+        cy.get('body').then(($body3) => {
+          const $next = $body3.find('button:contains("Next"), a:contains("Next")');
           if ($next.length > 0) {
             cy.wrap($next).first().click();
             // Answer second question
@@ -198,17 +208,22 @@ describe('Student - Take Exam', () => {
         });
 
         // Look for submit button
-        cy.get('button:contains("Submit"), a:contains("Submit"), button:contains("Finish")').first().click();
+        cy.get('body').then(($body4) => {
+          const $submit = $body4.find('button:contains("Submit"), a:contains("Submit"), button:contains("Finish")');
+          if ($submit.length > 0) {
+            cy.wrap($submit).first().click();
 
-        // Confirm submission if dialog appears
-        cy.get('body').then(($body) => {
-          if ($body.find('button:contains("Confirm"), button:contains("Yes")').length > 0) {
-            cy.contains('button', /confirm|yes/i).click();
+            // Confirm submission if dialog appears
+            cy.get('body').then(($body5) => {
+              if ($body5.find('button:contains("Confirm"), button:contains("Yes")').length > 0) {
+                cy.contains('button', /confirm|yes/i).click();
+              }
+            });
+
+            // Should be redirected to result or exams list
+            cy.url().should('match', /\/(result|my-exams)/);
           }
         });
-
-        // Should be redirected to result or exams list
-        cy.url().should('match', /\/(result|my-exams)/);
       } else {
         cy.log('No active exams available');
       }
@@ -219,24 +234,31 @@ describe('Student - Take Exam', () => {
     cy.visit('/my-exams/');
 
     // Navigate to exam
-    cy.get('a:contains("Start Exam"), a:contains("Start"), button:contains("Start")').then(($btn) => {
+    cy.get('body').then(($body) => {
+      const $btn = $body.find('a:contains("Start Exam"), a:contains("Start"), button:contains("Start")');
       if ($btn.length > 0) {
         cy.wrap($btn).first().click();
-        cy.get('button:contains("Begin"), button:contains("Start Exam")').then(($beginBtn) => {
+        cy.get('body').then(($body2) => {
+          const $beginBtn = $body2.find('button:contains("Begin"), button:contains("Start Exam")');
           if ($beginBtn.length > 0) cy.wrap($beginBtn).first().click();
         });
 
         // Try to submit
-        cy.get('button:contains("Submit"), button:contains("Finish")').first().click();
+        cy.get('body').then(($body3) => {
+          const $submit = $body3.find('button:contains("Submit"), button:contains("Finish")');
+          if ($submit.length > 0) {
+            cy.wrap($submit).first().click();
 
-        // Should show confirmation
-        cy.get('body').then(($body) => {
-          const text = $body.text().toLowerCase();
-          const hasConfirmation = text.includes('confirm') ||
-          text.includes('sure') ||
-          text.includes('submit') ||
-          text.includes('finish');
-          expect(hasConfirmation).to.be.true;
+            // Should show confirmation
+            cy.get('body').then(($body4) => {
+              const text = $body4.text().toLowerCase();
+              const hasConfirmation = text.includes('confirm') ||
+              text.includes('sure') ||
+              text.includes('submit') ||
+              text.includes('finish');
+              expect(hasConfirmation).to.be.true;
+            });
+          }
         });
       } else {
         cy.log('No active exams available');

@@ -206,17 +206,22 @@ describe('Student Answer Review', () => {
   it('should navigate to specific question via navigator', () => {
     cy.visit('/my-exams/');
 
-    cy.get('a:contains("Result"), a:contains("View"), a[href*="result"]').then(($btn) => {
+    cy.get('body').then(($body) => {
+      const $btn = $body.find('a:contains("Result"), a:contains("View"), a[href*="result"]');
       if ($btn.length > 0) {
         cy.wrap($btn).first().click();
-        cy.get('a:contains("Review"), a[href*="review"]').then(($reviewBtn) => {
+        cy.get('body').then(($body2) => {
+          const $reviewBtn = $body2.find('a:contains("Review"), a[href*="review"]');
           if ($reviewBtn.length > 0) {
             cy.wrap($reviewBtn).first().click();
 
             // Try to navigate to question
-            cy.get('a[href^="#question-"]').then(($qLinks) => {
+            cy.get('body').then(($body3) => {
+              const $qLinks = $body3.find('a[href^="#question-"]');
               if ($qLinks.length > 0) {
                 cy.wrap($qLinks).first().click();
+              } else {
+                cy.log('No question links found');
               }
             });
           } else {

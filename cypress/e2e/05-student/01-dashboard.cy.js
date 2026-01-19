@@ -90,7 +90,8 @@ describe('Student Dashboard', () => {
   it('should have navigation to My Exams', () => {
     // The dashboard has "View Exams" link that goes to /my-exams/
     cy.contains(/view exam|my exam|exams|available/i).should('be.visible');
-    cy.contains(/view exam|my exam|exams|available/i).first().click();
+    // Click on a link that goes to my-exams
+    cy.get('a[href*="my-exams"], a[href*="exams"]').first().click();
     cy.url().should('include', '/my-exams');
   });
 
