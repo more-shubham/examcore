@@ -4,23 +4,28 @@
 
 <h1 align="center">ExamCore</h1>
 
-<h3 align="center">Streamline Your Examination Process</h3>
+<h3 align="center">Enterprise-Grade Examination Management System</h3>
 
 <p align="center">
-  The complete examination management system for schools, colleges, and universities.
+  A complete, production-ready examination platform for educational institutions.
   <br />
-  <a href="#features"><strong>Explore Features</strong></a>
+  <a href="#-features"><strong>Features</strong></a>
   &nbsp;&middot;&nbsp;
-  <a href="#installation"><strong>Get Started</strong></a>
+  <a href="#-quick-demo"><strong>Quick Demo</strong></a>
   &nbsp;&middot;&nbsp;
-  <a href="#documentation"><strong>Documentation</strong></a>
+  <a href="#-installation"><strong>Installation</strong></a>
+  &nbsp;&middot;&nbsp;
+  <a href="#-future-scope"><strong>Roadmap</strong></a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
+  <a href="https://github.com/more-shubham/examcore/actions/workflows/ci.yml"><img src="https://github.com/more-shubham/examcore/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/more-shubham/examcore/pkgs/container/examcore"><img src="https://img.shields.io/badge/Docker-ghcr.io-blue?logo=docker" alt="Docker"></a>
   <img src="https://img.shields.io/badge/python-3.11%2B-blue.svg" alt="Python 3.11+">
   <img src="https://img.shields.io/badge/django-5.0-green.svg" alt="Django 5.0">
-  <img src="https://img.shields.io/badge/status-alpha-orange.svg" alt="Status">
+  <img src="https://img.shields.io/badge/tests-304%20passed-brightgreen.svg" alt="Tests">
+  <img src="https://img.shields.io/badge/version-1.0.0--mvp-blue.svg" alt="Version">
+  <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
 </p>
 
 <br />
@@ -31,20 +36,50 @@
 
 ---
 
-## Overview
+## 🚀 Quick Demo
 
-**ExamCore** is an enterprise-grade, open-source examination management system built with Django. It provides a complete solution for educational institutions to create, manage, and conduct examinations with built-in anti-cheat features, role-based access control, and instant result generation.
+Get ExamCore running locally in under 2 minutes:
 
-### Why ExamCore?
+```bash
+# Clone and start
+git clone https://github.com/more-shubham/examcore.git
+cd examcore
+docker-compose up -d
 
-- **Open Source** - Free to use, modify, and distribute
-- **Self-Hosted** - Full control over your data and infrastructure
-- **Modern Stack** - Built with Django 5.0 and Tailwind CSS
-- **Scalable** - Designed to handle institutions of any size
+# Access the application
+open http://localhost:8000
+```
+
+**Demo Credentials** (after seeding):
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@modelpolytechnic.edu.in | Admin@123 |
+| Examiner | examiner@modelpolytechnic.edu.in | Examiner@123 |
+| Teacher | dbms.teacher@modelpolytechnic.edu.in | Teacher@123 |
+| Student | rahul.patil@modelpolytechnic.edu.in | Student@123 |
+
+> **Note:** Run `python manage.py seed_cypress` to populate demo data.
 
 ---
 
-## Features
+## 📋 Overview
+
+**ExamCore** is an enterprise-grade, open-source examination management system built with Django 5.0. It provides a complete solution for educational institutions to create, manage, and conduct online examinations with built-in anti-cheat features, role-based access control, and instant result generation.
+
+### Why ExamCore?
+
+| Feature | Description |
+|---------|-------------|
+| 🔓 **Open Source** | Free to use, modify, and distribute under MIT license |
+| 🏠 **Self-Hosted** | Full control over your data and infrastructure |
+| ⚡ **Modern Stack** | Django 5.0, Tailwind CSS, PostgreSQL |
+| 📈 **Scalable** | Designed to handle institutions of any size |
+| ✅ **Tested** | 304 E2E tests with Cypress |
+| 🐳 **Containerized** | Ready-to-deploy Docker images |
+
+---
+
+## ✨ Features
 
 <table>
 <tr>
@@ -124,7 +159,7 @@ Automatic grading with detailed performance insights.
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/examcore.git
+git clone https://github.com/more-shubham/examcore.git
 cd examcore
 
 # Copy and configure environment
@@ -231,16 +266,42 @@ For development setup and code style guidelines, refer to [CLAUDE.md](CLAUDE.md)
 
 ---
 
-## Roadmap
+## Future Scope
 
+### Phase 2: Enhanced Question Types
+- [ ] Fill-in-the-blank questions
+- [ ] Essay/long answer with manual grading
+- [ ] Matching questions
+- [ ] True/False questions
+- [ ] Image-based questions
+
+### Phase 3: Advanced Features
 - [ ] REST API for third-party integrations
-- [ ] Multiple question types (fill-in-blank, essay, matching)
-- [ ] Proctoring integration
-- [ ] Mobile application
-- [ ] Multi-language support
+- [ ] Proctoring integration (webcam monitoring)
+- [ ] Browser lockdown mode
+- [ ] Plagiarism detection for essays
+- [ ] Question difficulty auto-adjustment
+
+### Phase 4: Analytics & Reporting
 - [ ] Advanced analytics dashboard
-- [ ] Bulk import/export
-- [ ] LTI integration for LMS
+- [ ] Performance trend analysis
+- [ ] Question effectiveness metrics
+- [ ] Exportable PDF reports
+- [ ] Comparative class analysis
+
+### Phase 5: Platform Expansion
+- [ ] Mobile application (iOS/Android)
+- [ ] Multi-language support (i18n)
+- [ ] LTI integration for LMS (Moodle, Canvas)
+- [ ] Bulk import/export (CSV, Excel)
+- [ ] White-label customization
+
+### Phase 6: Enterprise Features
+- [ ] Multi-institution support
+- [ ] SSO integration (SAML, OAuth)
+- [ ] Role-based API access
+- [ ] Audit logging
+- [ ] Custom branding per institution
 
 ---
 
@@ -259,8 +320,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 - **Documentation**: [docs.examcore.dev](https://docs.examcore.dev)
-- **Issues**: [GitHub Issues](https://github.com/your-username/examcore/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/examcore/discussions)
+- **Issues**: [GitHub Issues](https://github.com/more-shubham/examcore/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/more-shubham/examcore/discussions)
 
 ---
 
@@ -269,7 +330,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 </p>
 
 <p align="center">
-  <a href="https://github.com/your-username/examcore">
+  <a href="https://github.com/more-shubham/examcore">
     <img src="https://img.shields.io/badge/Star_on_GitHub-2563eb?style=for-the-badge&logo=github&logoColor=white" alt="Star on GitHub">
   </a>
 </p>
