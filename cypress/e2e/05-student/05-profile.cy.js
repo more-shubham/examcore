@@ -19,7 +19,7 @@ describe('Student Profile Edit', () => {
       cy.visit('/');
       cy.get('input[name="username"]').type(creds.student.email);
       cy.get('input[name="password"]').type(creds.student.password);
-      cy.get('button[type="submit"]').click();
+      cy.get('button[type="submit"]').first().click();
       cy.url().should('include', '/dashboard');
     });
   });
@@ -83,7 +83,7 @@ describe('Student Profile Edit', () => {
     cy.get('input[name="phone"]').clear().type('9876543210');
 
     // Submit form
-    cy.get('button[type="submit"]').click();
+    cy.get('button[type="submit"]').first().click();
 
     // Should show success message
     cy.contains(/updated|success/i).should('be.visible');
@@ -104,7 +104,7 @@ describe('Student Profile Edit', () => {
     cy.get('input[name="last_name"]').clear();
 
     // Submit form
-    cy.get('button[type="submit"]').click();
+    cy.get('button[type="submit"]').first().click();
 
     // Should show validation errors or stay on page
     cy.url().should('include', '/profile');
@@ -117,7 +117,7 @@ describe('Student Profile Edit', () => {
     cy.get('input[name="phone"]').clear().type('12345');
 
     // Submit form
-    cy.get('button[type="submit"]').click();
+    cy.get('button[type="submit"]').first().click();
 
     // Should show error message
     cy.contains(/valid phone|at least 10/i).should('be.visible');
