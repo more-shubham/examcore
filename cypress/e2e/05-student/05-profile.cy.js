@@ -54,8 +54,12 @@ describe('Student Profile Edit', () => {
 
     // Email should be read-only
     cy.get('input[disabled]').should('have.length.at.least', 2);
-    cy.contains('Account Information').should('be.visible');
-    cy.contains('rahul.patil@modelpolytechnic.edu.in').should('be.visible');
+    cy.contains(/Account Information/i).should('be.visible');
+    // Email is in a disabled input field, check the value
+    cy.get('input[disabled]').then(($inputs) => {
+      const values = [...$inputs].map((el) => el.value).join(' ');
+      expect(values).to.include('rahul.patil@modelpolytechnic.edu.in');
+    });
   });
 
   it('should show assigned class for student (read-only)', () => {

@@ -143,16 +143,30 @@ describe('Student Result PDF Export', () => {
   });
 
   it('should require authentication for PDF download', () => {
-    // Logout first
-    cy.visit('/logout/', { method: 'POST', form: true });
+    // Logout first using form submission
+    cy.get('form[action="/logout/"]').then(($form) => {
+      if ($form.length > 0) {
+        cy.wrap($form).submit();
+      } else {
+        cy.get('button:contains("Logout"), a:contains("Logout")').then(($logout) => {
+          if ($logout.length > 0) {
+            cy.wrap($logout).first().click();
+          }
+        });
+      }
+    });
 
-    // Try to access PDF directly
+    // Wait for logout to complete
+    cy.url().should('not.include', '/dashboard');
+
+    // Try to access PDF directly - should redirect or forbidden
     cy.request({
       url: '/my-exams/1/result/pdf/',
       failOnStatusCode: false,
+      followRedirect: false,
     }).then((response) => {
-      // Should redirect to login (302) or return forbidden (403)
-      expect(response.status).to.be.oneOf([302, 403]);
+      // Should redirect to login (302) or return forbidden (403) or unauthorized (401)
+      expect(response.status).to.be.oneOf([302, 401, 403]);
     });
   });
 

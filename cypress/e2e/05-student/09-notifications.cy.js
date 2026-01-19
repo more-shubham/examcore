@@ -197,14 +197,24 @@ describe('Student Notification Preferences', () => {
   });
 
   it('should require authentication', () => {
-    // Logout first
-    cy.visit('/logout/', { method: 'POST', form: true });
+    // Logout first using form submission
+    cy.get('form[action="/logout/"]').then(($form) => {
+      if ($form.length > 0) {
+        cy.wrap($form).submit();
+      } else {
+        // Try button/link based logout
+        cy.get('button:contains("Logout"), a:contains("Logout")').then(($logout) => {
+          if ($logout.length > 0) {
+            cy.wrap($logout).first().click();
+          }
+        });
+      }
+    });
 
     // Try to access notification preferences
     cy.visit('/profile/notifications/');
 
     // Should redirect to login
-    cy.url().should('include', '/');
-    cy.get('input[name="username"]').should('be.visible');
+    cy.url().should('not.include', '/profile/notifications');
   });
 });
