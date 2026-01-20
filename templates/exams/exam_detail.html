@@ -16,33 +16,21 @@
         <div>
           <h1 class="text-2xl font-bold text-gray-900">{{ exam.title }}</h1>
           <div class="flex items-center space-x-2 mt-2">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-              {{ exam.subject.name }}
-            </span>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                         {% if exam.status_display == 'Draft' %}bg-gray-100 text-gray-800
-                         {% elif exam.status_display == 'Upcoming' %}bg-blue-100 text-blue-800
-                         {% elif exam.status_display == 'Running' %}bg-green-100 text-green-800
-                         {% else %}bg-red-100 text-red-800{% endif %}">
-              {{ exam.status_display }}
-            </span>
+            <span class="badge-primary">{{ exam.subject.name }}</span>
+            {% include 'components/ui/_status_badge.html' with status=exam.status_display %}
           </div>
         </div>
         {% if can_manage and user.is_admin or can_manage and exam.created_by == user %}
           <div class="flex items-center space-x-2">
-            <a href="{% url 'exams:edit' exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100">
-              Edit
-            </a>
-            <a href="{% url 'exams:delete' exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100">
-              Delete
-            </a>
+            <a href="{% url 'exams:edit' exam.pk %}" class="btn-secondary btn-sm">Edit</a>
+            <a href="{% url 'exams:delete' exam.pk %}" class="btn-danger btn-sm">Delete</a>
           </div>
         {% endif %}
       </div>
     </div>
 
   <!-- Exam Details -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <div class="bg-white rounded shadow-notion-sm p-6">
       <h2 class="text-lg font-semibold text-gray-900 mb-4">Exam Details</h2>
 
       {% if exam.description %}
@@ -78,13 +66,13 @@
     </div>
 
   <!-- Question Selection Info -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <div class="bg-white rounded shadow-notion-sm p-6">
       <div class="flex items-start justify-between">
         <div>
           <h2 class="text-lg font-semibold text-gray-900 mb-2">Questions</h2>
           {% if exam.use_random_questions %}
             <p class="text-gray-600">
-              <span class="inline-flex items-center px-2 py-1 rounded bg-blue-50 text-blue-700 text-sm font-medium">
+              <span class="inline-flex items-center px-2 py-1 rounded bg-gray-100 text-gray-700 text-sm font-medium">
                 Random Selection
               </span>
             </p>
@@ -95,7 +83,7 @@
               Available questions in {{ exam.subject.name }}: <strong>{{ available_questions }}</strong>
             </p>
             {% if available_questions < exam.random_question_count %}
-              <p class="text-sm text-yellow-600 mt-2">
+              <p class="text-sm text-gray-600 mt-2">
                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                 </svg>
@@ -104,7 +92,7 @@
             {% endif %}
           {% else %}
             <p class="text-gray-600">
-              <span class="inline-flex items-center px-2 py-1 rounded bg-purple-50 text-purple-700 text-sm font-medium">
+              <span class="inline-flex items-center px-2 py-1 rounded bg-primary-50 text-primary-700 text-sm font-medium">
                 Manual Selection
               </span>
             </p>
@@ -114,9 +102,7 @@
           {% endif %}
         </div>
         {% if not exam.use_random_questions and can_manage and user.is_admin or not exam.use_random_questions and can_manage and exam.created_by == user %}
-          <a href="{% url 'exams:questions' exam.pk %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
-            Manage Questions
-          </a>
+          <a href="{% url 'exams:questions' exam.pk %}" class="btn-primary">Manage Questions</a>
         {% endif %}
       </div>
 

@@ -50,14 +50,14 @@ describe('Examiner Dashboard', () => {
     // Look for My Questions stat card
     cy.contains('My Questions').should('be.visible');
     // Should have a number displayed
-    cy.contains('My Questions').parent().find('.text-3xl').should('exist');
+    cy.contains('My Questions').parent().find('.text-2xl, .text-3xl').should('exist');
   });
 
   it('should display Exams Created stat card', () => {
     // Look for Exams Created stat card
     cy.contains('Exams Created').should('be.visible');
     // Should have a number displayed
-    cy.contains('Exams Created').parent().find('.text-3xl').should('exist');
+    cy.contains('Exams Created').parent().find('.text-2xl, .text-3xl').should('exist');
   });
 
   it('should have navigation to Questions via stat card', () => {

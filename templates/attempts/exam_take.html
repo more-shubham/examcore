@@ -5,16 +5,16 @@
 {% block extra_css %}
   <style>
     .question-nav-btn {
-      @apply w-10 h-10 rounded-lg text-sm font-medium border transition-colors;
+      @apply w-9 h-9 rounded text-sm font-medium transition-colors;
     }
     .question-nav-btn.answered {
-      @apply bg-green-100 border-green-300 text-green-800;
+      @apply bg-primary-100 text-primary-700;
     }
     .question-nav-btn.unanswered {
-      @apply bg-gray-100 border-gray-300 text-gray-600 hover:bg-gray-200;
+      @apply bg-gray-100 text-gray-600 hover:bg-gray-200;
     }
     .question-nav-btn.current {
-      @apply ring-2 ring-primary-500 ring-offset-2;
+      @apply ring-2 ring-primary-500 ring-offset-1;
     }
   </style>
 {% endblock %}
@@ -22,20 +22,20 @@
 {% block content %}
   <div class="space-y-4">
   <!-- Timer Bar -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sticky top-20 z-30">
+    <div class="bg-white rounded shadow-notion-sm p-4 sticky top-20 z-30">
       <div class="flex items-center justify-between">
         <div>
           <h1 class="text-lg font-bold text-gray-900">{{ exam.title }}</h1>
-          <p class="text-sm text-gray-600">{{ questions_data|length }} questions</p>
+          <p class="text-sm text-gray-500">{{ questions_data|length }} questions</p>
         </div>
         <div class="flex items-center space-x-4">
-          <div id="timer" class="flex items-center px-4 py-2 bg-red-50 border border-red-200 rounded-lg">
-            <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div id="timer" class="exam-timer">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <span id="time-display" class="text-lg font-mono font-bold text-red-600">--:--</span>
+            <span id="time-display" class="exam-timer-value">--:--</span>
           </div>
-          <button type="button" onclick="document.getElementById('submit-modal').classList.remove('hidden')" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+          <button type="button" onclick="document.getElementById('submit-modal').classList.remove('hidden')" class="btn-primary">
             Submit Exam
           </button>
         </div>
@@ -49,19 +49,19 @@
         <form id="exam-form" method="post" action="{% url 'attempts:submit' exam.pk %}">
           {% csrf_token %}
           {% for item in questions_data %}
-            <div id="question-{{ item.index }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div id="question-{{ item.index }}" class="bg-white rounded shadow-notion-sm p-6">
               <div class="flex items-start justify-between mb-4">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800">
+                <span class="inline-flex items-center px-3 py-1 rounded text-sm font-medium bg-primary-100 text-primary-700">
                   Question {{ item.index|add:1 }}
                 </span>
               </div>
               <p class="text-lg text-gray-900 mb-6">{{ item.question.question_text }}</p>
               <div class="space-y-3">
                 {% for option in item.options %}
-                  <label class="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors option-label" data-question="{{ item.question.id }}">
+                  <label class="flex items-center p-4 rounded bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors option-label" data-question="{{ item.question.id }}">
                     <input type="radio" name="question_{{ item.question.id }}" value="{{ option.option_id }}" class="h-4 w-4 text-primary-600 border-gray-300 focus:ring-primary-500" {% if item.selected_answer == option.option_id %}checked{% endif %}>
                     <span class="ml-3 flex items-center">
-                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-700 text-sm font-medium mr-3">
+                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-gray-600 text-sm font-medium mr-3">
                         {{ option.display_number }}
                       </span>
                       <span class="text-gray-700">{{ option.text }}</span>
@@ -76,9 +76,9 @@
 
     <!-- Question Navigator -->
       <div class="lg:col-span-1">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sticky top-40">
+        <div class="bg-white rounded shadow-notion-sm p-4 sticky top-40">
           <h3 class="text-sm font-semibold text-gray-900 mb-3">Question Navigator</h3>
-          <div class="grid grid-cols-5 gap-2">
+          <div class="grid grid-cols-5 gap-1.5">
             {% for item in questions_data %}
               <button type="button" onclick="scrollToQuestion({{ item.index }})" id="nav-btn-{{ item.index }}" class="question-nav-btn {% if item.selected_answer %}answered{% else %}unanswered{% endif %}">
                 {{ item.index|add:1 }}
@@ -88,14 +88,14 @@
           <div class="mt-4 pt-4 border-t border-gray-100">
             <div class="flex items-center justify-between text-sm">
               <div class="flex items-center">
-                <span class="w-3 h-3 rounded bg-green-100 border border-green-300 mr-2"></span>
+                <span class="w-3 h-3 rounded bg-primary-100 mr-2"></span>
                 <span class="text-gray-600">Answered</span>
               </div>
               <span id="answered-count" class="font-medium text-gray-900">0</span>
             </div>
             <div class="flex items-center justify-between text-sm mt-2">
               <div class="flex items-center">
-                <span class="w-3 h-3 rounded bg-gray-100 border border-gray-300 mr-2"></span>
+                <span class="w-3 h-3 rounded bg-gray-100 mr-2"></span>
                 <span class="text-gray-600">Unanswered</span>
               </div>
               <span id="unanswered-count" class="font-medium text-gray-900">{{ questions_data|length }}</span>
@@ -109,25 +109,25 @@
 <!-- Submit Modal -->
   <div id="submit-modal" class="hidden fixed inset-0 z-50 overflow-y-auto">
     <div class="flex items-center justify-center min-h-screen px-4">
-      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="document.getElementById('submit-modal').classList.add('hidden')"></div>
-      <div class="relative bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-2">Submit Exam?</h3>
-        <p class="text-gray-600 mb-4">Are you sure you want to submit your exam? This action cannot be undone.</p>
-        <div id="submit-summary" class="bg-gray-50 rounded-lg p-4 mb-4">
+      <div class="fixed inset-0 bg-black/40 transition-opacity" onclick="document.getElementById('submit-modal').classList.add('hidden')"></div>
+      <div class="relative bg-white rounded shadow-notion-lg max-w-md w-full p-6">
+        <h3 class="text-base font-bold text-gray-900 mb-2">Submit Exam?</h3>
+        <p class="text-gray-600 text-sm mb-4">Are you sure you want to submit your exam? This action cannot be undone.</p>
+        <div id="submit-summary" class="bg-gray-50 rounded p-4 mb-4">
           <div class="flex justify-between text-sm">
-            <span class="text-gray-600">Answered:</span>
+            <span class="text-gray-500">Answered:</span>
             <span id="modal-answered" class="font-medium">0 / {{ questions_data|length }}</span>
           </div>
           <div class="flex justify-between text-sm mt-1">
-            <span class="text-gray-600">Unanswered:</span>
-            <span id="modal-unanswered" class="font-medium text-red-600">{{ questions_data|length }}</span>
+            <span class="text-gray-500">Unanswered:</span>
+            <span id="modal-unanswered" class="font-medium text-gray-600">{{ questions_data|length }}</span>
           </div>
         </div>
         <div class="flex space-x-3">
-          <button type="button" onclick="document.getElementById('submit-modal').classList.add('hidden')" class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+          <button type="button" onclick="document.getElementById('submit-modal').classList.add('hidden')" class="btn-secondary flex-1">
             Cancel
           </button>
-          <button type="button" onclick="document.getElementById('exam-form').submit()" class="flex-1 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">
+          <button type="button" onclick="document.getElementById('exam-form').submit()" class="btn-primary flex-1">
             Submit Exam
           </button>
         </div>
@@ -160,15 +160,12 @@
         timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
       }
 
-    // Warning colors
+    // Warning colors (subtle for Notion style)
       const timerEl = document.getElementById('timer');
       if (timeRemaining <= 60) {
-        timerEl.classList.remove('bg-red-50', 'border-red-200');
-        timerEl.classList.add('bg-red-100', 'border-red-400');
-        timerDisplay.classList.add('animate-pulse');
+        timerEl.classList.add('exam-timer-warning');
       } else if (timeRemaining <= 300) {
-        timerEl.classList.remove('bg-red-50');
-        timerEl.classList.add('bg-red-100');
+        timerEl.classList.add('bg-gray-200');
       }
 
       timeRemaining--;

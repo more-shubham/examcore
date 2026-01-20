@@ -16,7 +16,7 @@
         <div class="card-body">
           <div class="space-y-2">
             {% for invitation in pending_invitations %}
-              <div class="flex items-center justify-between border border-gray-200 rounded-lg p-4">
+              <div class="flex items-center justify-between bg-gray-50 rounded p-4">
                 <div>
                   <div class="font-medium text-gray-900">{{ invitation.first_name }} {{ invitation.last_name }}</div>
                   <div class="text-sm text-gray-500">{{ invitation.email }}</div>
@@ -27,9 +27,7 @@
                   {% endif %}
                 </div>
                 <div class="flex items-center">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                    Pending
-                  </span>
+                  {% include 'components/ui/_status_badge.html' with status='pending' %}
                 </div>
               </div>
             {% endfor %}
@@ -71,12 +69,12 @@
   <div id="addModal" class="fixed inset-0 z-50 overflow-y-auto {% if not show_modal %}hidden{% endif %}" role="dialog" aria-modal="true">
     <div class="flex items-center justify-center min-h-screen px-4 py-6">
       <!-- Backdrop -->
-      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+      <div class="fixed inset-0 bg-black/40 transition-opacity"
            onclick="document.getElementById('addModal').classList.add('hidden')"
            aria-hidden="true"></div>
 
       <!-- Modal Panel -->
-      <div class="relative bg-white rounded-xl shadow-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+      <div class="relative bg-white rounded shadow-notion-lg max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
         <!-- Header -->
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold text-gray-900">Invite Teacher</h3>
@@ -107,7 +105,7 @@
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Assigned Subjects</label>
               <p class="text-xs text-gray-500 mb-3">Select subjects this teacher will teach</p>
-              <div class="max-h-48 overflow-y-auto border border-gray-200 rounded-lg p-3 space-y-2">
+              <div class="max-h-48 overflow-y-auto bg-gray-50 rounded p-3 space-y-2">
                 {% for subject in form.assigned_subjects %}
                   <label class="flex items-center space-x-2 text-sm">
                     {{ subject.tag }}

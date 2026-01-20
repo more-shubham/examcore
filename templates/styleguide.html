@@ -1,0 +1,861 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamCore Design System - Component Showcase</title>
+    {% include "components/base/_head_styles.html" %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+      .showcase-section {
+        @apply mb-16;
+      }
+      .showcase-title {
+        @apply text-2xl font-bold text-gray-900 mb-2;
+      }
+      .showcase-description {
+        @apply text-gray-600 mb-6;
+      }
+      .showcase-grid {
+        @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+      }
+      .showcase-item {
+        @apply p-6 bg-gray-50 rounded;
+      }
+      .showcase-label {
+        @apply text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3;
+      }
+      .code-block {
+        @apply bg-gray-900 text-gray-100 p-4 rounded-lg text-sm font-mono overflow-x-auto mt-4;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+  <!-- Header -->
+    <header class="bg-white shadow-notion-sm sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-xl font-bold text-gray-900">ExamCore Design System</h1>
+            <p class="text-sm text-gray-500">Component Showcase & Style Guide</p>
+          </div>
+          <a href="/dashboard/" class="btn btn-secondary btn-sm">
+            Back to App
+          </a>
+        </div>
+      </div>
+    </header>
+
+  <!-- Navigation -->
+    <nav class="bg-white shadow-notion-sm sticky top-[73px] z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex gap-1 py-2 overflow-x-auto hide-scrollbar">
+          <a href="#buttons" class="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg whitespace-nowrap">Buttons</a>
+          <a href="#cards" class="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg whitespace-nowrap">Cards</a>
+          <a href="#forms" class="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg whitespace-nowrap">Forms</a>
+          <a href="#badges" class="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg whitespace-nowrap">Badges</a>
+          <a href="#alerts" class="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg whitespace-nowrap">Alerts</a>
+          <a href="#modals" class="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg whitespace-nowrap">Modals</a>
+          <a href="#tables" class="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg whitespace-nowrap">Tables</a>
+          <a href="#loading" class="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg whitespace-nowrap">Loading</a>
+          <a href="#exam" class="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg whitespace-nowrap">Exam</a>
+        </div>
+      </div>
+    </nav>
+
+  <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- Color Palette -->
+      <section class="showcase-section" id="colors">
+        <h2 class="showcase-title">Color Palette</h2>
+        <p class="showcase-description">Primary colors and semantic variations used throughout the application.</p>
+
+        <div class="mb-8">
+          <h3 class="text-lg font-semibold mb-4">Primary (Indigo) - Accent Color</h3>
+          <div class="flex flex-wrap gap-2">
+            <div class="w-20 h-20 rounded bg-primary-50 flex items-end p-2"><span class="text-xs font-mono">50</span></div>
+            <div class="w-20 h-20 rounded bg-primary-100 flex items-end p-2"><span class="text-xs font-mono">100</span></div>
+            <div class="w-20 h-20 rounded bg-primary-200 flex items-end p-2"><span class="text-xs font-mono">200</span></div>
+            <div class="w-20 h-20 rounded bg-primary-300 flex items-end p-2"><span class="text-xs font-mono">300</span></div>
+            <div class="w-20 h-20 rounded bg-primary-400 flex items-end p-2"><span class="text-xs font-mono text-white">400</span></div>
+            <div class="w-20 h-20 rounded bg-primary-500 flex items-end p-2"><span class="text-xs font-mono text-white">500</span></div>
+            <div class="w-20 h-20 rounded bg-primary-600 flex items-end p-2"><span class="text-xs font-mono text-white">600</span></div>
+            <div class="w-20 h-20 rounded bg-primary-700 flex items-end p-2"><span class="text-xs font-mono text-white">700</span></div>
+            <div class="w-20 h-20 rounded bg-primary-800 flex items-end p-2"><span class="text-xs font-mono text-white">800</span></div>
+            <div class="w-20 h-20 rounded bg-primary-900 flex items-end p-2"><span class="text-xs font-mono text-white">900</span></div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-lg font-semibold mb-4">Grayscale Foundation</h3>
+          <div class="flex flex-wrap gap-2">
+            <div class="w-20 h-20 rounded bg-gray-50 flex items-end p-2"><span class="text-xs font-mono">50</span></div>
+            <div class="w-20 h-20 rounded bg-gray-100 flex items-end p-2"><span class="text-xs font-mono">100</span></div>
+            <div class="w-20 h-20 rounded bg-gray-200 flex items-end p-2"><span class="text-xs font-mono">200</span></div>
+            <div class="w-20 h-20 rounded bg-gray-300 flex items-end p-2"><span class="text-xs font-mono">300</span></div>
+            <div class="w-20 h-20 rounded bg-gray-400 flex items-end p-2"><span class="text-xs font-mono text-white">400</span></div>
+            <div class="w-20 h-20 rounded bg-gray-500 flex items-end p-2"><span class="text-xs font-mono text-white">500</span></div>
+            <div class="w-20 h-20 rounded bg-gray-600 flex items-end p-2"><span class="text-xs font-mono text-white">600</span></div>
+            <div class="w-20 h-20 rounded bg-gray-700 flex items-end p-2"><span class="text-xs font-mono text-white">700</span></div>
+            <div class="w-20 h-20 rounded bg-gray-800 flex items-end p-2"><span class="text-xs font-mono text-white">800</span></div>
+            <div class="w-20 h-20 rounded bg-gray-900 flex items-end p-2"><span class="text-xs font-mono text-white">900</span></div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Notion-like Shadows (No Borders)</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-4 rounded bg-white shadow-notion-sm">
+              <span class="text-gray-700 font-medium">shadow-notion-sm</span>
+              <p class="text-xs text-gray-500 mt-1">Cards at rest</p>
+            </div>
+            <div class="p-4 rounded bg-white shadow-notion">
+              <span class="text-gray-700 font-medium">shadow-notion</span>
+              <p class="text-xs text-gray-500 mt-1">Cards on hover</p>
+            </div>
+            <div class="p-4 rounded bg-white shadow-notion-md">
+              <span class="text-gray-700 font-medium">shadow-notion-md</span>
+              <p class="text-xs text-gray-500 mt-1">Dropdowns</p>
+            </div>
+            <div class="p-4 rounded bg-white shadow-notion-lg">
+              <span class="text-gray-700 font-medium">shadow-notion-lg</span>
+              <p class="text-xs text-gray-500 mt-1">Modals</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <!-- Buttons -->
+      <section class="showcase-section" id="buttons">
+        <h2 class="showcase-title">Buttons</h2>
+        <p class="showcase-description">Button variants for different actions and contexts.</p>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Button Variants</h3>
+          </div>
+          <div class="card-body space-y-6">
+          <!-- Primary Variants -->
+            <div>
+              <p class="showcase-label">Variants</p>
+              <div class="flex flex-wrap gap-3">
+                <button class="btn btn-primary">Primary</button>
+                <button class="btn btn-secondary">Secondary</button>
+                <button class="btn btn-danger">Danger</button>
+                <button class="btn btn-danger-outline">Danger Outline</button>
+                <button class="btn btn-success">Success</button>
+                <button class="btn btn-ghost">Ghost</button>
+                <button class="btn btn-outline">Outline</button>
+                <a href="#" class="btn-link">Link Style</a>
+              </div>
+            </div>
+
+          <!-- Sizes -->
+            <div>
+              <p class="showcase-label">Sizes</p>
+              <div class="flex flex-wrap items-center gap-3">
+                <button class="btn btn-primary btn-xs">Extra Small</button>
+                <button class="btn btn-primary btn-sm">Small</button>
+                <button class="btn btn-primary">Default</button>
+                <button class="btn btn-primary btn-lg">Large</button>
+                <button class="btn btn-primary btn-xl">Extra Large</button>
+              </div>
+            </div>
+
+          <!-- With Icons -->
+            <div>
+              <p class="showcase-label">With Icons</p>
+              <div class="flex flex-wrap gap-3">
+                <button class="btn btn-primary">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                  </svg>
+                  Add New
+                </button>
+                <button class="btn btn-secondary">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                  </svg>
+                  Upload
+                </button>
+                <button class="btn btn-danger">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                  Delete
+                </button>
+              </div>
+            </div>
+
+          <!-- States -->
+            <div>
+              <p class="showcase-label">States</p>
+              <div class="flex flex-wrap gap-3">
+                <button class="btn btn-primary" disabled>Disabled</button>
+                <button class="btn btn-primary" disabled>
+                  <span class="spinner spinner-sm"></span>
+                  Loading...
+                </button>
+              </div>
+            </div>
+
+          <!-- Full Width -->
+            <div>
+              <p class="showcase-label">Full Width</p>
+              <button class="btn btn-primary btn-full">Full Width Button</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <!-- Cards -->
+      <section class="showcase-section" id="cards">
+        <h2 class="showcase-title">Cards</h2>
+        <p class="showcase-description">Card components for containing content and information.</p>
+
+        <div class="showcase-grid">
+        <!-- Basic Card -->
+          <div>
+            <p class="showcase-label">Basic Card</p>
+            <div class="card">
+              <div class="card-body">
+                <p class="text-gray-700">This is a basic card with just a body.</p>
+              </div>
+            </div>
+          </div>
+
+        <!-- Card with Header -->
+          <div>
+            <p class="showcase-label">Card with Header</p>
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Card Title</h3>
+                <p class="card-subtitle">Card subtitle text</p>
+              </div>
+              <div class="card-body">
+                <p class="text-gray-700">Card content goes here.</p>
+              </div>
+            </div>
+          </div>
+
+        <!-- Card with Footer -->
+          <div>
+            <p class="showcase-label">Card with Footer</p>
+            <div class="card">
+              <div class="card-body">
+                <p class="text-gray-700">Card with action buttons in footer.</p>
+              </div>
+              <div class="card-footer">
+                <div class="flex justify-end gap-2">
+                  <button class="btn btn-secondary btn-sm">Cancel</button>
+                  <button class="btn btn-primary btn-sm">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <!-- Hover Card -->
+          <div>
+            <p class="showcase-label">Hover Effect</p>
+            <div class="card-hover">
+              <div class="card-body">
+                <p class="text-gray-700">This card has a hover effect.</p>
+              </div>
+            </div>
+          </div>
+
+        <!-- Clickable Card -->
+          <div>
+            <p class="showcase-label">Clickable Card</p>
+            <div class="card-clickable">
+              <div class="card-body">
+                <p class="text-gray-700">This card is clickable with scale effect.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- Stat Cards -->
+        <div class="mt-8">
+          <p class="showcase-label">Stat Cards (Dashboard)</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="stat-card-clickable">
+              <div class="stat-icon stat-icon-primary">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+              </div>
+              <div class="stat-content">
+                <p class="stat-value">1,234</p>
+                <p class="stat-label">Total Students</p>
+              </div>
+            </div>
+
+            <div class="stat-card-clickable">
+              <div class="stat-icon stat-icon-success">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div class="stat-content">
+                <p class="stat-value">89%</p>
+                <p class="stat-label">Pass Rate</p>
+                <p class="stat-change stat-change-up">+5% from last month</p>
+              </div>
+            </div>
+
+            <div class="stat-card-clickable">
+              <div class="stat-icon stat-icon-warning">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div class="stat-content">
+                <p class="stat-value">5</p>
+                <p class="stat-label">Active Exams</p>
+              </div>
+            </div>
+
+            <div class="stat-card-clickable">
+              <div class="stat-icon stat-icon-purple">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div class="stat-content">
+                <p class="stat-value">456</p>
+                <p class="stat-label">Questions</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <!-- Forms -->
+      <section class="showcase-section" id="forms">
+        <h2 class="showcase-title">Forms</h2>
+        <p class="showcase-description">Form elements and input components.</p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Input Fields</h3>
+            </div>
+            <div class="card-body space-y-4">
+              <div class="form-group">
+                <label class="form-label">Default Input</label>
+                <input type="text" class="form-input" placeholder="Enter text...">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label form-label-required">Required Field</label>
+                <input type="text" class="form-input" placeholder="This field is required">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">With Hint</label>
+                <input type="email" class="form-input" placeholder="you@example.com">
+                <p class="form-hint">We'll never share your email with anyone.</p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Error State</label>
+                <input type="text" class="form-input form-input-error" value="Invalid input">
+                <p class="form-error">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                  </svg>
+                  This field is required.
+                </p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Disabled</label>
+                <input type="text" class="form-input" value="Disabled input" disabled>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Small Input</label>
+                <input type="text" class="form-input-sm" placeholder="Small size">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Large Input</label>
+                <input type="text" class="form-input-lg" placeholder="Large size">
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Other Inputs</h3>
+            </div>
+            <div class="card-body space-y-4">
+              <div class="form-group">
+                <label class="form-label">OTP Input</label>
+                <input type="text" class="form-input-otp" maxlength="6" placeholder="000000">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Select</label>
+                <select class="form-select">
+                  <option value="">Choose an option...</option>
+                  <option value="1">Option 1</option>
+                  <option value="2">Option 2</option>
+                  <option value="3">Option 3</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Textarea</label>
+                <textarea class="form-textarea" rows="3" placeholder="Enter your message..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">File Upload</label>
+                <input type="file" class="form-input-file">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Checkbox</label>
+                <div class="space-y-2">
+                  <label class="form-checkbox-label">
+                    <input type="checkbox" class="form-checkbox" checked>
+                    <span>Option 1</span>
+                  </label>
+                  <label class="form-checkbox-label">
+                    <input type="checkbox" class="form-checkbox">
+                    <span>Option 2</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Radio</label>
+                <div class="space-y-2">
+                  <label class="form-radio-label">
+                    <input type="radio" name="radio-demo" class="form-radio" checked>
+                    <span>Choice A</span>
+                  </label>
+                  <label class="form-radio-label">
+                    <input type="radio" name="radio-demo" class="form-radio">
+                    <span>Choice B</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <!-- Badges -->
+      <section class="showcase-section" id="badges">
+        <h2 class="showcase-title">Badges & Status</h2>
+        <p class="showcase-description">Badges for labels, counts, and status indicators.</p>
+
+        <div class="card">
+          <div class="card-body space-y-6">
+            <div>
+              <p class="showcase-label">Standard Badges</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="badge-primary">Primary</span>
+                <span class="badge-success">Success</span>
+                <span class="badge-danger">Danger</span>
+                <span class="badge-warning">Warning</span>
+                <span class="badge-info">Info</span>
+                <span class="badge-gray">Gray</span>
+                <span class="badge-purple">Purple</span>
+                <span class="badge-orange">Orange</span>
+              </div>
+            </div>
+
+            <div>
+              <p class="showcase-label">Status Badges</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="status-active">Active</span>
+                <span class="status-inactive">Inactive</span>
+                <span class="status-running">Running</span>
+                <span class="status-published">Published</span>
+                <span class="status-draft">Draft</span>
+                <span class="status-pending">Pending</span>
+                <span class="status-upcoming">Upcoming</span>
+                <span class="status-ended">Ended</span>
+                <span class="status-pass">Pass</span>
+                <span class="status-fail">Fail</span>
+              </div>
+            </div>
+
+            <div>
+              <p class="showcase-label">Score Badges</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="score-excellent">95%</span>
+                <span class="score-good">72%</span>
+                <span class="score-average">48%</span>
+                <span class="score-poor">28%</span>
+              </div>
+            </div>
+
+            <div>
+              <p class="showcase-label">Badge Sizes</p>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="badge-primary badge-sm">Small</span>
+                <span class="badge-primary">Default</span>
+                <span class="badge-primary badge-lg">Large</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <!-- Alerts -->
+      <section class="showcase-section" id="alerts">
+        <h2 class="showcase-title">Alerts & Messages</h2>
+        <p class="showcase-description">Feedback messages and notifications.</p>
+
+        <div class="space-y-4">
+          <div class="alert-success">
+            <svg class="alert-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <div class="alert-content">
+              <p class="alert-title">Success!</p>
+              <p class="alert-message">Your changes have been saved successfully.</p>
+            </div>
+            <button class="alert-dismiss">&times;</button>
+          </div>
+
+          <div class="alert-error">
+            <svg class="alert-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+            </svg>
+            <div class="alert-content">
+              <p class="alert-title">Error!</p>
+              <p class="alert-message">Something went wrong. Please try again.</p>
+            </div>
+          </div>
+
+          <div class="alert-warning">
+            <svg class="alert-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+            <div class="alert-content">
+              <p class="alert-title">Warning!</p>
+              <p class="alert-message">Your session will expire in 5 minutes.</p>
+            </div>
+          </div>
+
+          <div class="alert-info">
+            <svg class="alert-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+            </svg>
+            <div class="alert-content">
+              <p class="alert-title">Information</p>
+              <p class="alert-message">A new version is available. Please refresh the page.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <!-- Tables -->
+      <section class="showcase-section" id="tables">
+        <h2 class="showcase-title">Tables</h2>
+        <p class="showcase-description">Data tables for displaying structured information.</p>
+
+        <div class="table-container">
+          <table class="table">
+            <thead class="table-header">
+              <tr>
+                <th class="table-th">Name</th>
+                <th class="table-th">Email</th>
+                <th class="table-th">Role</th>
+                <th class="table-th">Status</th>
+                <th class="table-th table-th-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              <tr class="table-row">
+                <td class="table-td font-medium">John Doe</td>
+                <td class="table-td">john@example.com</td>
+                <td class="table-td"><span class="badge-primary">Admin</span></td>
+                <td class="table-td"><span class="status-active">Active</span></td>
+                <td class="table-td table-td-actions">
+                  <button class="btn btn-ghost btn-sm">Edit</button>
+                </td>
+              </tr>
+              <tr class="table-row">
+                <td class="table-td font-medium">Jane Smith</td>
+                <td class="table-td">jane@example.com</td>
+                <td class="table-td"><span class="badge-info">Teacher</span></td>
+                <td class="table-td"><span class="status-active">Active</span></td>
+                <td class="table-td table-td-actions">
+                  <button class="btn btn-ghost btn-sm">Edit</button>
+                </td>
+              </tr>
+              <tr class="table-row">
+                <td class="table-td font-medium">Bob Wilson</td>
+                <td class="table-td">bob@example.com</td>
+                <td class="table-td"><span class="badge-success">Student</span></td>
+                <td class="table-td"><span class="status-inactive">Inactive</span></td>
+                <td class="table-td table-td-actions">
+                  <button class="btn btn-ghost btn-sm">Edit</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    <!-- Loading States -->
+      <section class="showcase-section" id="loading">
+        <h2 class="showcase-title">Loading States</h2>
+        <p class="showcase-description">Loading indicators and skeleton placeholders.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Spinners</h3>
+            </div>
+            <div class="card-body">
+              <div class="flex items-center gap-6">
+                <div class="spinner spinner-sm text-primary-600"></div>
+                <div class="spinner text-primary-600"></div>
+                <div class="spinner spinner-lg text-primary-600"></div>
+                <div class="spinner spinner-xl text-primary-600"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Skeleton Loading</h3>
+            </div>
+            <div class="card-body space-y-4">
+              <div class="flex items-center gap-4">
+                <div class="skeleton-avatar"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="skeleton-title"></div>
+                  <div class="skeleton-text"></div>
+                </div>
+              </div>
+              <div class="skeleton-card"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <p class="showcase-label">Progress Bars</p>
+          <div class="space-y-4">
+            <div class="progress">
+              <div class="progress-bar" style="width: 25%"></div>
+            </div>
+            <div class="progress">
+              <div class="progress-bar" style="width: 50%"></div>
+            </div>
+            <div class="progress">
+              <div class="progress-bar" style="width: 75%"></div>
+            </div>
+            <div class="progress-lg">
+              <div class="progress-bar bg-green-600" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <p class="showcase-label">Step Indicator</p>
+          <div class="steps">
+            <div class="step step-completed">
+              <div class="step-number">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <span class="step-label">Register</span>
+            </div>
+            <div class="step-connector step-connector-completed"></div>
+            <div class="step step-active">
+              <div class="step-number">2</div>
+              <span class="step-label">Verify OTP</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <span class="step-label">Setup</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <!-- Exam Components -->
+      <section class="showcase-section" id="exam">
+        <h2 class="showcase-title">Exam Components</h2>
+        <p class="showcase-description">Specialized components for the exam-taking interface.</p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Question Card -->
+          <div class="lg:col-span-2">
+            <p class="showcase-label">Question Card</p>
+            <div class="question-card">
+              <div class="question-header">
+                <span class="question-number">Question 1 of 10</span>
+                <span class="badge-gray">1 mark</span>
+              </div>
+              <div class="question-body">
+                <p class="question-text">What is the capital of France?</p>
+                <div class="space-y-3">
+                  <label class="answer-option">
+                    <input type="radio" name="q1" class="form-radio">
+                    <span>London</span>
+                  </label>
+                  <label class="answer-option-selected">
+                    <input type="radio" name="q1" class="form-radio" checked>
+                    <span>Paris</span>
+                  </label>
+                  <label class="answer-option">
+                    <input type="radio" name="q1" class="form-radio">
+                    <span>Berlin</span>
+                  </label>
+                  <label class="answer-option">
+                    <input type="radio" name="q1" class="form-radio">
+                    <span>Madrid</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <p class="showcase-label mt-8">Review Mode (Correct/Incorrect)</p>
+            <div class="space-y-3">
+              <div class="answer-option-correct">
+                <svg class="w-5 h-5 text-primary-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-primary-800">Paris (Correct Answer)</span>
+              </div>
+              <div class="answer-option-incorrect">
+                <svg class="w-5 h-5 text-gray-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">London (Your Answer - Incorrect)</span>
+              </div>
+            </div>
+          </div>
+
+        <!-- Question Navigator -->
+          <div>
+            <p class="showcase-label">Question Navigator</p>
+            <div class="card">
+              <div class="card-body">
+                <div class="question-nav">
+                  <button class="question-nav-btn-answered">1</button>
+                  <button class="question-nav-btn-answered">2</button>
+                  <button class="question-nav-btn-current">3</button>
+                  <button class="question-nav-btn">4</button>
+                  <button class="question-nav-btn">5</button>
+                  <button class="question-nav-btn-answered">6</button>
+                  <button class="question-nav-btn">7</button>
+                  <button class="question-nav-btn">8</button>
+                  <button class="question-nav-btn">9</button>
+                  <button class="question-nav-btn">10</button>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-gray-100 space-y-2 text-sm">
+                  <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 rounded bg-primary-100"></div>
+                    <span class="text-gray-600">Answered</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 rounded bg-gray-100"></div>
+                    <span class="text-gray-600">Unanswered</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 rounded bg-gray-100 ring-2 ring-primary-500 ring-offset-1"></div>
+                    <span class="text-gray-600">Current</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="showcase-label mt-6">Exam Timer</p>
+            <div class="space-y-3">
+              <div class="exam-timer">
+                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="exam-timer-value">45:00</span>
+              </div>
+              <div class="exam-timer-warning">
+                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="exam-timer-value">02:30</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <!-- Empty States -->
+      <section class="showcase-section" id="empty">
+        <h2 class="showcase-title">Empty States</h2>
+        <p class="showcase-description">Placeholder content when no data is available.</p>
+
+        <div class="card">
+          <div class="empty-state">
+            <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            <h3 class="empty-state-title">No exams yet</h3>
+            <p class="empty-state-description">
+              Get started by creating your first exam. You can add questions and schedule it for students.
+            </p>
+            <button class="btn btn-primary">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Create Exam
+            </button>
+          </div>
+        </div>
+      </section>
+
+    <!-- Avatars -->
+      <section class="showcase-section" id="avatars">
+        <h2 class="showcase-title">Avatars</h2>
+        <p class="showcase-description">User avatar components in various sizes.</p>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="flex items-end gap-4">
+              <div class="avatar avatar-xs">XS</div>
+              <div class="avatar avatar-sm">SM</div>
+              <div class="avatar avatar-md">MD</div>
+              <div class="avatar avatar-lg">LG</div>
+              <div class="avatar avatar-xl">XL</div>
+            </div>
+
+            <div class="mt-6">
+              <p class="showcase-label">Avatar Group</p>
+              <div class="avatar-group">
+                <div class="avatar avatar-md bg-primary-200 text-primary-700">JD</div>
+                <div class="avatar avatar-md bg-green-200 text-green-700">AB</div>
+                <div class="avatar avatar-md bg-yellow-200 text-yellow-700">CD</div>
+                <div class="avatar avatar-md bg-purple-200 text-purple-700">+5</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  <!-- Footer -->
+    <footer class="bg-white shadow-notion-sm py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+        ExamCore Design System v2.0 (Notion-Style) &middot; Built with Tailwind CSS
+      </div>
+    </footer>
+  </body>
+</html>

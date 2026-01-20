@@ -5,52 +5,64 @@
 {% block content %}
   <div class="space-y-6">
   <!-- Welcome Header -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <div class="bg-white rounded shadow-notion-sm p-5">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-2xl font-bold text-gray-900">Welcome, {{ user.get_full_name|default:user.username }}!</h1>
-          <p class="text-gray-600">{{ institution.name }} - Examiner</p>
+          <h1 class="text-xl font-semibold text-gray-900">Welcome, {{ user.get_full_name|default:user.username }}!</h1>
+          <p class="text-sm text-gray-500">{{ institution.name }} - Examiner</p>
         </div>
         {% if institution.logo %}
-          <img src="{{ institution.logo.url }}" alt="{{ institution.name }}" class="h-16 w-16 object-contain">
+          <img src="{{ institution.logo.url }}" alt="{{ institution.name }}" class="h-12 w-12 object-contain">
         {% endif %}
       </div>
     </div>
 
   <!-- Quick Stats -->
     <div class="grid grid-cols-2 gap-4">
-      <a href="{% url 'questions:list' %}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:border-primary-300 transition-colors">
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">My Questions</p>
-        <p class="mt-2 text-3xl font-bold text-primary-600">{{ question_count }}</p>
+      <a href="{% url 'questions:list' %}" class="bg-white rounded shadow-notion-sm p-5 hover:shadow-notion transition-shadow">
+        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">My Questions</p>
+        <p class="mt-2 text-2xl font-bold text-gray-900">{{ question_count }}</p>
       </a>
-      <a href="{% url 'exams:list' %}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:border-indigo-300 transition-colors">
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Exams Created</p>
-        <p class="mt-2 text-3xl font-bold text-indigo-600">{{ exam_count }}</p>
+      <a href="{% url 'exams:list' %}" class="bg-white rounded shadow-notion-sm p-5 hover:shadow-notion transition-shadow">
+        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Exams Created</p>
+        <p class="mt-2 text-2xl font-bold text-gray-900">{{ exam_count }}</p>
       </a>
     </div>
 
   <!-- Quick Actions -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+    <div class="bg-white rounded shadow-notion-sm p-5">
+      <h2 class="text-base font-semibold text-gray-900 mb-4">Quick Actions</h2>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <a href="{% url 'questions:add' %}" class="p-4 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors">
-          <div class="text-2xl mb-2">➕</div>
+        <a href="{% url 'questions:add' %}" class="p-4 bg-gray-50 rounded text-center hover:bg-gray-100 transition-colors">
+          <div class="w-8 h-8 mx-auto mb-2 bg-primary-100 rounded flex items-center justify-center">
+            <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+          </div>
           <div class="text-sm font-medium text-gray-700">Add Question</div>
         </a>
-        <a href="{% url 'questions:list' %}" class="p-4 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors">
-          <div class="text-2xl mb-2">❓</div>
+        <a href="{% url 'questions:list' %}" class="p-4 bg-gray-50 rounded text-center hover:bg-gray-100 transition-colors">
+          <div class="w-8 h-8 mx-auto mb-2 bg-gray-100 rounded flex items-center justify-center">
+            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
           <div class="text-sm font-medium text-gray-700">Question Bank</div>
         </a>
-        <a href="{% url 'exams:add' %}" class="p-4 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors">
-          <div class="text-2xl mb-2">📝</div>
+        <a href="{% url 'exams:add' %}" class="p-4 bg-gray-50 rounded text-center hover:bg-gray-100 transition-colors">
+          <div class="w-8 h-8 mx-auto mb-2 bg-gray-100 rounded flex items-center justify-center">
+            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
           <div class="text-sm font-medium text-gray-700">Create Exam</div>
         </a>
       </div>
     </div>
 
   <!-- Profile Info -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Profile</h2>
+    <div class="bg-white rounded shadow-notion-sm p-5">
+      <h2 class="text-base font-semibold text-gray-900 mb-4">Your Profile</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
         <div>
           <span class="text-gray-500">Name:</span>

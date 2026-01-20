@@ -1,5 +1,7 @@
 {% comment %}
-Shared Tailwind CSS configuration and component styles.
+ExamCore Design System - Notion-Style Minimal Design
+=====================================================
+Grayscale-focused, single accent color (indigo), subtle shadows, minimal borders.
 Include this in the <head> section of base templates.
 {% endcomment %}
 <script src="https://cdn.tailwindcss.com"></script>
@@ -9,142 +11,884 @@ Include this in the <head> section of base templates.
       extend: {
         colors: {
           primary: {
-            50: '#eff6ff',
-            100: '#dbeafe',
-            200: '#bfdbfe',
-            300: '#93c5fd',
-            400: '#60a5fa',
-            500: '#3b82f6',
-            600: '#2563eb',
-            700: '#1d4ed8',
-            800: '#1e40af',
-            900: '#1e3a8a',
+            50: '#eef2ff',
+            100: '#e0e7ff',
+            200: '#c7d2fe',
+            300: '#a5b4fc',
+            400: '#818cf8',
+            500: '#6366f1',
+            600: '#4f46e5',
+            700: '#4338ca',
+            800: '#3730a3',
+            900: '#312e81',
           }
-        }
+        },
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        },
+        boxShadow: {
+          'notion-sm': '0 1px 2px rgba(0,0,0,0.04)',
+          'notion': '0 2px 4px rgba(0,0,0,0.06)',
+          'notion-md': '0 4px 8px rgba(0,0,0,0.08)',
+          'notion-lg': '0 8px 16px rgba(0,0,0,0.12)',
+        },
+        borderRadius: {
+          'notion': '4px',
+        },
+        animation: {
+          'spin-slow': 'spin 2s linear infinite',
+          'pulse-slow': 'pulse 3s ease-in-out infinite',
+          'fade-in': 'fadeIn 0.2s ease-out',
+          'slide-up': 'slideUp 0.3s ease-out',
+          'slide-down': 'slideDown 0.3s ease-out',
+        },
+        keyframes: {
+          fadeIn: {
+            '0%': { opacity: '0' },
+            '100%': { opacity: '1' },
+          },
+          slideUp: {
+            '0%': { opacity: '0', transform: 'translateY(10px)' },
+            '100%': { opacity: '1', transform: 'translateY(0)' },
+          },
+          slideDown: {
+            '0%': { opacity: '0', transform: 'translateY(-10px)' },
+            '100%': { opacity: '1', transform: 'translateY(0)' },
+          },
+        },
       }
     }
   }
 </script>
 <style type="text/tailwindcss">
+  @layer base {
+    /* Typography defaults */
+    body {
+      @apply text-gray-900 antialiased;
+    }
+    h1 { @apply text-3xl font-bold text-gray-900; }
+    h2 { @apply text-2xl font-semibold text-gray-900; }
+    h3 { @apply text-xl font-semibold text-gray-900; }
+    h4 { @apply text-lg font-medium text-gray-900; }
+    h5 { @apply text-base font-medium text-gray-900; }
+    h6 { @apply text-sm font-medium text-gray-900; }
+  }
+
   @layer components {
-    /* Form Inputs */
-    .form-input {
-      @apply block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500;
+    /* ===========================================
+       FORM COMPONENTS
+       =========================================== */
+
+    /* Form Group */
+    .form-group {
+      @apply mb-4;
     }
-    .form-input-otp {
-      @apply form-input text-center text-2xl tracking-widest;
+    .form-group-inline {
+      @apply flex items-center gap-4 mb-4;
     }
-    .form-input-file {
-      @apply block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100;
-    }
-    .form-input-error {
-      @apply form-input border-red-500 focus:border-red-500 focus:ring-red-500;
-    }
-    .form-textarea {
-      @apply form-input resize-none;
-    }
+
+    /* Labels */
     .form-label {
       @apply block text-sm font-medium text-gray-700 mb-2;
     }
-    .form-checkbox {
-      @apply h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500;
-    }
-    .field-error {
-      @apply text-sm text-red-600 mt-1;
+    .form-label-required::after {
+      content: ' *';
+      @apply text-gray-500;
     }
 
-    /* Buttons */
+    /* Text Inputs - Notion style: subtle border, minimal padding */
+    .form-input {
+      @apply block w-full rounded border border-gray-200 px-3 py-2.5 text-gray-900 placeholder-gray-400
+      bg-white transition-all duration-150
+      focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500/30
+      disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed;
+    }
+    .form-input-sm {
+      @apply form-input px-2.5 py-2 text-sm;
+    }
+    .form-input-lg {
+      @apply form-input px-4 py-3 text-lg;
+    }
+    .form-input-otp {
+      @apply form-input text-center text-2xl tracking-[0.5em] font-mono;
+    }
+    .form-input-error {
+      @apply border-gray-400 bg-gray-50;
+    }
+    .form-input-success {
+      @apply border-primary-500;
+    }
+
+    /* Textarea */
+    .form-textarea {
+      @apply form-input resize-none min-h-[100px];
+    }
+
+    /* Select */
+    .form-select {
+      @apply form-input pr-10 bg-no-repeat cursor-pointer;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.5rem center;
+      background-size: 1.25em 1.25em;
+    }
+
+    /* File Input */
+    .form-input-file {
+      @apply block w-full text-sm text-gray-500
+      file:mr-4 file:py-2 file:px-3 file:rounded file:border-0
+      file:text-sm file:font-medium file:cursor-pointer
+      file:bg-gray-100 file:text-gray-700
+      hover:file:bg-gray-200 file:transition-colors;
+    }
+
+    /* Checkbox & Radio */
+    .form-checkbox {
+      @apply h-4 w-4 rounded border-gray-300 text-primary-600
+      focus:ring-primary-500 focus:ring-offset-0 cursor-pointer
+      disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+    .form-radio {
+      @apply h-4 w-4 rounded-full border-gray-300 text-primary-600
+      focus:ring-primary-500 focus:ring-offset-0 cursor-pointer;
+    }
+    .form-checkbox-label, .form-radio-label {
+      @apply flex items-center gap-2 cursor-pointer text-gray-700 select-none;
+    }
+
+    /* Form Hints & Errors */
+    .form-hint {
+      @apply text-sm text-gray-500 mt-1;
+    }
+    .form-error, .field-error {
+      @apply text-sm text-gray-600 mt-1 flex items-center gap-1;
+    }
+    .form-error::before, .field-error::before {
+      content: '⚠';
+      @apply text-xs;
+    }
+
+    /* ===========================================
+       BUTTON COMPONENTS
+       =========================================== */
+
     .btn {
-      @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2;
+      @apply inline-flex items-center justify-center gap-2 px-4 py-2
+      text-sm font-medium rounded
+      transition-all duration-150 ease-in-out
+      focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-500/50
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none;
     }
+
+    /* Primary - Main actions (Indigo) */
     .btn-primary {
-      @apply btn text-white bg-primary-600 hover:bg-primary-700 focus:ring-primary-500;
+      @apply btn text-white bg-primary-600
+      hover:bg-primary-700 active:bg-primary-800;
     }
+
+    /* Secondary - Secondary actions (Gray, no border) */
     .btn-secondary {
-      @apply btn text-gray-700 bg-gray-100 hover:bg-gray-200 focus:ring-gray-500;
+      @apply btn text-gray-700 bg-gray-100
+      hover:bg-gray-200 active:bg-gray-300;
     }
+
+    /* Danger - Destructive actions (Gray with icon context) */
     .btn-danger {
-      @apply btn text-red-600 bg-red-50 hover:bg-red-100 focus:ring-red-500;
+      @apply btn text-gray-700 bg-gray-100
+      hover:bg-gray-200 active:bg-gray-300;
     }
+
+    /* Danger Outline */
+    .btn-danger-outline {
+      @apply btn text-gray-600 bg-white border border-gray-200
+      hover:bg-gray-50 active:bg-gray-100;
+    }
+
+    /* Success (now uses primary/indigo) */
+    .btn-success {
+      @apply btn text-white bg-primary-600
+      hover:bg-primary-700 active:bg-primary-800;
+    }
+
+    /* Ghost - Subtle actions */
     .btn-ghost {
-      @apply btn text-gray-600 bg-gray-50 hover:bg-gray-100 focus:ring-gray-500;
+      @apply btn text-gray-600 bg-transparent
+      hover:bg-gray-100 active:bg-gray-200;
     }
+
+    /* Link style */
     .btn-link {
-      @apply text-sm font-medium text-primary-600 hover:text-primary-700;
+      @apply text-sm font-medium text-primary-600
+      hover:text-primary-700 hover:underline
+      focus:outline-none focus:ring-0;
+    }
+
+    /* Outline */
+    .btn-outline {
+      @apply btn text-primary-600 bg-white border border-gray-200
+      hover:bg-primary-50 active:bg-primary-100;
+    }
+
+    /* Button Sizes */
+    .btn-xs {
+      @apply px-2 py-1 text-xs;
     }
     .btn-sm {
       @apply px-3 py-1.5 text-sm;
     }
     .btn-lg {
-      @apply px-6 py-3 text-base;
+      @apply px-5 py-2.5 text-base;
+    }
+    .btn-xl {
+      @apply px-6 py-3 text-lg;
     }
     .btn-full {
-      @apply w-full justify-center py-3;
+      @apply w-full justify-center;
     }
 
-    /* Alerts */
-    .alert {
-      @apply p-4 rounded-lg text-sm border;
+    /* Icon-only button */
+    .btn-icon {
+      @apply btn p-2;
     }
-    .alert-error {
-      @apply alert bg-red-50 border-red-200 text-red-700;
-    }
-    .alert-success {
-      @apply alert bg-green-50 border-green-200 text-green-700;
-    }
-    .alert-warning {
-      @apply alert bg-yellow-50 border-yellow-200 text-yellow-700;
-    }
-    .alert-info {
-      @apply alert bg-blue-50 border-blue-200 text-blue-700;
+    .btn-icon-sm {
+      @apply btn p-1.5;
     }
 
-    /* Cards */
+    /* Button Group */
+    .btn-group {
+      @apply inline-flex rounded overflow-hidden;
+    }
+    .btn-group .btn {
+      @apply rounded-none;
+    }
+
+    /* ===========================================
+       CARD COMPONENTS - Notion style
+       =========================================== */
+
     .card {
-      @apply bg-white rounded-xl shadow-sm border border-gray-100;
+      @apply bg-white rounded shadow-notion-sm;
+    }
+    .card-hover {
+      @apply card transition-shadow duration-200 hover:shadow-notion;
+    }
+    .card-clickable {
+      @apply card-hover cursor-pointer active:scale-[0.99];
+    }
+
+    .card-header {
+      @apply px-5 py-4 border-b border-gray-100;
+    }
+    .card-title {
+      @apply text-base font-semibold text-gray-900;
+    }
+    .card-subtitle {
+      @apply text-sm text-gray-500 mt-0.5;
     }
     .card-body {
-      @apply p-6;
+      @apply p-5;
+    }
+    .card-body-compact {
+      @apply p-4;
+    }
+    .card-footer {
+      @apply px-5 py-4 border-t border-gray-100;
     }
 
-    /* Badges */
+    /* Stat Card - Dashboard (Notion style) */
+    .stat-card {
+      @apply card p-5 flex items-start gap-4;
+    }
+    .stat-card-clickable {
+      @apply stat-card cursor-pointer transition-shadow hover:shadow-notion;
+    }
+    .stat-icon {
+      @apply flex-shrink-0 w-10 h-10 rounded flex items-center justify-center bg-gray-100 text-gray-600;
+    }
+    .stat-icon-primary { @apply bg-primary-100 text-primary-600; }
+    .stat-icon-success { @apply bg-primary-100 text-primary-600; }
+    .stat-icon-warning { @apply bg-gray-100 text-gray-600; }
+    .stat-icon-danger { @apply bg-gray-100 text-gray-600; }
+    .stat-icon-info { @apply bg-gray-100 text-gray-600; }
+    .stat-icon-purple { @apply bg-primary-100 text-primary-600; }
+
+    .stat-content {
+      @apply flex-1 min-w-0;
+    }
+    .stat-value {
+      @apply text-2xl font-bold text-gray-900;
+    }
+    .stat-label {
+      @apply text-sm text-gray-500 mt-0.5;
+    }
+    .stat-change {
+      @apply text-xs font-medium mt-1 text-gray-500;
+    }
+    .stat-change-up { @apply text-primary-600; }
+    .stat-change-down { @apply text-gray-500; }
+
+    /* ===========================================
+       BADGE COMPONENTS - Grayscale + Indigo only
+       =========================================== */
+
     .badge {
-      @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+      @apply inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium;
     }
-    .badge-primary {
-      @apply badge bg-primary-100 text-primary-800;
+    .badge-sm {
+      @apply px-1.5 py-0.5 text-[10px];
     }
-    .badge-success {
-      @apply badge bg-green-100 text-green-800;
-    }
-    .badge-danger {
-      @apply badge bg-red-100 text-red-800;
-    }
-    .badge-warning {
-      @apply badge bg-yellow-100 text-yellow-800;
-    }
-    .badge-info {
-      @apply badge bg-blue-100 text-blue-800;
-    }
-    .badge-gray {
-      @apply badge bg-gray-100 text-gray-800;
+    .badge-lg {
+      @apply px-2.5 py-1 text-sm;
     }
 
-    /* Status Badges (pill style) */
+    .badge-primary { @apply badge bg-primary-100 text-primary-700; }
+    .badge-success { @apply badge bg-primary-100 text-primary-700; }
+    .badge-danger { @apply badge bg-gray-100 text-gray-600; }
+    .badge-warning { @apply badge bg-gray-100 text-gray-600; }
+    .badge-info { @apply badge bg-gray-100 text-gray-600; }
+    .badge-gray { @apply badge bg-gray-100 text-gray-600; }
+    .badge-purple { @apply badge bg-primary-100 text-primary-700; }
+    .badge-orange { @apply badge bg-gray-100 text-gray-600; }
+
+    /* Status Badges - Indigo for active states, gray for everything else */
     .status-badge {
-      @apply inline-flex px-2 py-1 text-xs font-semibold rounded-full;
+      @apply inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium rounded;
     }
-    .status-active {
-      @apply status-badge text-green-800 bg-green-100;
+    .status-active { @apply status-badge bg-primary-100 text-primary-700; }
+    .status-inactive { @apply status-badge bg-gray-100 text-gray-500; }
+    .status-running { @apply status-badge bg-primary-100 text-primary-700; }
+    .status-published { @apply status-badge bg-primary-100 text-primary-700; }
+    .status-draft { @apply status-badge bg-gray-100 text-gray-500; }
+    .status-pending { @apply status-badge bg-gray-100 text-gray-500; }
+    .status-upcoming { @apply status-badge bg-gray-100 text-gray-500; }
+    .status-ended { @apply status-badge bg-gray-100 text-gray-500; }
+    .status-pass { @apply status-badge bg-primary-100 text-primary-700; }
+    .status-fail { @apply status-badge bg-gray-100 text-gray-500; }
+
+    /* Score Badges - Grayscale with semantic labels */
+    .score-badge {
+      @apply inline-flex items-center justify-center min-w-[3rem] px-2 py-1 text-sm font-bold rounded;
     }
-    .status-inactive {
-      @apply status-badge text-red-800 bg-red-100;
+    .score-excellent { @apply score-badge bg-primary-100 text-primary-700; } /* >= 80% */
+    .score-good { @apply score-badge bg-primary-50 text-primary-600; }       /* >= 60% */
+    .score-average { @apply score-badge bg-gray-100 text-gray-600; }         /* >= 40% */
+    .score-poor { @apply score-badge bg-gray-50 text-gray-500; }             /* < 40% */
+
+    /* ===========================================
+       ALERT COMPONENTS - Grayscale, icon-based
+       =========================================== */
+
+    .alert {
+      @apply flex items-start gap-3 p-4 rounded bg-gray-50 text-gray-700;
     }
-    .status-pending {
-      @apply status-badge text-yellow-800 bg-yellow-100;
+    .alert-icon {
+      @apply flex-shrink-0 w-5 h-5 mt-0.5 text-gray-500;
     }
-    .status-draft {
-      @apply status-badge text-gray-800 bg-gray-100;
+    .alert-content {
+      @apply flex-1 min-w-0;
+    }
+    .alert-title {
+      @apply font-medium text-gray-900;
+    }
+    .alert-message {
+      @apply text-sm mt-0.5 text-gray-600;
+    }
+    .alert-dismiss {
+      @apply flex-shrink-0 p-1 rounded hover:bg-gray-200 transition-colors cursor-pointer text-gray-400;
+    }
+
+    .alert-success {
+      @apply alert bg-primary-50 text-primary-800;
+    }
+    .alert-success .alert-icon {
+      @apply text-primary-600;
+    }
+    .alert-error {
+      @apply alert bg-gray-100 text-gray-800;
+    }
+    .alert-warning {
+      @apply alert bg-gray-50 text-gray-700;
+    }
+    .alert-info {
+      @apply alert bg-gray-50 text-gray-700;
+    }
+
+    /* Toast (floating alerts) */
+    .toast {
+      @apply alert shadow-notion-md animate-slide-up;
+    }
+
+    /* ===========================================
+       MODAL COMPONENTS
+       =========================================== */
+
+    .modal {
+      @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+    }
+    .modal-backdrop {
+      @apply absolute inset-0 bg-black/40 backdrop-blur-sm;
+    }
+    .modal-container {
+      @apply relative bg-white rounded shadow-notion-lg max-h-[90vh] overflow-hidden
+      animate-slide-up flex flex-col;
+    }
+    .modal-sm { @apply modal-container w-full max-w-sm; }
+    .modal-md { @apply modal-container w-full max-w-md; }
+    .modal-lg { @apply modal-container w-full max-w-lg; }
+    .modal-xl { @apply modal-container w-full max-w-xl; }
+    .modal-2xl { @apply modal-container w-full max-w-2xl; }
+    .modal-full { @apply modal-container w-full max-w-[95vw] h-[90vh]; }
+
+    .modal-header {
+      @apply flex items-center justify-between px-5 py-4 border-b border-gray-100;
+    }
+    .modal-title {
+      @apply text-base font-semibold text-gray-900;
+    }
+    .modal-close {
+      @apply p-1.5 -mr-1.5 rounded text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors;
+    }
+    .modal-body {
+      @apply px-5 py-4 overflow-y-auto flex-1;
+    }
+    .modal-footer {
+      @apply flex items-center justify-end gap-2 px-5 py-4 border-t border-gray-100;
+    }
+
+    /* ===========================================
+       TABLE COMPONENTS
+       =========================================== */
+
+    .table-container {
+      @apply overflow-x-auto rounded shadow-notion-sm;
+    }
+    .table {
+      @apply min-w-full divide-y divide-gray-100;
+    }
+    .table-header {
+      @apply bg-gray-50;
+    }
+    .table-th {
+      @apply px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+    }
+    .table-th-actions {
+      @apply text-right;
+    }
+    .table-body {
+      @apply bg-white divide-y divide-gray-50;
+    }
+    .table-row {
+      @apply hover:bg-gray-50 transition-colors;
+    }
+    .table-row-clickable {
+      @apply table-row cursor-pointer;
+    }
+    .table-td {
+      @apply px-4 py-3 text-sm text-gray-700;
+    }
+    .table-td-actions {
+      @apply text-right;
+    }
+
+    /* ===========================================
+       NAVIGATION COMPONENTS
+       =========================================== */
+
+    /* Navbar */
+    .navbar {
+      @apply fixed top-0 left-0 right-0 z-40 bg-white shadow-notion-sm;
+    }
+    .navbar-container {
+      @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between;
+    }
+    .navbar-brand {
+      @apply flex items-center gap-3;
+    }
+    .navbar-logo {
+      @apply h-8 w-auto;
+    }
+    .navbar-title {
+      @apply text-base font-semibold text-gray-900;
+    }
+    .navbar-menu {
+      @apply hidden md:flex items-center gap-1;
+    }
+    .navbar-link {
+      @apply px-3 py-1.5 rounded text-sm font-medium text-gray-600
+      hover:text-gray-900 hover:bg-gray-100 transition-colors;
+    }
+    .navbar-link-active {
+      @apply navbar-link text-primary-600 bg-primary-50;
+    }
+    .navbar-actions {
+      @apply flex items-center gap-3;
+    }
+    .navbar-user {
+      @apply text-sm font-medium text-gray-700;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      @apply fixed left-0 top-14 bottom-0 w-60 bg-white shadow-notion-sm overflow-y-auto;
+    }
+    .sidebar-header {
+      @apply p-4 border-b border-gray-100;
+    }
+    .sidebar-nav {
+      @apply p-2 space-y-0.5;
+    }
+    .sidebar-link {
+      @apply flex items-center gap-3 px-3 py-2 rounded text-sm font-medium text-gray-600
+      hover:text-gray-900 hover:bg-gray-100 transition-colors;
+    }
+    .sidebar-link-active {
+      @apply sidebar-link text-primary-700 bg-primary-50;
+    }
+    .sidebar-icon {
+      @apply w-5 h-5 flex-shrink-0;
+    }
+    .sidebar-section {
+      @apply mt-4 pt-4 border-t border-gray-100;
+    }
+    .sidebar-section-title {
+      @apply px-3 mb-2 text-xs font-medium text-gray-400 uppercase tracking-wider;
+    }
+
+    /* ===========================================
+       DROPDOWN COMPONENTS
+       =========================================== */
+
+    .dropdown {
+      @apply relative inline-block;
+    }
+    .dropdown-trigger {
+      @apply cursor-pointer;
+    }
+    .dropdown-menu {
+      @apply absolute right-0 mt-1 w-48 bg-white rounded shadow-notion-md
+      py-1 z-50 animate-fade-in;
+    }
+    .dropdown-item {
+      @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors;
+    }
+    .dropdown-item-danger {
+      @apply dropdown-item text-gray-600 hover:bg-gray-100;
+    }
+    .dropdown-divider {
+      @apply my-1 border-t border-gray-100;
+    }
+
+    /* ===========================================
+       TAB COMPONENTS
+       =========================================== */
+
+    .tabs {
+      @apply w-full;
+    }
+    .tabs-list {
+      @apply flex border-b border-gray-100;
+    }
+    .tab {
+      @apply px-4 py-2.5 text-sm font-medium text-gray-500 border-b-2 border-transparent -mb-px
+      hover:text-gray-700 transition-colors cursor-pointer;
+    }
+    .tab-active {
+      @apply tab text-primary-600 border-primary-600;
+    }
+    .tabs-content {
+      @apply mt-4;
+    }
+    .tab-panel {
+      @apply hidden;
+    }
+    .tab-panel-active {
+      @apply block animate-fade-in;
+    }
+
+    /* ===========================================
+       PAGINATION COMPONENTS
+       =========================================== */
+
+    .pagination {
+      @apply flex items-center justify-center gap-1;
+    }
+    .pagination-link {
+      @apply px-3 py-1.5 text-sm font-medium text-gray-600 bg-white rounded
+      hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
+    }
+    .pagination-link-active {
+      @apply pagination-link bg-primary-50 text-primary-700;
+    }
+    .pagination-info {
+      @apply text-sm text-gray-500;
+    }
+
+    /* ===========================================
+       EMPTY STATE COMPONENTS
+       =========================================== */
+
+    .empty-state {
+      @apply flex flex-col items-center justify-center py-12 px-4 text-center;
+    }
+    .empty-state-icon {
+      @apply w-12 h-12 text-gray-300 mb-4;
+    }
+    .empty-state-title {
+      @apply text-base font-medium text-gray-900 mb-1;
+    }
+    .empty-state-description {
+      @apply text-sm text-gray-500 max-w-sm mb-6;
+    }
+
+    /* ===========================================
+       LOADING COMPONENTS
+       =========================================== */
+
+    /* Spinner */
+    .spinner {
+      @apply inline-block w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin;
+    }
+    .spinner-sm { @apply w-4 h-4; }
+    .spinner-lg { @apply w-8 h-8; }
+    .spinner-xl { @apply w-12 h-12; }
+
+    /* Skeleton */
+    .skeleton {
+      @apply bg-gray-100 rounded animate-pulse;
+    }
+    .skeleton-text {
+      @apply skeleton h-4 w-full;
+    }
+    .skeleton-title {
+      @apply skeleton h-5 w-3/4;
+    }
+    .skeleton-avatar {
+      @apply skeleton w-10 h-10 rounded-full;
+    }
+    .skeleton-card {
+      @apply skeleton h-32 w-full rounded;
+    }
+
+    /* Page Loader */
+    .page-loader {
+      @apply fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm;
+    }
+
+    /* ===========================================
+       PROGRESS COMPONENTS
+       =========================================== */
+
+    .progress {
+      @apply w-full h-1.5 bg-gray-100 rounded-full overflow-hidden;
+    }
+    .progress-bar {
+      @apply h-full bg-primary-600 rounded-full transition-all duration-500;
+    }
+    .progress-lg {
+      @apply progress h-2;
+    }
+
+    /* Step Indicator */
+    .steps {
+      @apply flex items-center justify-center gap-4;
+    }
+    .step {
+      @apply flex items-center gap-2;
+    }
+    .step-number {
+      @apply w-7 h-7 rounded-full flex items-center justify-center text-sm font-medium
+      bg-gray-100 text-gray-500;
+    }
+    .step-label {
+      @apply text-sm font-medium text-gray-500;
+    }
+    .step-active .step-number {
+      @apply bg-primary-600 text-white;
+    }
+    .step-active .step-label {
+      @apply text-primary-700;
+    }
+    .step-completed .step-number {
+      @apply bg-primary-600 text-white;
+    }
+    .step-completed .step-label {
+      @apply text-primary-700;
+    }
+    .step-connector {
+      @apply w-8 h-0.5 bg-gray-200;
+    }
+    .step-connector-completed {
+      @apply step-connector bg-primary-600;
+    }
+
+    /* ===========================================
+       TOOLTIP COMPONENTS
+       =========================================== */
+
+    .tooltip-container {
+      @apply relative inline-block;
+    }
+    .tooltip {
+      @apply absolute z-50 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-notion-md
+      opacity-0 invisible transition-all duration-200 whitespace-nowrap;
+    }
+    .tooltip-top {
+      @apply bottom-full left-1/2 -translate-x-1/2 mb-1;
+    }
+    .tooltip-bottom {
+      @apply top-full left-1/2 -translate-x-1/2 mt-1;
+    }
+    .tooltip-container:hover .tooltip {
+      @apply opacity-100 visible;
+    }
+
+    /* ===========================================
+       AVATAR COMPONENTS
+       =========================================== */
+
+    .avatar {
+      @apply inline-flex items-center justify-center rounded-full bg-gray-200 text-gray-600 font-medium;
+    }
+    .avatar-xs { @apply w-6 h-6 text-xs; }
+    .avatar-sm { @apply w-8 h-8 text-sm; }
+    .avatar-md { @apply w-10 h-10 text-sm; }
+    .avatar-lg { @apply w-12 h-12 text-base; }
+    .avatar-xl { @apply w-16 h-16 text-lg; }
+
+    .avatar-group {
+      @apply flex -space-x-2;
+    }
+    .avatar-group .avatar {
+      @apply ring-2 ring-white;
+    }
+
+    /* ===========================================
+       DIVIDER COMPONENTS
+       =========================================== */
+
+    .divider {
+      @apply border-t border-gray-100 my-6;
+    }
+    .divider-text {
+      @apply flex items-center text-sm text-gray-400;
+    }
+    .divider-text::before,
+    .divider-text::after {
+      content: '';
+      @apply flex-1 border-t border-gray-100;
+    }
+    .divider-text::before { @apply mr-4; }
+    .divider-text::after { @apply ml-4; }
+
+    /* ===========================================
+       PAGE LAYOUT COMPONENTS
+       =========================================== */
+
+    .page-container {
+      @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6;
+    }
+    .page-header {
+      @apply flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6;
+    }
+    .page-title {
+      @apply text-xl font-semibold text-gray-900;
+    }
+    .page-subtitle {
+      @apply text-sm text-gray-500 mt-0.5;
+    }
+    .page-actions {
+      @apply flex items-center gap-2;
+    }
+
+    .content-section {
+      @apply mb-6;
+    }
+    .section-title {
+      @apply text-base font-semibold text-gray-900 mb-4;
+    }
+
+    /* ===========================================
+       EXAM-SPECIFIC COMPONENTS
+       =========================================== */
+
+    /* Question Card */
+    .question-card {
+      @apply card mb-4;
+    }
+    .question-header {
+      @apply flex items-center justify-between px-5 py-3 bg-gray-50 border-b border-gray-100;
+    }
+    .question-number {
+      @apply text-sm font-medium text-gray-600;
+    }
+    .question-body {
+      @apply p-5;
+    }
+    .question-text {
+      @apply text-gray-900 mb-6;
+    }
+
+    /* Answer Option */
+    .answer-option {
+      @apply flex items-start gap-3 p-4 rounded bg-gray-50
+      cursor-pointer transition-all hover:bg-gray-100;
+    }
+    .answer-option-selected {
+      @apply answer-option bg-primary-50 ring-1 ring-primary-200;
+    }
+    .answer-option-correct {
+      @apply answer-option bg-primary-50 ring-1 ring-primary-300;
+    }
+    .answer-option-incorrect {
+      @apply answer-option bg-gray-100;
+    }
+
+    /* Question Navigator */
+    .question-nav {
+      @apply grid grid-cols-5 gap-1.5;
+    }
+    .question-nav-btn {
+      @apply w-9 h-9 rounded text-sm font-medium transition-all
+      bg-gray-100 text-gray-600 hover:bg-gray-200;
+    }
+    .question-nav-btn-current {
+      @apply question-nav-btn ring-2 ring-primary-500 ring-offset-1;
+    }
+    .question-nav-btn-answered {
+      @apply question-nav-btn bg-primary-100 text-primary-700;
+    }
+
+    /* Timer */
+    .exam-timer {
+      @apply inline-flex items-center gap-2 px-3 py-1.5 rounded bg-gray-100 text-gray-700;
+    }
+    .exam-timer-value {
+      @apply text-lg font-mono font-semibold text-gray-900;
+    }
+    .exam-timer-warning {
+      @apply exam-timer bg-gray-200 animate-pulse;
+    }
+  }
+
+  @layer utilities {
+    /* Text utilities */
+    .text-balance {
+      text-wrap: balance;
+    }
+
+    /* Hide scrollbar */
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Focus visible only */
+    .focus-visible-only:focus:not(:focus-visible) {
+      outline: none;
+      box-shadow: none;
     }
   }
 </style>

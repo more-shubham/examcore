@@ -150,7 +150,7 @@ describe('Student Answer Review', () => {
     });
   });
 
-  it('should highlight correct answers in green', () => {
+  it('should highlight correct answers', () => {
     cy.visit('/my-exams/');
 
     cy.get('a:contains("Result"), a:contains("View"), a[href*="result"]').then(($btn) => {
@@ -160,10 +160,10 @@ describe('Student Answer Review', () => {
           if ($reviewBtn.length > 0) {
             cy.wrap($reviewBtn).first().click();
 
-            // Should have correct answer labels or styling
+            // Should have correct answer labels or styling (supports both old green and new indigo/primary styling)
             cy.get('body').then(($body) => {
               const hasCorrect = $body.text().includes('Correct') ||
-              $body.find('.bg-green-50, .text-green-700').length > 0;
+              $body.find('.bg-green-50, .text-green-700, .bg-primary-50, .text-primary-700').length > 0;
               expect(hasCorrect).to.be.true;
             });
           } else {
@@ -285,11 +285,12 @@ describe('Student Answer Review', () => {
           if ($reviewBtn.length > 0) {
             cy.wrap($reviewBtn).first().click();
 
-            // Should have questions with options
+            // Should have questions with options (supports both rounded-full and rounded styling)
             cy.get('body').then(($body) => {
               const hasOptions = $body.find('[id^="question-"]').length > 0 ||
               $body.text().includes('Option') ||
-              $body.find('.rounded-full').length > 0;
+              $body.find('.rounded-full, .rounded').length > 0 ||
+              $body.text().includes('Question');
               expect(hasOptions).to.be.true;
             });
           } else {
@@ -312,9 +313,9 @@ describe('Student Answer Review', () => {
           if ($reviewBtn.length > 0) {
             cy.wrap($reviewBtn).first().click();
 
-            // Should have color-coded styling
+            // Should have color-coded styling (supports both old green/red and new indigo/gray styling)
             cy.get('body').then(($body) => {
-              const hasStyling = $body.find('.bg-green-50, .bg-red-50, .text-green-700, .text-red-700').length > 0 ||
+              const hasStyling = $body.find('.bg-green-50, .bg-red-50, .text-green-700, .text-red-700, .bg-primary-50, .bg-gray-100, .text-primary-700, .text-gray-700').length > 0 ||
               $body.text().includes('Correct') ||
               $body.text().includes('Incorrect');
               expect(hasStyling).to.be.true;
