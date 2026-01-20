@@ -35,7 +35,7 @@ describe('Student - Take Exam', () => {
         cy.url().should('match', /\/my-exams\/\d+\/(start|take)/);
       } else {
         // No active exams available, test passes
-        cy.log('No active exams available to start');
+        // No active exams available to start
       }
     });
   });
@@ -59,7 +59,7 @@ describe('Student - Take Exam', () => {
           expect(hasInstructions).to.be.true;
         });
       } else {
-        cy.log('No active exams available');
+        // No active exams available
       }
     });
   });
@@ -82,7 +82,7 @@ describe('Student - Take Exam', () => {
         // Should see question text
         cy.get('body').should('contain.text', '?');
       } else {
-        cy.log('No active exams available');
+        // No active exams available
       }
     });
   });
@@ -101,7 +101,7 @@ describe('Student - Take Exam', () => {
         // Should see radio buttons or answer options
         cy.get('input[type="radio"], .answer-option, label').should('have.length.at.least', 2);
       } else {
-        cy.log('No active exams available');
+        // No active exams available
       }
     });
   });
@@ -123,7 +123,7 @@ describe('Student - Take Exam', () => {
         cy.get('input[type="radio"]').first().check();
         cy.get('input[type="radio"]').first().should('be.checked');
       } else {
-        cy.log('No active exams available');
+        // No active exams available
       }
     });
   });
@@ -151,7 +151,7 @@ describe('Student - Take Exam', () => {
           }
         });
       } else {
-        cy.log('No active exams available');
+        // No active exams available
       }
     });
   });
@@ -176,7 +176,7 @@ describe('Student - Take Exam', () => {
           expect(hasTimer).to.be.true;
         });
       } else {
-        cy.log('No active exams available');
+        // No active exams available
       }
     });
   });
@@ -225,7 +225,7 @@ describe('Student - Take Exam', () => {
           }
         });
       } else {
-        cy.log('No active exams available');
+        // No active exams available
       }
     });
   });
@@ -261,7 +261,7 @@ describe('Student - Take Exam', () => {
           }
         });
       } else {
-        cy.log('No active exams available');
+        // No active exams available
       }
     });
   });

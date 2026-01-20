@@ -163,7 +163,7 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="noreply@examcore.local")
 SERVER_EMAIL = config("SERVER_EMAIL", default="server@examcore.local")
 
-LOG_LEVEL = config("LOG_LEVEL", default="INFO")
+LOG_LEVEL = config("LOG_LEVEL", default="WARNING")
 
 LOGGING = {
     "version": 1,
@@ -229,12 +229,12 @@ LOGGING = {
         },
         "django.db.backends": {
             "handlers": ["console"],
-            "level": "WARNING",
+            "level": "ERROR",
             "propagate": False,
         },
         "apps": {
             "handlers": ["console"],
-            "level": LOG_LEVEL,
+            "level": "WARNING",
             "propagate": False,
         },
     },

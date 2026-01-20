@@ -39,7 +39,6 @@ Cypress.Commands.add('getOTPFromMailpit', (email, maxRetries = 10) => {
 
       if (!message) {
         if (attempt < maxRetries) {
-          cy.log(`Attempt ${attempt}: No email found for ${email}, retrying...`);
           cy.wait(1000);
           return fetchOTP(attempt + 1);
         }
@@ -61,7 +60,6 @@ Cypress.Commands.add('getOTPFromMailpit', (email, maxRetries = 10) => {
         }
 
         const otp = otpMatch[1];
-        cy.log(`Found OTP: ${otp}`);
         return cy.wrap(otp);
       });
     });
@@ -79,8 +77,6 @@ Cypress.Commands.add('clearMailpit', () => {
     method: 'DELETE',
     url: `${mailpitUrl}/api/v1/messages`,
     failOnStatusCode: false,
-  }).then((response) => {
-    cy.log('Mailpit inbox cleared');
   });
 });
 

@@ -31,15 +31,12 @@ module.exports = defineConfig({
           const managePy = path.join(projectRoot, 'manage.py');
 
           try {
-            console.log('Flushing database...');
             execSync(`${pythonPath} ${managePy} flush --no-input`, {
               cwd: projectRoot,
-              stdio: 'inherit',
+              stdio: 'pipe',
             });
-            console.log('Database flushed successfully');
             return null;
           } catch (error) {
-            console.error('Failed to flush database:', error.message);
             throw error;
           }
         },
@@ -61,9 +58,8 @@ module.exports = defineConfig({
               fs.mkdirSync(mediaDir, { recursive: true });
             }
             fs.copyFileSync(logoSrc, logoDest);
-            console.log('Logo copied to media/institution/');
           } catch (err) {
-            console.log('Could not copy logo:', err.message);
+            // Logo copy failed, continue anyway
           }
 
           // Python script to create admin and institution with logo
@@ -117,15 +113,12 @@ else:
 `;
 
           try {
-            console.log('Setting up admin user...');
             execSync(`${pythonPath} ${managePy} shell -c "${pythonScript}"`, {
               cwd: projectRoot,
-              stdio: 'inherit',
+              stdio: 'pipe',
             });
-            console.log('Admin user setup complete');
             return null;
           } catch (error) {
-            console.error('Failed to setup admin:', error.message);
             throw error;
           }
         },
@@ -147,21 +140,17 @@ else:
               fs.mkdirSync(mediaDir, { recursive: true });
             }
             fs.copyFileSync(logoSrc, logoDest);
-            console.log('Logo copied to media/institution/');
           } catch (err) {
-            console.log('Could not copy logo:', err.message);
+            // Logo copy failed, continue anyway
           }
 
           try {
-            console.log('Seeding database...');
             execSync(`${pythonPath} ${managePy} seed_cypress`, {
               cwd: projectRoot,
-              stdio: 'inherit',
+              stdio: 'pipe',
             });
-            console.log('Database seeded successfully');
             return null;
           } catch (error) {
-            console.error('Failed to seed database:', error.message);
             throw error;
           }
         },
@@ -171,12 +160,10 @@ else:
           const mailpitUrl = config.env.MAILPIT_URL || 'http://localhost:8025';
           try {
             execSync(`curl -X DELETE ${mailpitUrl}/api/v1/messages`, {
-              stdio: 'inherit',
+              stdio: 'pipe',
             });
-            console.log('Mailpit cleared');
             return null;
           } catch (error) {
-            console.error('Failed to clear Mailpit:', error.message);
             return null; // Don't fail if Mailpit is not running
           }
         },

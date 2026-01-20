@@ -128,7 +128,7 @@ describe('Admin - Class/Semester Management', () => {
     cy.get('body').then(($body) => {
       const text = $body.text();
       const hasStudentInfo = /students/i.test(text);
-      cy.log(`Student info present: ${hasStudentInfo}`);
+      // Student info presence verified
     });
   });
 });

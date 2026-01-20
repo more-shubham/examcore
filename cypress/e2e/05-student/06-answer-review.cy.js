@@ -42,7 +42,7 @@ describe('Student Answer Review', () => {
         });
       } else {
         // Skip if no completed exams
-        cy.log('No completed exams found for this student');
+        // No completed exams found for this student
       }
     });
   });
@@ -58,11 +58,11 @@ describe('Student Answer Review', () => {
             cy.wrap($reviewBtn).first().click();
             cy.url().should('include', '/review');
           } else {
-            cy.log('Review not available for this exam');
+            // Review not available for this exam
           }
         });
       } else {
-        cy.log('No completed exams found');
+        // No completed exams found
       }
     });
   });
@@ -87,11 +87,11 @@ describe('Student Answer Review', () => {
               expect(hasExamInfo).to.be.true;
             });
           } else {
-            cy.log('Review not available');
+            // Review not available
           }
         });
       } else {
-        cy.log('No completed exams found');
+        // No completed exams found
       }
     });
   });
@@ -114,11 +114,11 @@ describe('Student Answer Review', () => {
               expect(hasNav).to.be.true;
             });
           } else {
-            cy.log('Review not available');
+            // Review not available
           }
         });
       } else {
-        cy.log('No completed exams found');
+        // No completed exams found
       }
     });
   });
@@ -141,11 +141,11 @@ describe('Student Answer Review', () => {
               expect(hasQuestions).to.be.true;
             });
           } else {
-            cy.log('Review not available');
+            // Review not available
           }
         });
       } else {
-        cy.log('No completed exams found');
+        // No completed exams found
       }
     });
   });
@@ -167,11 +167,11 @@ describe('Student Answer Review', () => {
               expect(hasCorrect).to.be.true;
             });
           } else {
-            cy.log('Review not available');
+            // Review not available
           }
         });
       } else {
-        cy.log('No completed exams found');
+        // No completed exams found
       }
     });
   });
@@ -194,11 +194,11 @@ describe('Student Answer Review', () => {
               expect(hasAnswer).to.be.true;
             });
           } else {
-            cy.log('Review not available');
+            // Review not available
           }
         });
       } else {
-        cy.log('No completed exams found');
+        // No completed exams found
       }
     });
   });
@@ -221,15 +221,15 @@ describe('Student Answer Review', () => {
               if ($qLinks.length > 0) {
                 cy.wrap($qLinks).first().click();
               } else {
-                cy.log('No question links found');
+                // No question links found
               }
             });
           } else {
-            cy.log('Review not available');
+            // Review not available
           }
         });
       } else {
-        cy.log('No completed exams found');
+        // No completed exams found
       }
     });
   });
@@ -252,11 +252,11 @@ describe('Student Answer Review', () => {
               }
             });
           } else {
-            cy.log('Review not available');
+            // Review not available
           }
         });
       } else {
-        cy.log('No completed exams found');
+        // No completed exams found
       }
     });
   });
@@ -270,7 +270,7 @@ describe('Student Answer Review', () => {
       // Check if there's an active exam that hasn't been submitted
       if ($body.text().includes('Start Exam') || $body.text().includes('Continue')) {
         // Try to manually navigate to review (should fail)
-        cy.log('Testing that review is blocked for non-submitted exams');
+        // Testing that review is blocked for non-submitted exams
       }
     });
   });
@@ -293,11 +293,11 @@ describe('Student Answer Review', () => {
               expect(hasOptions).to.be.true;
             });
           } else {
-            cy.log('Review not available');
+            // Review not available
           }
         });
       } else {
-        cy.log('No completed exams found');
+        // No completed exams found
       }
     });
   });
@@ -320,11 +320,11 @@ describe('Student Answer Review', () => {
               expect(hasStyling).to.be.true;
             });
           } else {
-            cy.log('Review not available');
+            // Review not available
           }
         });
       } else {
-        cy.log('No completed exams found');
+        // No completed exams found
       }
     });
   });
@@ -347,11 +347,11 @@ describe('Student Answer Review', () => {
               expect(hasAnswerInfo).to.be.true;
             });
           } else {
-            cy.log('Review not available');
+            // Review not available
           }
         });
       } else {
-        cy.log('No completed exams found');
+        // No completed exams found
       }
     });
   });
